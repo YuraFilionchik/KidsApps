@@ -1,0 +1,119 @@
+// Логика заданий: выбор примеров, варианты ответов, запоминание выученного.
+'use strict';
+
+const rand = n => Math.floor(Math.random() * n);
+const pick = arr => arr[rand(arr.length)];
+const shuffle = arr => {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = rand(i + 1);
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
+function factKey(a, b) { return a <= b ? `${a}x${b}` : `${b}x${a}`; }
+
+function factOf(p, a, b) { return p.facts[factKey(a, b)] || { box: 0, r: 0, w: 0 }; }
+
+// Коробки Лейтнера: 0 — не знаю, 5 — знаю отлично.
+function recordFact(p, a, b, ok) {
+  const k = factKey(a, b);
+  const f = p.facts[k] || { box: 0, r: 0, w: 0 };
+  if (ok) { f.r++; f.box = Math.min(5, f.box + 1); } else { f.w++; f.box = Math.max(0, f.box - 2); }
+  p.facts[k] = f;
+}
+
+function isMastered(f) { return f.box >= 4; }
+
+function masteredTables(p) {
+  const res = [];
+  for (let t = 2; t <= 10; t++) {
+    let all = true;
+    for (let b = 2; b <= 10; b++) if (!isMastered(factOf(p, t, b))) { all = false; break; }
+    if (all) res.push(t);
+  }
+  return res;
+}
+
+// Выбираем пример: чем хуже знаем факт, тем чаще он попадается.
+function pickQuestion(p, tables, recent = [], allowMissing = true) {
+  const cands = [];
+  for (const t of tables) {
+    for (let b = 2; b <= 10; b++) {
+      const k = factKey(t, b);
+      if (recent.includes(k)) continue;
+      const f = factOf(p, t, b);
+      const seen = f.r + f.w > 0;
+      const w = seen ? 1 + (5 - f.box) * 2 : 6;
+      cands.push({ t, b, w, box: f.box });
+    }
+  }
+  if (!cands.length) return pickQuestion(p, tables, [], allowMissing);
+  let sum = cands.reduce((s, c) => s + c.w, 0);
+  let r = Math.random() * sum;
+  let c = cands[0];
+  for (const x of cands) { r -= x.w; if (r <= 0) { c = x; break; } }
+  const [a, b] = Math.random() < 0.5 ? [c.t, c.b] : [c.b, c.t];
+  const missing = allowMissing && c.box >= 2 && Math.random() < 0.25;
+  return makeQuestion(a, b, missing ? 'missing' : 'product');
+}
+
+function makeQuestion(a, b, type = 'product') {
+  if (type === 'missing') {
+    return { a, b, type, key: factKey(a, b), text: `${a} × <span class="q-hole">?</span> = ${a * b}`, answer: b };
+  }
+  return { a, b, type, key: factKey(a, b), text: `${a} × ${b} = <span class="q-hole">?</span>`, answer: a * b };
+}
+
+// Правдоподобные неверные варианты — соседние ответы таблицы.
+function makeChoices(q) {
+  const ans = q.answer;
+  let pool;
+  if (q.type === 'missing') {
+    pool = [ans - 1, ans + 1, ans - 2, ans + 2, ans + 3].filter(x => x >= 1 && x <= 12);
+  } else {
+    const { a, b } = q;
+    pool = [a * (b + 1), a * (b - 1), (a + 1) * b, (a - 1) * b, ans + 1, ans - 1, ans + 10, ans - 10];
+    const rev = Number(String(ans).split('').reverse().join(''));
+    if (ans >= 10) pool.push(rev);
+  }
+  const set = [...new Set(pool.filter(x => x > 0 && x !== ans))];
+  const wrong = shuffle(set).slice(0, 3);
+  while (wrong.length < 3) {
+    const x = ans + rand(9) - 4;
+    if (x > 0 && x !== ans && !wrong.includes(x)) wrong.push(x);
+  }
+  return shuffle([ans, ...wrong]);
+}
+
+function tipFor(a, b) {
+  const t = TIP_PRIORITY.find(x => x === a || x === b);
+  return t ? TIPS[t] : '';
+}
+
+function levelInfo(xp) {
+  let level = 1, need = 20, rest = xp;
+  while (rest >= need) { rest -= need; level++; need += 10; }
+  return { level, cur: rest, need, title: LEVEL_TITLES[Math.min(level - 1, LEVEL_TITLES.length - 1)] };
+}
+
+function isWorldUnlocked(p, i) {
+  return i === 0 || (p.stars[WORLDS[i - 1].id] || 0) > 0;
+}
+
+// Таблицы из открытых миров (для босса).
+function unlockedTables(p) {
+  const s = new Set();
+  WORLDS.forEach((w, i) => { if (isWorldUnlocked(p, i)) w.tables.forEach(t => s.add(t)); });
+  return [...s].sort((x, y) => x - y);
+}
+
+function bossFor(level) {
+  const b = BOSSES[(level - 1) % BOSSES.length];
+  return {
+    ...b,
+    level,
+    hp: 8 + level * 2,
+    attackMs: Math.max(5000, 12000 - level * 700),
+  };
+}

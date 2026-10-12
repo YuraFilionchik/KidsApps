@@ -1,0 +1,13 @@
+{
+  "name": "Котоматика",
+  "short_name": "Котоматика",
+  "description": "Учим таблицу умножения вместе с котиками",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fff6e9",
+  "theme_color": "#ffb84d",
+  "icons": [
+    { "src": "img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
