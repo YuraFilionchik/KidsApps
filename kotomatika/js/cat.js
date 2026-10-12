@@ -200,6 +200,14 @@ const AURA_LAYOUT = {
   snow:     { sym: '❄️', pts: [[8, -10], [30, -10], [52, -10], [74, -10], [92, -10], [18, -10], [64, -10]] },
   fire:     { sym: '🔥', pts: [[6, 78], [20, 84], [80, 84], [94, 78], [2, 60], [98, 60]] },
   gold:     { sym: '⭐', pts: [[12, 18], [86, 22], [10, 70], [90, 66]] },
+  bubbles:  { sym: '🫧', pts: [[10, 92], [30, 98], [52, 94], [74, 98], [90, 92], [20, 96]] },
+  notes:    { sym: '🎵', pts: [[8, 70], [92, 66], [16, 92], [84, 90], [50, 98]] },
+  petals:   { sym: '🌸', pts: [[10, -10], [32, -10], [56, -10], [78, -10], [94, -10], [44, -10]] },
+  leaves:   { sym: '🍂', pts: [[6, -10], [26, -10], [48, -10], [70, -10], [90, -10], [60, -10]] },
+  butterflies: { sym: '🦋', pts: [[12, 22], [88, 20], [8, 64], [92, 58], [50, 6]] },
+  lightning:{ sym: '⚡', pts: [[10, 30], [90, 26], [6, 72], [94, 70]] },
+  coins:    { sym: '🪙', pts: [[12, 20], [86, 16], [8, 60], [92, 56], [20, 88], [80, 88]] },
+  spooky:   { sym: '👻', alt: '🦇', pts: [[10, 24], [88, 18], [6, 64], [94, 60], [50, 4], [24, 90], [78, 88]] },
 };
 
 function auraHTML(id) {
@@ -207,7 +215,7 @@ function auraHTML(id) {
   if (id === 'rainbow') return '<div class="aura aura-rainbow"><i class="ring"></i></div>';
   if (id === 'orbit') return '<div class="aura aura-orbit"><i class="orbit">' + '<b>⭐</b>'.repeat(4) + '</i></div>';
   const L = AURA_LAYOUT[id];
-  const spans = L.pts.map(([x, y], i) => `<span style="left:${x}%;top:${y}%;animation-delay:${(i * 0.37).toFixed(2)}s">${L.sym}</span>`).join('');
+  const spans = L.pts.map(([x, y], i) => `<span style="left:${x}%;top:${y}%;animation-delay:${(i * 0.37).toFixed(2)}s">${L.alt && i % 2 ? L.alt : L.sym}</span>`).join('');
   return `<div class="aura aura-${id}">${id === 'gold' ? '<i class="glow"></i>' : ''}${spans}</div>`;
 }
 
