@@ -221,6 +221,84 @@ const ART = {
     <rect x="-5" y="-66" width="10" height="46" fill="#4de8e0"/>
     <rect x="-5" y="-66" width="3.5" height="46" fill="#b7fffb" stroke="none"/>
     <polygon points="-5,-66 0,-75 5,-66" fill="#4de8e0"/></g>`,
+  // ---------- Пак «Новинки»: шапки ----------
+  cowboy: ({ top: t }) => `
+    <path d="M30 ${t + 10} Q100 ${t + 30} 170 ${t + 10} Q160 ${t + 22} 100 ${t + 24} Q40 ${t + 22} 30 ${t + 10} Z" fill="#a8672e" stroke="#6b3e17" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M64 ${t + 14} Q60 ${t - 22} 82 ${t - 24} Q100 ${t - 14} 118 ${t - 24} Q140 ${t - 22} 136 ${t + 14} Q100 ${t + 22} 64 ${t + 14} Z" fill="#c07f3c" stroke="#6b3e17" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M65 ${t + 6} Q100 ${t + 14} 135 ${t + 6}" stroke="#e23d4b" stroke-width="5" fill="none"/>
+    <polygon points="${starPoints(100, t - 6, 6, 2.5)}" fill="#ffd84a" stroke="#d69a00" stroke-width="1"/>`,
+  beanie: ({ top: t }) => `
+    <path d="M52 ${t + 14} Q52 ${t - 32} 100 ${t - 32} Q148 ${t - 32} 148 ${t + 14} Z" fill="#4aa3ff" stroke="#2a6fb8" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M70 ${t - 20} V${t + 8} M85 ${t - 27} V${t + 8} M100 ${t - 29} V${t + 8} M115 ${t - 27} V${t + 8} M130 ${t - 20} V${t + 8}" stroke="#2a6fb8" stroke-width="2" opacity=".5"/>
+    <rect x="48" y="${t + 4}" width="104" height="16" rx="8" fill="#ffe14a" stroke="#d6a400" stroke-width="2.5"/>
+    <circle cx="100" cy="${t - 36}" r="11" fill="#fff" stroke="#c9d6e6" stroke-width="2.5"/>`,
+  chef: ({ top: t }) => `
+    <g fill="#fff" stroke="#c9c9d6" stroke-width="3"><circle cx="78" cy="${t - 18}" r="18"/><circle cx="122" cy="${t - 18}" r="18"/><circle cx="100" cy="${t - 30}" r="22"/></g>
+    <rect x="66" y="${t - 18}" width="68" height="34" rx="4" fill="#fff" stroke="#c9c9d6" stroke-width="3"/>
+    <path d="M70 ${t - 2} H130" stroke="#e6e6ee" stroke-width="3"/>`,
+  partyHat: ({ top: t }) => {
+    const id = 'ph' + (++artUid);
+    return `<defs><pattern id="${id}" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(30)"><rect width="12" height="12" fill="#ff7eb6"/><rect width="6" height="12" fill="#a78bfa"/></pattern></defs>
+      <path d="M76 ${t + 10} L104 ${t - 46} L128 ${t + 10} Z" fill="url(#${id})" stroke="#7a3fa8" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="104" cy="${t - 48}" r="7" fill="#ffd84a" stroke="#d69a00" stroke-width="2"/>
+      <circle cx="92" cy="${t - 6}" r="3" fill="#fff"/><circle cx="110" cy="${t - 20}" r="3" fill="#fff"/><circle cx="114" cy="${t + 2}" r="3" fill="#5bd96b"/>`;
+  },
+
+  // ---------- Пак «Новинки»: очки ----------
+  aviators: () => `<path d="M90 78 Q100 74 110 78" stroke="#c9a227" stroke-width="2.5" fill="none"/>
+    <path d="M60 76 H96 Q96 96 80 96 Q62 96 60 76 Z M140 76 H104 Q104 96 120 96 Q138 96 140 76 Z" fill="#6b4a2a" fill-opacity=".85" stroke="#c9a227" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M66 80 L74 88 M110 80 L118 88" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".6"/>
+    <path d="M60 78 L44 74 M140 78 L156 74" stroke="#c9a227" stroke-width="3" stroke-linecap="round"/>`,
+  catEyeGlasses: () => mirrorG(`<path d="M56 72 Q60 66 70 70 L94 74 Q96 92 80 94 Q62 94 58 82 Q52 78 56 72 Z" fill="#ffd1ec" fill-opacity=".35" stroke="#e0218a" stroke-width="3.5" stroke-linejoin="round"/>
+    <circle cx="57" cy="72" r="2.5" fill="#fff"/>`) + '<path d="M94 78 Q100 74 106 78" stroke="#e0218a" stroke-width="3" fill="none"/>',
+
+  // ---------- Пак «Новинки»: шея ----------
+  bandana: ({ arc }) => {
+    const { x0, x1, y0, cy } = arc;
+    return `<path d="M${x0 - 4} ${y0 - 2} Q100 ${cy - 4} ${x1 + 4} ${y0 - 2} L100 ${cy + 26} Z" fill="#e23d4b" stroke="#a51f2c" stroke-width="3" stroke-linejoin="round"/>
+      <g fill="#fff"><circle cx="88" cy="${cy}" r="2.5"/><circle cx="112" cy="${cy}" r="2.5"/><circle cx="100" cy="${cy + 12}" r="2.5"/><circle cx="${x0 + 12}" cy="${y0 + 6}" r="2"/><circle cx="${x1 - 12}" cy="${y0 + 6}" r="2"/></g>`;
+  },
+  tie: ({ arc }) => {
+    const y = arc.cy - 8;
+    return `<path d="${arc.d}" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M93 ${y} H107 L104 ${y + 9} H96 Z" fill="#3f7fd6" stroke="#244f8f" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M96 ${y + 9} H104 L110 ${y + 40} L100 ${y + 50} L90 ${y + 40} Z" fill="#3f7fd6" stroke="#244f8f" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M93 ${y + 22} L107 ${y + 18} M92 ${y + 34} L108 ${y + 30}" stroke="#ffd84a" stroke-width="3"/>`;
+  },
+
+  // ---------- Пак «Новинки»: спина ----------
+  backpack: () => `<rect x="134" y="112" width="44" height="58" rx="12" fill="#ffb020" stroke="#c97a00" stroke-width="3"/>
+    <rect x="140" y="140" width="32" height="22" rx="6" fill="#ffd36e" stroke="#c97a00" stroke-width="2.5"/>
+    <path d="M140 124 Q156 116 172 124" stroke="#c97a00" stroke-width="3" fill="none"/>
+    <circle cx="156" cy="151" r="3" fill="#c97a00"/>`,
+  butterflyWings: () => mirrorG(`<path d="M76 130 Q30 60 14 86 Q4 112 64 140 Z" fill="#7cc8ff" stroke="#2a6fb8" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M70 146 Q22 150 26 176 Q36 194 72 156 Z" fill="#ffb3d1" stroke="#c2185b" stroke-width="3" stroke-linejoin="round"/>
+    <circle cx="34" cy="96" r="7" fill="#fff" opacity=".8"/><circle cx="40" cy="172" r="5" fill="#fff" opacity=".8"/>`),
+
+  // ---------- Пак «Вкусняшки и игрушки» (в лапке) ----------
+  fishSnack: () => `<g transform="translate(140 170) rotate(-30)">
+    <path d="M-22 0 Q-4 -14 14 0 Q-4 14 -22 0 Z" fill="#7cc8ff" stroke="#2a6fb8" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M14 0 L26 -10 L26 10 Z" fill="#7cc8ff" stroke="#2a6fb8" stroke-width="2.5" stroke-linejoin="round"/>
+    <circle cx="-13" cy="-2" r="2.5" fill="#1a1a22"/><path d="M-4 -8 Q0 0 -4 8" stroke="#2a6fb8" stroke-width="2" fill="none"/></g>`,
+  yarnBall: () => `<path d="M124 186 Q150 196 170 184" stroke="#e0218a" stroke-width="2.5" fill="none"/>
+    <circle cx="150" cy="164" r="20" fill="#ff7eb6" stroke="#c2185b" stroke-width="3"/>
+    <g stroke="#c2185b" stroke-width="2" fill="none" opacity=".8"><path d="M134 154 Q150 168 166 154"/><path d="M132 166 Q150 180 168 168"/><path d="M142 146 Q158 162 156 184"/></g>`,
+  donut: () => `<circle cx="146" cy="166" r="20" fill="#e0a86a" stroke="#a86b30" stroke-width="3"/>
+    <path d="M128 162 Q130 146 146 146 Q164 146 165 162 Q160 172 152 166 Q146 174 140 166 Q132 172 128 162 Z" fill="#ff9ac6"/>
+    <circle cx="146" cy="166" r="6" fill="#fff" stroke="#a86b30" stroke-width="2.5"/>
+    <g stroke-width="2.5" stroke-linecap="round"><path d="M136 154 l3 2" stroke="#4aa3ff"/><path d="M152 152 l3 -2" stroke="#ffe14a"/><path d="M158 160 l2 3" stroke="#5bd96b"/><path d="M142 150 l-2 2" stroke="#fff"/></g>`,
+  toyMouse: () => `<path d="M132 182 Q118 188 124 196" stroke="#888" stroke-width="2" fill="none"/>
+    <ellipse cx="150" cy="176" rx="20" ry="13" fill="#a7b0bc" stroke="#6f7884" stroke-width="3"/>
+    <circle cx="162" cy="164" r="7" fill="#ffb3c7" stroke="#6f7884" stroke-width="2.5"/>
+    <circle cx="164" cy="176" r="2.3" fill="#1a1a22"/><circle cx="171" cy="179" r="2.5" fill="#ff7b9c"/>`,
+  sunflower: () => `<path d="M124 186 Q140 150 150 120" stroke="#3fae3f" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="136" cy="156" rx="10" ry="5" fill="#5bd96b" transform="rotate(-40 136 156)"/>
+    ${[0, 1, 2, 3, 4, 5, 6, 7].map(k => `<ellipse cx="150" cy="106" rx="5" ry="11" fill="#ffd84a" stroke="#d69a00" stroke-width="1.5" transform="rotate(${k * 45} 150 118)"/>`).join('')}
+    <circle cx="150" cy="118" r="9" fill="#7a4e25"/>`,
+  watermelon: () => `<g transform="translate(148 164) rotate(-15)">
+    <path d="M-24 -6 A24 24 0 0 0 24 -6 Z" fill="#3fae3f"/><path d="M-20 -6 A20 20 0 0 0 20 -6 Z" fill="#fff6d6"/>
+    <path d="M-17 -6 A17 17 0 0 0 17 -6 Z" fill="#ff5a6e"/>
+    <g fill="#1a1a22"><ellipse cx="-8" cy="0" rx="1.5" ry="2.4"/><ellipse cx="0" cy="4" rx="1.5" ry="2.4"/><ellipse cx="8" cy="0" rx="1.5" ry="2.4"/></g></g>`,
 };
 
 // ---------- Фоны (SVG-картинки) ----------
@@ -343,6 +421,71 @@ const BG_ART = {
     h += '<path d="M0 0 H200 V18 Q150 34 100 18 Q50 34 0 18 Z" fill="#c62839"/>';
     h += '<polygon points="70,200 130,200 112,150 88,150" fill="#c62839"/>';
     h += '<g fill="#fff">' + [[30, 60], [170, 80], [100, 30], [40, 140], [160, 140]].map(([x, y]) => `<polygon points="${starPoints(x, y, 5, 1.5, 4)}"/>`).join('') + '</g>';
+    return h;
+  },
+  // ---------- Пак «Новые места» ----------
+  snowyHills: () => {
+    const r = seeded(21);
+    let h = '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9ccfff"/><stop offset="1" stop-color="#e6f4ff"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/>';
+    h += '<ellipse cx="40" cy="170" rx="110" ry="50" fill="#f4faff"/><ellipse cx="170" cy="180" rx="100" ry="46" fill="#fff"/>';
+    for (const x of [30, 160]) h += `<rect x="${x - 3}" y="132" width="6" height="12" fill="#7a4e25"/><polygon points="${x},92 ${x - 16},134 ${x + 16},134" fill="#2f8f5a"/><polygon points="${x},92 ${x - 10},114 ${x + 10},114" fill="#fff" opacity=".85"/>`;
+    for (let i = 0; i < 30; i++) h += `<circle cx="${(r() * 200).toFixed(1)}" cy="${(r() * 150).toFixed(1)}" r="${(1 + r() * 2).toFixed(1)}" fill="#fff"/>`;
+    return h;
+  },
+  beach: () => {
+    let h = '<rect width="200" height="200" fill="#8fd8ff"/><circle cx="160" cy="36" r="18" fill="#ffe14a"/>';
+    h += '<rect y="110" width="200" height="40" fill="#2f9be0"/><path d="M0 116 Q25 110 50 116 T100 116 T150 116 T200 116" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/>';
+    h += '<path d="M0 146 Q100 132 200 146 V200 H0 Z" fill="#f7dc9a"/>';
+    h += '<path d="M28 170 Q34 120 46 92" stroke="#8b5a2b" stroke-width="6" fill="none" stroke-linecap="round"/>';
+    h += '<g fill="#3fae3f"><path d="M46 92 Q20 84 8 100 Q26 90 46 94 Z"/><path d="M46 92 Q70 80 84 96 Q64 88 46 94 Z"/><path d="M46 92 Q40 70 58 62 Q48 78 48 92 Z"/></g>';
+    h += '<path d="M150 176 A14 14 0 0 1 178 176 Z" fill="#ff7e8a"/><path d="M164 162 V176" stroke="#fff" stroke-width="2"/>';
+    return h;
+  },
+  nightCity: () => {
+    const r = seeded(5);
+    let h = '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#151a40"/><stop offset="1" stop-color="#4a3a8a"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/>';
+    h += starsSvg(30, 9, 90) + '<circle cx="40" cy="36" r="14" fill="#fff6c4"/><circle cx="46" cy="32" r="12" fill="#1c2150"/>';
+    let x = 0;
+    while (x < 200) {
+      const w = 18 + Math.floor(r() * 18), top = 90 + Math.floor(r() * 60);
+      h += `<rect x="${x}" y="${top}" width="${w}" height="${200 - top}" fill="${r() < 0.5 ? '#232a5a' : '#2c2f6a'}"/>`;
+      for (let wy = top + 6; wy < 196; wy += 10) for (let wx = x + 4; wx < x + w - 5; wx += 8) if (r() < 0.45) h += `<rect x="${wx}" y="${wy}" width="4" height="5" fill="#ffe17a"/>`;
+      x += w + 2;
+    }
+    return h;
+  },
+  autumn: () => {
+    const r = seeded(13);
+    let h = '<rect width="200" height="200" fill="#ffe2b8"/><rect y="150" width="200" height="50" fill="#d9a35a"/>';
+    for (const [x, c] of [[30, '#e8632b'], [100, '#ffb020'], [170, '#c9402a']]) h += `<rect x="${x - 5}" y="80" width="10" height="72" fill="#7a4e25"/><circle cx="${x}" cy="70" r="30" fill="${c}"/><circle cx="${x - 16}" cy="84" r="18" fill="${c}"/><circle cx="${x + 16}" cy="84" r="18" fill="${c}"/>`;
+    const leaves = ['#e8632b', '#ffb020', '#c9402a', '#f2c94c'];
+    for (let i = 0; i < 24; i++) h += `<ellipse cx="${(r() * 200).toFixed(1)}" cy="${(100 + r() * 100).toFixed(1)}" rx="4" ry="2.4" fill="${leaves[i % 4]}" transform="rotate(${(r() * 90 - 45).toFixed(0)})"/>`;
+    return h;
+  },
+  desert: () => {
+    let h = '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb36b"/><stop offset="1" stop-color="#ffe7a8"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/>';
+    h += '<circle cx="140" cy="60" r="24" fill="#fff3a0"/><polygon points="60,130 100,70 140,130" fill="#e0b060"/><polygon points="100,70 140,130 112,130" fill="#c99540"/>';
+    h += '<path d="M0 140 Q60 116 120 140 T200 136 V200 H0 Z" fill="#f2c97a"/><path d="M0 170 Q80 150 200 172 V200 H0 Z" fill="#e8b860"/>';
+    h += '<g fill="#3fae6a" stroke="#1f6b3c" stroke-width="2"><rect x="28" y="120" width="10" height="44" rx="5"/><path d="M28 140 H20 V126" fill="none" stroke-width="6" stroke-linecap="round"/><path d="M38 134 H46 V122" fill="none" stroke-width="6" stroke-linecap="round"/></g>';
+    return h;
+  },
+  library: () => {
+    const r = seeded(17);
+    let h = '<rect width="200" height="200" fill="#f3dfc2"/><rect y="160" width="200" height="40" fill="#a86b3c"/>';
+    const cols = ['#e23d4b', '#4aa3ff', '#5bd96b', '#ffb020', '#a78bfa', '#ff7eb6'];
+    for (const sy of [30, 80, 130]) {
+      h += `<rect x="10" y="${sy + 26}" width="180" height="6" fill="#7a4e25"/>`;
+      let x = 14;
+      while (x < 184) { const w = 6 + Math.floor(r() * 6), hh = 16 + Math.floor(r() * 10); h += `<rect x="${x}" y="${sy + 26 - hh}" width="${w}" height="${hh}" fill="${cols[Math.floor(r() * cols.length)]}" stroke="#5a3a1a" stroke-width=".8"/>`; x += w + 1; }
+    }
+    h += '<circle cx="170" cy="14" r="8" fill="#ffe17a" opacity=".9"/>';
+    return h;
+  },
+  volcanoIsle: () => {
+    let h = '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a5a"/><stop offset="1" stop-color="#ffd0a0"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/>';
+    h += '<polygon points="40,150 86,56 114,56 160,150" fill="#6b4a3a"/><path d="M86 56 Q100 66 114 56 L106 90 Q100 80 96 96 Z" fill="#ff6a00"/>';
+    h += cloud(80, 38, 0.9, '#9a8a8a') + cloud(100, 22, 0.7, '#b0a0a0');
+    h += '<rect y="146" width="200" height="54" fill="#2f9be0"/><path d="M20 150 Q100 140 180 150 V160 H20 Z" fill="#f2c97a"/>';
     return h;
   },
 };
