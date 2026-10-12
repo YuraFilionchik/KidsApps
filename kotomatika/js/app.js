@@ -140,7 +140,7 @@ function grantSpecial(slot, id, text) {
 
 function screenProfiles() {
   const list = Store.list();
-  show(`<div class="screen center">
+  show(`<div class="screen center profiles-screen">
     <h1 class="logo">Кото<span>матика</span></h1>
     <p class="subtitle">Учим таблицу умножения вместе с котиками</p>
     ${list.length ? `
@@ -156,6 +156,7 @@ function screenProfiles() {
         <div class="bubble">Привет! Я котик Мурчик. Давай вместе выучим таблицу умножения и соберём кучу рыбок! 🐾</div>
         <button class="btn big primary" data-action="newProfile">Начать игру!</button>
       </div>`}
+    <button class="btn ghost parent-link" data-action="parent">👨‍👩‍👧 Для родителей · ☁️ сохранения в облаке</button>
   </div>`);
 }
 
@@ -207,7 +208,8 @@ function pinPad(action) {
 
 function screenPin() {
   const p = Store.get(pinState.id);
-  const hint = pinState.fails >= 2 ? `<p class="hint">Подсказка: код начинается с ${PIN_SYMBOLS[Number(p.pin.split(',')[0])]}</p>` : '';
+  const first = pinState.fails >= 2 ? Store.pinFirstSymbol(p) : null;
+  const hint = first !== null ? `<p class="hint">Подсказка: код начинается с ${PIN_SYMBOLS[first]}</p>` : '';
   show(`<div class="screen center">
     <div class="row-top"><button class="icon-btn" data-action="toProfiles">←</button></div>
     ${catHTML(p.cat, 120)}
@@ -246,6 +248,7 @@ function screenHub() {
         <div class="xpbar"><i style="width:${lv.cur / lv.need * 100}%"></i></div>
       </div>
       <div class="pill fish">🐟 ${P.fish}</div>
+      <span id="cloudBadge">${cloudBadgeHTML()}</span>
       <button class="icon-btn" data-action="settings" title="Настройки">⚙️</button>
     </header>
 
@@ -280,6 +283,7 @@ function settingsModal() {
   modal(`<h2>Настройки</h2>
     <button class="btn wide" data-action="toggleSound">${P.settings.sound ? '🔊 Звук включён' : '🔇 Звук выключен'}</button>
     <button class="btn wide" data-action="logout">👥 Сменить игрока</button>
+    <button class="btn wide" data-action="parent">👨‍👩‍👧 Для родителей</button>
     <button class="btn wide danger" data-action="deleteProfile">🗑️ Удалить игрока</button>
     <button class="btn wide ghost" data-action="closeModal">Закрыть</button>`);
 }
@@ -938,7 +942,7 @@ const actions = {
     document.getElementById('pinSlotsBox').innerHTML = pinSlots(pinState.entered, false);
     if (pinState.entered.length < PIN_LENGTH) return;
     const p = Store.get(pinState.id);
-    if (pinState.entered.join(',') === p.pin) {
+    if (Store.checkPin(p, pinState.entered.join(','))) {
       pinState = null;
       login(p);
     } else {
