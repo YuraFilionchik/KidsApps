@@ -1,3 +1,9 @@
 node_modules/
 .DS_Store
 *.log
+# Firebase: ключи сервисных аккаунтов и служебные файлы никогда не коммитим
+*firebase-adminsdk*.json
+service-account*.json
+.firebase/
+firebase-debug.log
+firestore-debug.log

@@ -1,0 +1,33 @@
+rules_version = '2';
+
+// Доступ только у аккаунта семьи (родителя): families/{uid} читает и пишет только сам uid.
+// Схема данных описана в docs/firebase-plan.md, раздел 3.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    match /families/{uid} {
+      allow read, write: if isOwner(uid);
+
+      match /profiles/{profileId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+          && request.resource.data.keys().hasOnly(['data', 'rev', 'updatedAt', 'updatedBy', 'schemaVersion', 'pinHash'])
+          && request.resource.data.rev is int
+          && (resource == null || request.resource.data.rev == resource.data.rev + 1)
+          && request.resource.data.updatedAt == request.time
+          && request.resource.data.data.name is string
+          && request.resource.data.data.name.size() <= 14;
+
+        match /snapshots/{day} {
+          allow read, delete: if isOwner(uid);
+          allow create, update: if isOwner(uid) && day.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$');
+        }
+      }
+    }
+
+    // Всё остальное закрыто.
+  }
+}
