@@ -46,6 +46,8 @@ python3 -m http.server 8000
 
 В `localStorage` браузера. Значит, прогресс привязан к устройству и браузеру. Очистка данных сайта удалит профили.
 
+План облачного сохранения и переезда на Firebase Hosting: [docs/firebase-plan.md](docs/firebase-plan.md).
+
 ### Структура
 
 ```
