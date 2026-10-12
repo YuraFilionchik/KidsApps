@@ -94,10 +94,7 @@ h2 { font-size: 1.5rem; }
 .cat { position: relative; flex-shrink: 0; }
 .cat.with-bg { border-radius: 24%; overflow: hidden; box-shadow: inset 0 0 0 3px rgba(255, 255, 255, .6); }
 .cat-svg { position: absolute; inset: 6% 6% 2%; width: 88%; height: 92%; }
-.cat .acc { position: absolute; left: 50%; transform: translate(-50%, -50%); line-height: 1; pointer-events: none; }
-.acc-hat { top: 16%; }
-.acc-glasses { top: 46%; }
-.acc-neck { top: 66%; }
+.cat-svg text { font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', sans-serif; }
 .cat.wiggle { animation: wiggle .5s; }
 @keyframes wiggle { 25% { transform: rotate(-6deg) scale(1.05); } 75% { transform: rotate(6deg) scale(1.05); } }
 .cat-tail { transform-origin: 140px 160px; animation: tail 2.4s ease-in-out infinite; }

@@ -29,6 +29,8 @@ const BOSSES = [
 ];
 
 // Магазин. price: 0 — есть сразу; special — не продаётся, только в награду.
+// Наряды рисуются внутри SVG котика. pos — координаты центра в системе котика (200×200):
+// x (по умолчанию 100), y, s — размер, r — наклон. Для шеи collar — цвет ошейника, scarf — цвет шарфа.
 const SHOP = {
   fur: {
     title: 'Шёрстка', icon: '🎨',
@@ -50,31 +52,31 @@ const SHOP = {
   hat: {
     title: 'Шапки', icon: '🎩',
     items: [
-      { id: 'bow',    name: 'Бантик',     price: 25,  emoji: '🎀' },
-      { id: 'cap',    name: 'Кепка',      price: 35,  emoji: '🧢' },
-      { id: 'flower', name: 'Цветочек',   price: 35,  emoji: '🌸' },
-      { id: 'helmet', name: 'Каска',      price: 50,  emoji: '⛑️' },
-      { id: 'tophat', name: 'Цилиндр',    price: 60,  emoji: '🎩' },
-      { id: 'grad',   name: 'Шапка умника', price: 80, emoji: '🎓' },
-      { id: 'crown',  name: 'Корона',     price: 150, emoji: '👑' },
+      { id: 'bow',    name: 'Бантик',     price: 25,  emoji: '🎀', pos: { y: 24, s: 54 } },
+      { id: 'cap',    name: 'Кепка',      price: 35,  emoji: '🧢', pos: { y: 20, s: 70 } },
+      { id: 'flower', name: 'Цветочек',   price: 35,  emoji: '🌸', pos: { x: 134, y: 38, s: 42, r: 15 } },
+      { id: 'helmet', name: 'Каска',      price: 50,  emoji: '⛑️', pos: { y: 18, s: 70 } },
+      { id: 'tophat', name: 'Цилиндр',    price: 60,  emoji: '🎩', pos: { y: 14, s: 72 } },
+      { id: 'grad',   name: 'Шапка умника', price: 80, emoji: '🎓', pos: { x: 104, y: 18, s: 74 } },
+      { id: 'crown',  name: 'Корона',     price: 150, emoji: '👑', pos: { y: 18, s: 68 } },
     ],
   },
   glasses: {
     title: 'Очки', icon: '🕶️',
     items: [
-      { id: 'round', name: 'Очки',          price: 30, emoji: '👓' },
-      { id: 'sun',   name: 'Тёмные очки',   price: 50, emoji: '🕶️' },
-      { id: 'goggle',name: 'Очки шахтёра',  price: 70, emoji: '🥽' },
+      { id: 'round', name: 'Очки',          price: 30, emoji: '👓', pos: { y: 84, s: 74 } },
+      { id: 'sun',   name: 'Тёмные очки',   price: 50, emoji: '🕶️', pos: { y: 83, s: 76 } },
+      { id: 'goggle',name: 'Очки шахтёра',  price: 70, emoji: '🥽', pos: { y: 83, s: 80 } },
     ],
   },
   neck: {
     title: 'Шея', icon: '🔔',
     items: [
-      { id: 'bell',  name: 'Колокольчик', price: 20, emoji: '🔔' },
-      { id: 'scarf', name: 'Шарфик',      price: 45, emoji: '🧣' },
-      { id: 'gem',   name: 'Кулон',       price: 90, emoji: '💎' },
-      { id: 'medal', name: 'Медаль чемпиона', special: 'Победи босса', emoji: '🏅' },
-      { id: 'star',  name: 'Звезда мира',  special: 'Пройди все миры', emoji: '🌟' },
+      { id: 'bell',  name: 'Колокольчик', price: 20, emoji: '🔔', collar: '#e23d4b', pos: { y: 155, s: 28 } },
+      { id: 'scarf', name: 'Шарфик',      price: 45, emoji: '🧣', scarf: '#e8434f' },
+      { id: 'gem',   name: 'Кулон',       price: 90, emoji: '💎', collar: '#7c5bd9', pos: { y: 154, s: 26 } },
+      { id: 'medal', name: 'Медаль чемпиона', special: 'Победи босса', emoji: '🏅', collar: '#3f7fd6', pos: { y: 158, s: 30 } },
+      { id: 'star',  name: 'Звезда мира',  special: 'Пройди все миры', emoji: '🌟', collar: '#f5b800', pos: { y: 153, s: 26 } },
     ],
   },
   bg: {

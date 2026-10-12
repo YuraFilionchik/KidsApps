@@ -25,7 +25,35 @@ const EARS = {
   fold:   { outer: 'M50 60 Q46 32 74 34 Q90 38 88 50 Q72 42 50 60 Z', inner: '' },
 };
 
-function catSVG(furId, mood = 'normal', breedId = 'home') {
+// Ошейник или шарф по изгибу шеи, подвеска — эмодзи под ошейником.
+function neckSVG(it, hrx, hry) {
+  if (!it) return '';
+  const dx = (hrx * 0.66).toFixed(1);
+  const y0 = (86 + hry * 0.75).toFixed(1);
+  const cy = 86 + hry + 18;
+  const arc = `M${100 - dx} ${y0} Q100 ${cy} ${100 + +dx} ${y0}`;
+  if (it.scarf) {
+    const c = it.scarf;
+    return `<g class="scarf">
+      <path d="M108 136 L130 138 Q131 160 127 180 L106 178 Q110 158 108 136 Z" fill="${c}" stroke="#9e1f2b" stroke-width="2.5" stroke-linejoin="round"/>
+      <path d="M109 150 L129 152 M108 164 L128 166" stroke="#fff" stroke-width="5" opacity=".85"/>
+      <path d="M108 180 L107 186 M113 180 L112 187 M118 181 L118 187 M123 181 L123 187" stroke="${c}" stroke-width="3" stroke-linecap="round"/>
+      <path d="${arc}" stroke="#9e1f2b" stroke-width="19" fill="none" stroke-linecap="round"/>
+      <path d="${arc}" stroke="${c}" stroke-width="15" fill="none" stroke-linecap="round"/>
+      <path d="${arc}" stroke="#fff" stroke-width="15" fill="none" stroke-dasharray="5 11" opacity=".75"/>
+    </g>`;
+  }
+  const p = it.pos;
+  return `<path d="${arc}" stroke="rgba(0,0,0,.25)" stroke-width="9" fill="none" stroke-linecap="round"/>
+    <path d="${arc}" stroke="${it.collar}" stroke-width="6" fill="none" stroke-linecap="round"/>
+    ${emojiSVG(it.emoji, { y: p.y + (hry - 48), s: p.s })}`;
+}
+
+function emojiSVG(emoji, { x = 100, y, s, r = 0 }) {
+  return `<text x="${x}" y="${y}" font-size="${s}" text-anchor="middle" dominant-baseline="central"${r ? ` transform="rotate(${r} ${x} ${y})"` : ''}>${emoji}</text>`;
+}
+
+function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
   const fur = findItem('fur', furId) || SHOP.fur.items[0];
   const br = findBreed(breedId);
   const id = ++catUid;
@@ -135,21 +163,23 @@ function catSVG(furId, mood = 'normal', breedId = 'home') {
     <g stroke="${s}" stroke-width="2.5" stroke-linecap="round" opacity=".8">
       <path d="M60 98 L28 92"/><path d="M60 105 L28 108"/><path d="M140 98 L172 92"/><path d="M140 105 L172 108"/>
     </g>
+    ${neckSVG(findItem('neck', acc.neck), hrx, hry)}
+    ${acc.glasses ? emojiSVG(findItem('glasses', acc.glasses).emoji, findItem('glasses', acc.glasses).pos) : ''}
+    ${hatSVG(findItem('hat', acc.hat), hry)}
   </svg>`;
+}
+
+// Шапка садится на макушку: у круглоголовых пород макушка чуть выше.
+function hatSVG(it, hry) {
+  if (!it) return '';
+  return emojiSVG(it.emoji, { ...it.pos, y: it.pos.y - (hry - 48) });
 }
 
 // cat: {fur, breed, hat, glasses, neck, bg}; withBg — рисовать фон.
 function catHTML(cat, size, mood = 'normal', withBg = true) {
   const bg = withBg ? (findItem('bg', cat.bg) || SHOP.bg.items[0]).css : 'transparent';
-  const acc = (slot, cls, k) => {
-    const it = cat[slot] && findItem(slot, cat[slot]);
-    return it ? `<span class="acc ${cls}" style="font-size:${Math.round(size * k)}px">${it.emoji}</span>` : '';
-  };
   return `<div class="cat ${withBg ? 'with-bg' : ''}" style="width:${size}px;height:${size}px;background:${bg}">
-    ${catSVG(cat.fur, mood, cat.breed)}
-    ${acc('neck', 'acc-neck', 0.2)}
-    ${acc('glasses', 'acc-glasses', 0.34)}
-    ${acc('hat', 'acc-hat', 0.33)}
+    ${catSVG(cat.fur, mood, cat.breed, cat)}
   </div>`;
 }
 
