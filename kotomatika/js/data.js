@@ -37,6 +37,8 @@ const SHOP = {
       { id: 'gray',    name: 'Серый',      price: 0,   color: '#a7b0bc', stroke: '#6f7884' },
       { id: 'white',   name: 'Белый',      price: 0,   color: '#fbf7f0', stroke: '#c9bfb0' },
       { id: 'black',   name: 'Чёрный',     price: 0,   color: '#3d3a4a', stroke: '#1f1d28', eye: '#a6e35a' },
+      { id: 'cream',   name: 'Кремовый',   price: 0,   color: '#f6e3c6', stroke: '#c9a97a' },
+      { id: 'peach',   name: 'Персиковый', price: 0,   color: '#f6c9b8', stroke: '#d99a86' },
       { id: 'pink',    name: 'Розовый',    price: 60,  color: '#ffb3d1', stroke: '#e07aa6' },
       { id: 'blue',    name: 'Голубой',    price: 60,  color: '#9fd3ff', stroke: '#5a9fd6' },
       { id: 'mint',    name: 'Мятный',     price: 80,  color: '#a6f0c6', stroke: '#5bbf8a' },
@@ -131,4 +133,97 @@ const ACHIEVEMENTS = [
   { id: 'streak7',  icon: '🏆', name: 'Целая неделя',      desc: 'Выполни задание дня 7 дней подряд', test: p => p.streak.best >= 7 },
   { id: 'master',   icon: '🧠', name: 'Мастер таблицы',    desc: 'Выучи одну таблицу полностью', test: p => masteredTables(p).length >= 1 },
   { id: 'master9',  icon: '🎓', name: 'Профессор Мяу',     desc: 'Выучи все таблицы от 2 до 10', test: p => masteredTables(p).length >= 9 },
+  { id: 'div1',     icon: '🍕', name: 'Поровну!',          desc: 'Пройди первый мир деления',    test: p => DIV_WORLDS.some(w => (p.stars[w.id] || 0) > 0) },
+  { id: 'divall',   icon: '🍱', name: 'Пир на весь мир',   desc: 'Пройди все миры деления',      test: p => DIV_WORLDS.every(w => (p.stars[w.id] || 0) > 0) },
+  { id: 'col1',     icon: '✏️', name: 'Первый столбик',    desc: 'Пройди уровень в столбик',     test: p => Object.keys(p.colStars).length >= 1 },
+  { id: 'colall',   icon: '📐', name: 'Мастер столбика',   desc: 'Пройди все уровни в столбик',  test: p => COLUMN_LEVELS.every(l => (p.colStars[l.id] || 0) > 0) },
+  { id: 'farm1',    icon: '🎣', name: 'Первый улов',       desc: 'Вырасти и поймай рыбу на ферме', test: p => p.farm.harvested >= 1 },
+  { id: 'farm15',   icon: '🐳', name: 'Рыбак-профи',       desc: 'Поймай 15 рыб на ферме',       test: p => p.farm.harvested >= 15 },
+  { id: 'pet1',     icon: '🥚', name: 'Новый друг',        desc: 'Выведи первого питомца',       test: p => p.pets.length >= 1 },
+  { id: 'petleg',   icon: '✨', name: 'Легенда',           desc: 'Найди легендарного питомца',   test: p => p.pets.some(id => PETS.find(x => x.id === id).rarity === 'legendary') },
+  { id: 'breeds6',  icon: '🐈', name: 'Кошатница',         desc: 'Собери 6 пород котиков',       test: p => BREEDS.filter(b => b.test(p)).length >= 6 },
+];
+
+// ---------- Деление: «делим угощение поровну» ----------
+
+const DIV_WORLDS = [
+  { id: 'd2',   tables: [2],  name: 'Пицца пополам',     icon: '🍕', color: '#ffb38a' },
+  { id: 'd3',   tables: [3],  name: 'Конфетная лавка',   icon: '🍬', color: '#f7a8d8' },
+  { id: 'd4',   tables: [4],  name: 'Ягодная поляна',    icon: '🍓', color: '#ff9aa2' },
+  { id: 'd5',   tables: [5],  name: 'Печенькина пекарня', icon: '🍪', color: '#e0b98a' },
+  { id: 'd6',   tables: [6],  name: 'Сырная гора',       icon: '🧀', color: '#ffe17a' },
+  { id: 'd7',   tables: [7],  name: 'Арбузный пляж',     icon: '🍉', color: '#9be36d' },
+  { id: 'd8',   tables: [8],  name: 'Пончиковый парк',   icon: '🍩', color: '#f5b0c8' },
+  { id: 'd9',   tables: [9],  name: 'Мороженое-град',    icon: '🍦', color: '#bfe3ff' },
+  { id: 'd10',  tables: [10], name: 'Тортовый дворец',   icon: '🎂', color: '#d6c4ff' },
+  { id: 'dmix', tables: [2, 3, 4, 5, 6, 7, 8, 9, 10], name: 'Пир на весь мир', icon: '🍱', color: '#ffd86b' },
+];
+
+// ---------- Столбик ----------
+
+const COLUMN_PER_LEVEL = 5;
+const COLUMN_LEVELS = [
+  { id: 'a1', op: '+', name: 'Без перехода',   icon: '🌱', desc: '23 + 45' },
+  { id: 'a2', op: '+', name: 'С переходом',    icon: '🌿', desc: '47 + 35, держим в уме' },
+  { id: 'a3', op: '+', name: 'Трёхзначные',    icon: '🌳', desc: '358 + 274' },
+  { id: 's1', op: '-', name: 'Без займа',      icon: '🍂', desc: '68 − 25' },
+  { id: 's2', op: '-', name: 'С займом',       icon: '🍁', desc: '52 − 27, занимаем десяток' },
+  { id: 's3', op: '-', name: 'Трёхзначные',    icon: '🌲', desc: '503 − 268' },
+];
+
+// ---------- Кото-ферма ----------
+
+const FARM_SPECIES = [
+  { id: 'carp',   name: 'Карасик',          icon: '🐟', price: 10,  need: 8,  reward: 20,  unlock: 0 },
+  { id: 'tropic', name: 'Тропическая рыбка', icon: '🐠', price: 25,  need: 15, reward: 45,  unlock: 2 },
+  { id: 'puffer', name: 'Рыба-фугу',        icon: '🐡', price: 40,  need: 25, reward: 75,  unlock: 5 },
+  { id: 'squid',  name: 'Кальмарчик',       icon: '🦑', price: 60,  need: 35, reward: 110, unlock: 9 },
+  { id: 'octo',   name: 'Осьминожка',       icon: '🐙', price: 80,  need: 45, reward: 150, unlock: 12 },
+  { id: 'whale',  name: 'Китёнок',          icon: '🐳', price: 100, need: 60, reward: 200, unlock: 15 },
+];
+const POND_SLOT_PRICES = { 4: 80, 5: 150, 6: 250 }; // цена 4-го, 5-го и 6-го места в пруду
+const POND_MAX = 6;
+
+// ---------- Питомцы ----------
+
+const RARITY = {
+  common:    { name: 'Обычный',      color: '#8fd16a' },
+  rare:      { name: 'Редкий',       color: '#5ab0ff' },
+  legendary: { name: 'Легендарный',  color: '#ffb020' },
+};
+
+const PETS = [
+  { id: 'hamster', name: 'Хомячок',      icon: '🐹', rarity: 'common',    bonus: '+1 🦐 корма за каждые 5 верных ответов' },
+  { id: 'bunny',   name: 'Зайка',        icon: '🐰', rarity: 'common',    bonus: '+1 🐟 за каждые 5 ответов подряд' },
+  { id: 'turtle',  name: 'Черепашка',    icon: '🐢', rarity: 'common',    bonus: 'Босс атакует на 30% медленнее' },
+  { id: 'chick',   name: 'Цыплёнок',     icon: '🐥', rarity: 'common',    bonus: 'Двойной опыт за ответы' },
+  { id: 'parrot',  name: 'Попугай Кеша', icon: '🦜', rarity: 'rare',      bonus: 'В приключении убирает 1 неверный вариант' },
+  { id: 'puppy',   name: 'Щенок',        icon: '🐶', rarity: 'rare',      bonus: '+1 жизнь в битве с боссом' },
+  { id: 'owl',     name: 'Сова',         icon: '🦉', rarity: 'rare',      bonus: '+10 секунд в Блице' },
+  { id: 'axolotl', name: 'Аксолотль',    icon: '🦎', rarity: 'rare',      bonus: 'Рыбы на ферме растут в 2 раза быстрее' },
+  { id: 'unicorn', name: 'Единорог',     icon: '🦄', rarity: 'legendary', bonus: '×2 рыбки за звёзды в приключении и столбике' },
+  { id: 'dragon',  name: 'Дракончик',    icon: '🐲', rarity: 'legendary', bonus: '+1 урон боссу за каждый удар' },
+  { id: 'fox',     name: 'Лисёнок',      icon: '🦊', rarity: 'legendary', bonus: 'Сундук дня в 2 раза больше' },
+];
+
+const EGGS = [
+  { id: 'basic', name: 'Обычное яйцо', price: 60,  odds: { common: 70, rare: 25, legendary: 5 } },
+  { id: 'gold',  name: 'Золотое яйцо', price: 150, odds: { common: 25, rare: 55, legendary: 20 } },
+];
+
+// ---------- Породы котиков ----------
+// ears: normal | big | small | tuft | fold; pattern: none | stripes | spots | points | calico | wrinkles | stars
+const BREEDS = [
+  { id: 'home',    name: 'Домашний',     fur: 'ginger',   ears: 'normal', pattern: 'none',     cond: 'Твой первый котик',            test: () => true },
+  { id: 'tabby',   name: 'Полосатик',    fur: 'gray',     ears: 'normal', pattern: 'stripes',  cond: 'Пройди мир ×2',                test: p => (p.stars.w2 || 0) > 0 },
+  { id: 'british', name: 'Британец',     fur: 'gray',     ears: 'small',  pattern: 'none', round: true, eye: '#f0a020', cond: 'Пройди мир ×3', test: p => (p.stars.w3 || 0) > 0 },
+  { id: 'siamese', name: 'Сиамский',     fur: 'cream',    ears: 'big',    pattern: 'points', eye: '#4aa3ff', cond: 'Пройди мир ×5',      test: p => (p.stars.w5 || 0) > 0 },
+  { id: 'maine',   name: 'Мейн-кун',     fur: 'ginger',   ears: 'tuft',   pattern: 'stripes', fluffy: true, eye: '#8cc63f', cond: 'Пройди мир ×7', test: p => (p.stars.w7 || 0) > 0 },
+  { id: 'fold',    name: 'Вислоухий',    fur: 'white',    ears: 'fold',   pattern: 'none', round: true, eye: '#f0a020', cond: 'Выполни задание дня 3 дня подряд', test: p => p.streak.best >= 3 },
+  { id: 'bengal',  name: 'Бенгальский',  fur: 'ginger',   ears: 'normal', pattern: 'spots', eye: '#8cc63f', cond: 'Набери 25 очков в Блице',    test: p => p.blitzBest >= 25 },
+  { id: 'sphynx',  name: 'Сфинкс',       fur: 'peach',    ears: 'big',    pattern: 'wrinkles', eye: '#8cc63f', cond: 'Победи босса',          test: p => p.bossWins >= 1 },
+  { id: 'calico',  name: 'Трёхцветный',  fur: 'white',    ears: 'normal', pattern: 'calico',   cond: 'Пройди 3 уровня в столбик',    test: p => Object.keys(p.colStars).length >= 3 },
+  { id: 'persian', name: 'Персидский',   fur: 'white',    ears: 'small',  pattern: 'none', fluffy: true, round: true, eye: '#f0a020', cond: 'Поймай 5 рыб на ферме', test: p => p.farm.harvested >= 5 },
+  { id: 'ragdoll', name: 'Рэгдолл',      fur: 'cream',    ears: 'normal', pattern: 'points', fluffy: true, eye: '#4aa3ff', cond: 'Пройди 3 мира деления', test: p => DIV_WORLDS.filter(w => (p.stars[w.id] || 0) > 0).length >= 3 },
+  { id: 'cosmo',   name: 'Космокот',     fur: 'lavender', ears: 'tuft',   pattern: 'stars', eye: '#ffd84a', cond: 'Собери 3 звезды во всех мирах умножения', test: p => WORLDS.every(w => (p.stars[w.id] || 0) === 3) },
 ];

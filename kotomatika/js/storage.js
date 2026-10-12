@@ -17,7 +17,7 @@ const Store = (() => {
       createdAt: Date.now(),
       fish: 0,
       xp: 0,
-      cat: { fur: 'ginger', hat: null, glasses: null, neck: null, bg: 'meadow' },
+      cat: { fur: 'ginger', breed: 'home', hat: null, glasses: null, neck: null, bg: 'meadow' },
       owned: [],
       stars: {},
       facts: {},
@@ -33,6 +33,11 @@ const Store = (() => {
       purchases: 0,
       achievements: {},
       settings: { sound: true },
+      colStars: {},
+      farm: { food: 0, size: 3, pond: [null, null, null], harvested: 0 },
+      pets: [],
+      pet: null,
+      breedsSeen: ['home'],
     };
   }
 
@@ -40,7 +45,7 @@ const Store = (() => {
   function migrate(p) {
     const d = defaultProfile();
     const out = Object.assign(d, p);
-    for (const k of ['cat', 'daily', 'streak', 'settings']) out[k] = Object.assign(defaultProfile()[k], p[k] || {});
+    for (const k of ['cat', 'daily', 'streak', 'settings', 'farm']) out[k] = Object.assign(defaultProfile()[k], p[k] || {});
     return out;
   }
 

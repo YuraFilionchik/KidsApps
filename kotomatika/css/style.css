@@ -300,7 +300,7 @@ h2 { font-size: 1.5rem; }
 .big-eq { font-size: 2.2rem; font-weight: 900; margin: 6px 0; }
 .big-eq b { color: var(--green-d); }
 .tip { background: #fff7d6; border-radius: 14px; padding: 10px 12px; text-align: left; }
-.dots { display: grid; gap: 4px; max-width: 280px; margin: 10px auto; }
+.dots { --dot: 22px; display: grid; gap: 4px; justify-content: center; margin: 10px auto; }
 .dots i { aspect-ratio: 1; border-radius: 50%; background: var(--primary); }
 .dots i.r1 { background: var(--purple); }
 .chest { font-size: 5rem; animation: wiggle .6s 2; }
@@ -377,6 +377,129 @@ h2 { font-size: 1.5rem; }
 .ach-icon { font-size: 2rem; width: 44px; text-align: center; }
 .ach b { display: block; }
 .ach small { color: var(--muted); }
+
+/* ---------- Общее для новых режимов ---------- */
+
+.tile.wide { grid-column: 1 / -1; min-height: 96px; flex-direction: row; align-items: center; gap: 14px; }
+.tile.wide .ti { font-size: 3rem; }
+.tile.wide b { font-size: 1.35rem; display: block; }
+.t-col { --c: #26b5a6; --d: #178477; }
+.t-farm { --c: #3fa9f5; --d: #1d6fb8; }
+.t-pets { --c: #ff8a5c; --d: #d0602f; }
+.t-coll { --c: #c77dff; --d: #9447d1; }
+
+.seg { display: flex; background: #f1e3d3; border-radius: 16px; padding: 4px; margin: 10px 0 4px; }
+.seg button { flex: 1; padding: 10px 6px; border-radius: 12px; font-weight: 900; font-size: 1.05rem; color: var(--muted); }
+.seg button.sel { background: #fff; color: var(--ink); box-shadow: 0 2px 6px rgba(0, 0, 0, .08); }
+
+.cat-with-pet { position: relative; display: inline-block; flex-shrink: 0; }
+.cat-pet .pet, .cat-with-pet .pet { position: absolute; right: -10%; bottom: -4%; line-height: 1; animation: bob 1.4s ease-in-out infinite; filter: drop-shadow(0 3px 2px rgba(0, 0, 0, .15)); }
+
+.answers.choices.three { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ---------- Столбик ---------- */
+
+.col-level {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; margin-bottom: 10px;
+  background: #fff; border-radius: 20px; padding: 12px 14px; box-shadow: 0 5px 0 #ead6c1;
+}
+.col-level:active { transform: translateY(3px); box-shadow: 0 2px 0 #ead6c1; }
+.col-level.locked { opacity: .55; }
+.cl-icon { font-size: 2.2rem; }
+.cl-text { flex: 1; display: flex; flex-direction: column; }
+.cl-text small { color: var(--muted); }
+
+.col-box { display: flex; justify-content: center; margin: 4px 0 14px; }
+.col-grid {
+  --cw: clamp(44px, 14vw, 60px);
+  display: grid; background: #fff; border-radius: var(--radius); padding: 8px 16px 12px; box-shadow: var(--shadow);
+  background-image: linear-gradient(#e7f0ff 1px, transparent 1px), linear-gradient(90deg, #e7f0ff 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+.cc { height: var(--cw); display: grid; place-items: center; font-size: calc(var(--cw) * .62); font-weight: 900; }
+.cc.sign { color: var(--purple-d); }
+.cc.mark { height: calc(var(--cw) * .55); font-size: calc(var(--cw) * .38); color: var(--red); align-self: end; }
+.cc.ans { border-radius: 12px; margin: 3px; height: calc(var(--cw) - 6px); }
+.cc.ans.active { background: #f3eeff; color: var(--purple); outline: 3px dashed var(--purple); animation: pulse 1.2s infinite; }
+.cc.ans.active.bad { background: #ffe1e4; outline-color: var(--red); animation: shake .4s; }
+.cc.ans.done { color: var(--green-d); animation: bump .3s; }
+.col-line { height: 4px; background: var(--ink); border-radius: 4px; margin: 4px 0; }
+.col-keypad span { display: block; }
+
+/* ---------- Кото-ферма ---------- */
+
+.farm-food { display: flex; align-items: center; gap: 14px; }
+.food-count { font-size: 2rem; white-space: nowrap; }
+.food-count small { font-size: .9rem; color: var(--muted); }
+.food-help { font-size: .9rem; color: var(--muted); }
+.pond {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 14px; border-radius: 30px;
+  background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, .45) 0 18px, transparent 19px), radial-gradient(circle at 80% 70%, rgba(255, 255, 255, .3) 0 12px, transparent 13px), linear-gradient(#7fd3ff, #2f8fdc);
+  box-shadow: inset 0 -8px 0 rgba(0, 0, 0, .12), 0 0 0 8px #9be36d, 0 0 0 12px #6cc644;
+  margin: 18px 6px;
+}
+.pond-slot {
+  aspect-ratio: 1; border-radius: 22px; background: rgba(255, 255, 255, .28); display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 4px; color: #fff; position: relative; padding: 6px;
+}
+.pond-slot small { font-size: .75rem; font-weight: 800; text-shadow: 0 1px 2px rgba(0, 0, 0, .3); }
+.pond-slot.empty { border: 3px dashed rgba(255, 255, 255, .7); }
+.pond-slot.empty .plus { line-height: 1; font-size: 2.4rem; color: #fff; }
+.pond-slot.locked { background: rgba(0, 0, 0, .18); font-size: 1.6rem; }
+.pond-slot.hidden { visibility: hidden; }
+.pond-slot.ready { background: rgba(255, 230, 120, .6); animation: pulse 1.2s infinite; }
+.fish-sprite { font-size: 2.6rem; line-height: 1; transition: transform .4s; animation: swim 2.4s ease-in-out infinite; }
+@keyframes swim { 50% { translate: 6px -3px; } }
+.mini-bar { width: 80%; height: 7px; background: rgba(255, 255, 255, .45); border-radius: 9px; overflow: hidden; }
+.mini-bar i { display: block; height: 100%; background: #ffd84a; }
+.ready-tag { background: var(--gold); color: var(--ink) !important; text-shadow: none !important; border-radius: 999px; padding: 1px 8px; }
+.farm-info { display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--muted); text-align: center; }
+
+.species-list { display: flex; flex-direction: column; gap: 8px; margin: 10px 0; }
+.species { display: flex; align-items: center; gap: 10px; background: #fff7ec; border-radius: 16px; padding: 8px 12px; text-align: left; }
+.species.locked { opacity: .5; }
+.sp-icon { font-size: 2rem; }
+.sp-text { flex: 1; display: flex; flex-direction: column; }
+.sp-text small { color: var(--muted); }
+
+/* ---------- Питомцы ---------- */
+
+.companion { display: flex; align-items: center; gap: 14px; }
+.companion small { color: var(--muted); }
+.eggs { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.egg-card { background: #fff; border-radius: 22px; padding: 12px 8px; display: flex; flex-direction: column; align-items: center; gap: 4px; box-shadow: 0 5px 0 #ead6c1; }
+.egg-card:active { transform: translateY(3px); box-shadow: 0 2px 0 #ead6c1; }
+.egg-card small { font-size: .75rem; }
+.egg { font-size: 3.2rem; line-height: 1.1; display: inline-block; animation: wiggle 2.5s infinite; }
+.egg-gold { filter: sepia(1) saturate(5) hue-rotate(-15deg) brightness(1.1) drop-shadow(0 0 6px #ffd84a); }
+.pet-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px; padding-bottom: 20px; }
+.pet-card {
+  background: #fff; border-radius: 18px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  border: 3px solid var(--rc); box-shadow: 0 4px 0 #ead6c1;
+}
+.pet-card.unknown { border-style: dashed; opacity: .6; }
+.pet-card.on { background: #fff6d6; }
+.pet-card small { color: var(--muted); font-size: .72rem; }
+.pet-card .bonus { color: var(--ink); line-height: 1.2; }
+.pet-icon { font-size: 2.6rem; line-height: 1.1; }
+.hatch { font-size: 6rem; height: 140px; display: grid; place-items: center; }
+.egg.big { font-size: 6rem; }
+.wobble { animation: wobble .35s infinite; }
+@keyframes wobble { 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+.hatch.revealed { background: radial-gradient(circle, var(--rc) 0, transparent 65%); border-radius: 50%; }
+.pet-big { animation: starIn .6s; display: inline-block; }
+.rarity { display: inline-block; color: #fff; font-weight: 900; padding: 4px 14px; border-radius: 999px; }
+
+/* ---------- Коллекция ---------- */
+
+.breed-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 12px; padding-bottom: 20px; }
+.breed-card {
+  background: #fff; border-radius: 20px; padding: 10px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  box-shadow: 0 5px 0 #ead6c1; border: 3px solid transparent;
+}
+.breed-card.on { border-color: var(--green); }
+.breed-card small { color: var(--muted); font-size: .75rem; line-height: 1.2; }
+.silhouette .cat-svg { filter: brightness(0) opacity(.25); }
 
 @media (max-width: 380px) {
   .pin-pad { grid-template-columns: repeat(3, 74px); }
