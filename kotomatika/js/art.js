@@ -221,6 +221,34 @@ const ART = {
     <rect x="-5" y="-66" width="10" height="46" fill="#4de8e0"/>
     <rect x="-5" y="-66" width="3.5" height="46" fill="#b7fffb" stroke="none"/>
     <polygon points="-5,-66 0,-75 5,-66" fill="#4de8e0"/></g>`,
+  // ---------- Пак «Хэллоуин» ----------
+  pumpkinHat: ({ top: t }) => `
+    <path d="M100 ${t - 26} Q98 ${t - 40} 108 ${t - 44}" stroke="#4e8a2a" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <ellipse cx="100" cy="${t - 6}" rx="46" ry="26" fill="#ff8a1f" stroke="#c45a00" stroke-width="3"/>
+    <path d="M80 ${t - 28} Q70 ${t - 6} 80 ${t + 18} M100 ${t - 32} V${t + 20} M120 ${t - 28} Q130 ${t - 6} 120 ${t + 18}" stroke="#c45a00" stroke-width="2.5" fill="none"/>
+    <path d="M114 ${t - 38} Q126 ${t - 46} 128 ${t - 36} Q120 ${t - 34} 114 ${t - 38} Z" fill="#5bbf3b"/>`,
+  witchHat: ({ top: t }) => `
+    <path d="M70 ${t + 8} Q86 ${t - 30} 96 ${t - 52} Q110 ${t - 64} 132 ${t - 50} Q114 ${t - 48} 112 ${t - 30} L128 ${t + 8} Z" fill="#3a2a5a" stroke="#1d1430" stroke-width="3" stroke-linejoin="round"/>
+    <ellipse cx="100" cy="${t + 10}" rx="62" ry="11" fill="#3a2a5a" stroke="#1d1430" stroke-width="3"/>
+    <path d="M74 ${t} Q100 ${t + 8} 126 ${t}" stroke="#8fd14a" stroke-width="7" fill="none"/>
+    <rect x="94" y="${t - 4}" width="12" height="10" rx="2" fill="none" stroke="#ffd84a" stroke-width="2.5"/>`,
+  spookyBow: ({ arc }) => {
+    const y = arc.cy - 6;
+    return `<path d="${arc.d}" stroke="#2b2b3a" stroke-width="6" fill="none" stroke-linecap="round"/>
+      <path d="M100 ${y} L76 ${y - 12} L76 ${y + 12} Z M100 ${y} L124 ${y - 12} L124 ${y + 12} Z" fill="#ff8a1f" stroke="#2b2b3a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M82 ${y - 6} V${y + 6} M118 ${y - 6} V${y + 6}" stroke="#2b2b3a" stroke-width="2.5"/>
+      <circle cx="100" cy="${y}" r="5" fill="#2b2b3a"/>`;
+  },
+  vampireCape: () => `<path d="M60 122 L36 104 L46 128 L24 196 Q100 210 176 196 L154 128 L164 104 L140 122 Q100 136 60 122 Z" fill="#1d1430" stroke="#000" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M44 132 L30 192 Q100 202 170 192 L156 132 Q100 146 44 132 Z" fill="#c62839"/>`,
+  candyBucket: () => `<path d="M126 184 Q148 120 170 150" stroke="#2b2b3a" stroke-width="3" fill="none"/>
+    <ellipse cx="148" cy="170" rx="22" ry="18" fill="#ff8a1f" stroke="#c45a00" stroke-width="3"/>
+    <ellipse cx="148" cy="154" rx="16" ry="4" fill="#5a2a00"/>
+    <path d="M136 164 L142 158 L146 166 Z M152 166 L156 158 L162 164 Z M136 176 Q148 186 160 176 L154 178 L148 174 L142 178 Z" fill="#2b2b3a"/>
+    <circle cx="142" cy="152" r="3.5" fill="#ff7eb6"/><circle cx="152" cy="151" r="3" fill="#5bd96b"/>`,
+  candyCorn: () => `<g transform="translate(146 160) rotate(20)" stroke="#c45a00" stroke-width="2" stroke-linejoin="round">
+    <path d="M-16 18 Q0 24 16 18 L0 -22 Z" fill="#fff6d6"/><path d="M-16 18 Q0 24 16 18 L9 0 Q0 3 -9 0 Z" fill="#ff8a1f"/>
+    <path d="M-16 18 Q0 24 16 18 L13 10 Q0 14 -13 10 Z" fill="#ffd84a"/></g>`,
 };
 
 // ---------- Фоны (SVG-картинки) ----------
@@ -343,6 +371,24 @@ const BG_ART = {
     h += '<path d="M0 0 H200 V18 Q150 34 100 18 Q50 34 0 18 Z" fill="#c62839"/>';
     h += '<polygon points="70,200 130,200 112,150 88,150" fill="#c62839"/>';
     h += '<g fill="#fff">' + [[30, 60], [170, 80], [100, 30], [40, 140], [160, 140]].map(([x, y]) => `<polygon points="${starPoints(x, y, 5, 1.5, 4)}"/>`).join('') + '</g>';
+    return h;
+  },
+  // ---------- Пак «Хэллоуин» ----------
+  hauntedHouse: () => {
+    let h = '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1d1440"/><stop offset="1" stop-color="#6a3a8a"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/>';
+    h += starsSvg(24, 31, 100) + '<circle cx="150" cy="40" r="22" fill="#fff3b0"/>';
+    h += '<g fill="#140c28"><rect x="60" y="80" width="80" height="80"/><polygon points="52,82 100,40 148,82"/><rect x="118" y="46" width="12" height="30"/><polygon points="44,100 60,100 60,160 44,160"/></g>';
+    h += '<g fill="#ffd84a"><rect x="72" y="96" width="14" height="14"/><rect x="114" y="96" width="14" height="14"/><rect x="92" y="126" width="16" height="34"/></g>';
+    h += '<path d="M0 160 Q100 150 200 160 V200 H0 Z" fill="#2a1d3a"/>';
+    h += '<g fill="#140c28"><path d="M30 50 q6 -6 12 0 q6 -6 12 0 q-6 2 -12 6 q-6 -4 -12 -6 Z"/><path d="M170 80 q5 -5 10 0 q5 -5 10 0 q-5 2 -10 5 q-5 -3 -10 -5 Z"/></g>';
+    return h;
+  },
+  pumpkinPatch: () => {
+    let h = '<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9a5a"/><stop offset="1" stop-color="#5a2a6a"/></linearGradient></defs><rect width="200" height="200" fill="url(#g)"/>';
+    h += '<circle cx="40" cy="44" r="16" fill="#fff3b0"/><path d="M0 140 Q100 124 200 140 V200 H0 Z" fill="#4a3a2a"/>';
+    const p = (x, y, k) => `<rect x="${x - 2 * k}" y="${y - 20 * k}" width="${4 * k}" height="${8 * k}" fill="#4e8a2a"/><ellipse cx="${x}" cy="${y}" rx="${20 * k}" ry="${14 * k}" fill="#ff8a1f" stroke="#c45a00" stroke-width="2"/><path d="M${x} ${y - 14 * k} V${y + 14 * k}" stroke="#c45a00" stroke-width="1.6"/>`;
+    h += p(30, 160, 1) + p(80, 176, 1.3) + p(150, 162, 1.1) + p(186, 182, 0.8);
+    h += '<path d="M110 150 V100 M96 112 H124" stroke="#6b4423" stroke-width="5"/><circle cx="110" cy="96" r="8" fill="#e0b060"/>';
     return h;
   },
 };

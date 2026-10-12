@@ -524,6 +524,11 @@ h2 { font-size: 1.5rem; }
 .aura-hearts span { animation: rise 2.6s ease-in infinite; opacity: 0; }
 .aura-snow span { font-size: calc(var(--s) * .09); animation: snowfall 3.4s linear infinite; }
 .aura-fire span { font-size: calc(var(--s) * .16); animation: flicker .5s ease-in-out infinite alternate; }
+.aura-bubbles span, .aura-notes span { animation: rise 3s ease-in infinite; opacity: 0; }
+.aura-petals span, .aura-leaves span { font-size: calc(var(--s) * .09); animation: snowfall 4s linear infinite; }
+.aura-butterflies span, .aura-spooky span { animation: hover 2.2s ease-in-out infinite alternate; }
+.aura-lightning span { font-size: calc(var(--s) * .14); animation: zap 1.2s steps(2, jump-none) infinite; }
+.aura-coins span { animation: coinSpin 1.6s linear infinite; }
 .aura .glow { position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 226, 110, .85), rgba(255, 190, 40, .35) 50%, transparent 70%); animation: glowPulse 2s ease-in-out infinite; }
 .aura .ring { position: absolute; inset: 6%; border-radius: 50%; background: conic-gradient(#ff6b6b, #ffb020, #ffe14a, #5bd96b, #4aa3ff, #a78bfa, #ff6b6b);
   -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 68%, transparent 69%); mask: radial-gradient(circle, transparent 60%, #000 61%, #000 68%, transparent 69%);
@@ -540,6 +545,9 @@ h2 { font-size: 1.5rem; }
 @keyframes flicker { from { scale: .85; opacity: .75; } to { scale: 1.1; opacity: 1; } }
 @keyframes glowPulse { 50% { scale: 1.08; opacity: .7; } }
 @keyframes spin { to { rotate: 360deg; } }
+@keyframes hover { from { translate: 0 0; rotate: -8deg; } to { translate: calc(var(--s) * .03) calc(var(--s) * -.05); rotate: 8deg; } }
+@keyframes zap { 0%, 60% { opacity: 1; scale: 1.1; } 80%, 100% { opacity: .15; scale: .8; } }
+@keyframes coinSpin { 0%, 100% { scale: 1 1; } 50% { scale: .2 1; } }
 .cat-svg .flame { transform-box: fill-box; transform-origin: top; animation: flicker .25s ease-in-out infinite alternate; }
 
 @media (max-width: 380px) {
