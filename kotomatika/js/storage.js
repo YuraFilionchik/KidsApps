@@ -17,7 +17,7 @@ const Store = (() => {
       createdAt: Date.now(),
       fish: 0,
       xp: 0,
-      cat: { fur: 'ginger', breed: 'home', hat: null, glasses: null, neck: null, bg: 'meadow' },
+      cat: { fur: 'ginger', breed: 'home', hat: null, glasses: null, neck: null, back: null, paw: null, aura: null, bg: 'meadow' },
       owned: [],
       stars: {},
       facts: {},

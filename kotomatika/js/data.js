@@ -31,6 +31,7 @@ const BOSSES = [
 // Магазин. price: 0 — есть сразу; special — не продаётся, только в награду.
 // Наряды рисуются внутри SVG котика. pos — координаты центра в системе котика (200×200):
 // x (по умолчанию 100), y, s — размер, r — наклон. Для шеи collar — цвет ошейника, scarf — цвет шарфа.
+// art — имя рисунка из art.js. Редкость вещи определяется ценой (см. itemTier).
 const SHOP = {
   fur: {
     title: 'Шёрстка', icon: '🎨',
@@ -46,7 +47,11 @@ const SHOP = {
       { id: 'mint',    name: 'Мятный',     price: 80,  color: '#a6f0c6', stroke: '#5bbf8a' },
       { id: 'lavender',name: 'Лавандовый', price: 80,  color: '#c9b3ff', stroke: '#8f74d6' },
       { id: 'gold',    name: 'Золотой',    price: 200, color: '#ffd84a', stroke: '#d6a400' },
-      { id: 'rainbow', name: 'Радужный',   price: 300, rainbow: true,   stroke: '#9a6ad6' },
+      { id: 'rainbow', name: 'Радужный',   price: 300, grad: ['#ff9a9e', '#ffd36e', '#a6f0c6', '#9fd3ff', '#c9b3ff'], stroke: '#9a6ad6' },
+      { id: 'candyfur',name: 'Конфетный',  price: 350, grad: ['#ffb3d1', '#fff0f8', '#a6f0c6'], stroke: '#e07aa6' },
+      { id: 'ice',     name: 'Ледяной',    price: 450, grad: ['#f2fbff', '#9fd3ff', '#c9b3ff'], stroke: '#5a9fd6', eye: '#2f7fd0' },
+      { id: 'firefur', name: 'Огненный',   price: 600, grad: ['#ffe14a', '#ff8a3d', '#e23d4b'], stroke: '#a51f2c' },
+      { id: 'galaxy',  name: 'Галактика',  price: 900, grad: ['#2a1d5c', '#7c5bd9', '#3fa9f5'], stroke: '#1a1240', eye: '#ffd84a', sparkle: true },
     ],
   },
   hat: {
@@ -59,6 +64,15 @@ const SHOP = {
       { id: 'tophat', name: 'Цилиндр',    price: 60,  emoji: '🎩', pos: { y: 14, s: 72 } },
       { id: 'grad',   name: 'Шапка умника', price: 80, emoji: '🎓', pos: { x: 104, y: 18, s: 74 } },
       { id: 'crown',  name: 'Корона',     price: 150, emoji: '👑', pos: { y: 18, s: 68 } },
+      { id: 'santa',  name: 'Колпак Деда Мороза', price: 250, art: 'santa' },
+      { id: 'devil',  name: 'Рожки',      price: 300, art: 'devil' },
+      { id: 'pirate', name: 'Пиратская шляпа', price: 350, art: 'pirate' },
+      { id: 'halo',   name: 'Нимб',       price: 400, art: 'halo' },
+      { id: 'flowers',name: 'Венок',      price: 450, art: 'flowerCrown' },
+      { id: 'wizard', name: 'Шляпа волшебника', price: 550, art: 'wizard' },
+      { id: 'unicorn',name: 'Рог единорога', price: 700, art: 'unicorn' },
+      { id: 'diamond',name: 'Алмазный шлем', price: 900, art: 'diamondHelmet' },
+      { id: 'royal',  name: 'Королевская корона', price: 1500, art: 'royalCrown' },
     ],
   },
   glasses: {
@@ -67,6 +81,12 @@ const SHOP = {
       { id: 'round', name: 'Очки',          price: 30, emoji: '👓', pos: { y: 84, s: 74 } },
       { id: 'sun',   name: 'Тёмные очки',   price: 50, emoji: '🕶️', pos: { y: 83, s: 76 } },
       { id: 'goggle',name: 'Очки шахтёра',  price: 70, emoji: '🥽', pos: { y: 83, s: 80 } },
+      { id: 'hearts',name: 'Очки-сердечки', price: 120, art: 'heartGlasses' },
+      { id: 'g3d',   name: '3D-очки',       price: 150, art: 'glasses3d' },
+      { id: 'stars', name: 'Очки-звёзды',   price: 220, art: 'starGlasses' },
+      { id: 'monocle',name: 'Монокль',      price: 300, art: 'monocle' },
+      { id: 'pixel', name: 'Пиксельные очки', price: 450, art: 'pixelShades' },
+      { id: 'visor', name: 'Кибер-визор',   price: 700, art: 'visor' },
     ],
   },
   neck: {
@@ -75,8 +95,50 @@ const SHOP = {
       { id: 'bell',  name: 'Колокольчик', price: 20, emoji: '🔔', collar: '#e23d4b', pos: { y: 155, s: 28 } },
       { id: 'scarf', name: 'Шарфик',      price: 45, emoji: '🧣', scarf: '#e8434f' },
       { id: 'gem',   name: 'Кулон',       price: 90, emoji: '💎', collar: '#7c5bd9', pos: { y: 154, s: 26 } },
+      { id: 'bowtie',name: 'Бабочка',     price: 80, art: 'bowtie' },
+      { id: 'lei',   name: 'Гавайские бусы', price: 220, art: 'lei' },
+      { id: 'pearls',name: 'Жемчуг',      price: 300, art: 'pearls' },
+      { id: 'chain', name: 'Золотая цепочка', price: 500, art: 'goldChain' },
+      { id: 'diamonds', name: 'Алмазное колье', price: 1000, art: 'diamonds' },
       { id: 'medal', name: 'Медаль чемпиона', special: 'Победи босса', emoji: '🏅', collar: '#3f7fd6', pos: { y: 158, s: 30 } },
       { id: 'star',  name: 'Звезда мира',  special: 'Пройди все миры', emoji: '🌟', collar: '#f5b800', pos: { y: 153, s: 26 } },
+    ],
+  },
+  back: {
+    title: 'Спина', icon: '🪽',
+    items: [
+      { id: 'cape',    name: 'Плащ супергероя', price: 250, art: 'cape' },
+      { id: 'bat',     name: 'Крылья летучей мыши', price: 400, art: 'batWings' },
+      { id: 'fairy',   name: 'Крылья феи',   price: 450, art: 'fairyWings' },
+      { id: 'angel',   name: 'Крылья ангела', price: 550, art: 'angelWings' },
+      { id: 'jetpack', name: 'Реактивный ранец', price: 750, art: 'jetpack' },
+      { id: 'dragon',  name: 'Крылья дракона', price: 950, art: 'dragonWings' },
+      { id: 'rainbow', name: 'Радужные крылья', price: 1500, art: 'rainbowWings' },
+    ],
+  },
+  paw: {
+    title: 'В лапке', icon: '🪄',
+    items: [
+      { id: 'lolly',   name: 'Леденец',      price: 40,  art: 'lollipop' },
+      { id: 'icecream',name: 'Мороженое',    price: 60,  emoji: '🍦', pos: { x: 148, y: 154, s: 44, r: 12 } },
+      { id: 'balloon', name: 'Воздушный шарик', price: 90, art: 'balloon' },
+      { id: 'rod',     name: 'Удочка',       price: 150, art: 'rod' },
+      { id: 'guitar',  name: 'Гитара',       price: 250, emoji: '🎸', pos: { x: 150, y: 160, s: 46, r: -20 } },
+      { id: 'wand',    name: 'Волшебная палочка', price: 450, art: 'wand' },
+      { id: 'sword',   name: 'Алмазный меч', price: 850, art: 'sword' },
+      { id: 'trophy',  name: 'Кубок чемпиона', special: 'Победи 5 боссов', emoji: '🏆', pos: { x: 152, y: 160, s: 46 } },
+    ],
+  },
+  aura: {
+    title: 'Сияние', icon: '✨',
+    items: [
+      { id: 'sparkles', name: 'Искорки',      price: 300 },
+      { id: 'hearts',   name: 'Сердечки',     price: 400 },
+      { id: 'snow',     name: 'Снегопад',     price: 450 },
+      { id: 'fire',     name: 'Огненная аура', price: 750 },
+      { id: 'orbit',    name: 'Звёздная орбита', price: 1000 },
+      { id: 'rainbow',  name: 'Радужное кольцо', price: 1300 },
+      { id: 'gold',     name: 'Золотое сияние', price: 2000 },
     ],
   },
   bg: {
@@ -89,6 +151,15 @@ const SHOP = {
       { id: 'ocean',  name: 'Океан',   price: 70,  css: 'radial-gradient(circle at 30% 20%, #b3ecff, #3fa9f5 60%, #1d6fb8)' },
       { id: 'space',  name: 'Космос',  price: 100, css: 'radial-gradient(circle, #fff 0 1.5px, transparent 2px) 0 0 / 34px 34px, radial-gradient(circle, #ffe9a8 0 1px, transparent 1.5px) 17px 11px / 47px 47px, linear-gradient(#1b1446, #3b2a7a)' },
       { id: 'nether', name: 'Лавовый мир', price: 120, css: 'linear-gradient(#5a1a1a 0 64%, #ff6a00 64% 72%, #7a2a1a 72%)' },
+      { id: 'sakura', name: 'Сакура',      price: 200, css: bgArt('sakura') },
+      { id: 'mine',   name: 'Пиксельная деревня', price: 250, css: bgArt('mine') },
+      { id: 'reef',   name: 'Коралловый риф', price: 300, css: bgArt('reef') },
+      { id: 'rainbowSky', name: 'Радужное небо', price: 300, css: bgArt('rainbowSky') },
+      { id: 'obby',   name: 'Небесный паркур', price: 400, css: bgArt('obby') },
+      { id: 'aurora', name: 'Северное сияние', price: 500, css: bgArt('aurora') },
+      { id: 'planets',name: 'Парад планет', price: 600, css: bgArt('planets') },
+      { id: 'castle', name: 'Замок принцессы', price: 800, css: bgArt('castle') },
+      { id: 'palace', name: 'Золотой дворец', price: 1500, css: bgArt('palace') },
     ],
   },
 };

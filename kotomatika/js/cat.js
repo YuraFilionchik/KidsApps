@@ -26,12 +26,18 @@ const EARS = {
 };
 
 // Ошейник или шарф по изгибу шеи, подвеска — эмодзи под ошейником.
-function neckSVG(it, hrx, hry) {
-  if (!it) return '';
-  const dx = (hrx * 0.66).toFixed(1);
-  const y0 = (86 + hry * 0.75).toFixed(1);
+// Дуга шеи: от щеки до щеки чуть ниже подбородка.
+function neckArc(hrx, hry) {
+  const dx = +(hrx * 0.66).toFixed(1);
+  const y0 = +(86 + hry * 0.75).toFixed(1);
   const cy = 86 + hry + 18;
-  const arc = `M${100 - dx} ${y0} Q100 ${cy} ${100 + +dx} ${y0}`;
+  return { x0: 100 - dx, x1: 100 + dx, y0, cy, d: `M${100 - dx} ${y0} Q100 ${cy} ${100 + dx} ${y0}` };
+}
+
+function neckSVG(it, arcObj, hry) {
+  if (!it) return '';
+  if (it.art) return ART[it.art]({ arc: arcObj });
+  const arc = arcObj.d;
   if (it.scarf) {
     const c = it.scarf;
     return `<g class="scarf">
@@ -57,7 +63,7 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
   const fur = findItem('fur', furId) || SHOP.fur.items[0];
   const br = findBreed(breedId);
   const id = ++catUid;
-  const fill = fur.rainbow ? `url(#rb${id})` : fur.color;
+  const fill = fur.grad ? `url(#rb${id})` : fur.color;
   const s = fur.stroke;
   const iris = br.eye || fur.eye || null;
   const lineEye = fur.eye || '#2b2b3a';
@@ -69,10 +75,8 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
   const earFill = pat === 'points' ? pointC : fill;
 
   const defs = `<defs>
-    ${fur.rainbow ? `<linearGradient id="rb${id}" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#ff9a9e"/><stop offset=".25" stop-color="#ffd36e"/>
-        <stop offset=".5" stop-color="#a6f0c6"/><stop offset=".75" stop-color="#9fd3ff"/>
-        <stop offset="1" stop-color="#c9b3ff"/></linearGradient>` : ''}
+    ${fur.grad ? `<linearGradient id="rb${id}" x1="0" y1="0" x2="1" y2="1">
+        ${fur.grad.map((g, i) => `<stop offset="${i / (fur.grad.length - 1)}" stop-color="${g}"/>`).join('')}</linearGradient>` : ''}
     <clipPath id="hc${id}"><ellipse cx="100" cy="86" rx="${hrx}" ry="${hry}"/></clipPath>
     <clipPath id="bc${id}"><ellipse cx="100" cy="155" rx="52" ry="40"/></clipPath>
   </defs>`;
@@ -102,6 +106,13 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
     const st = (x, y, z) => `<text x="${x}" y="${y}" font-size="${z}" fill="#fff" text-anchor="middle">✦</text>`;
     bodyPat = st(66, 145, 12) + st(136, 150, 10) + st(80, 175, 8) + st(124, 176, 12);
     headPat = st(70, 58, 10) + st(132, 56, 12) + st(100, 48, 8);
+  }
+
+  // Звёздочки на «галактической» шёрстке.
+  if (fur.sparkle) {
+    const st = (x, y, z) => `<text x="${x}" y="${y}" font-size="${z}" fill="#fff" text-anchor="middle">✦</text>`;
+    bodyPat += st(70, 150, 9) + st(132, 142, 7) + st(88, 178, 6) + st(120, 172, 9);
+    headPat += st(64, 64, 7) + st(136, 60, 9) + st(112, 48, 6);
   }
 
   // Пушистый воротник — кружки вокруг головы, голова рисуется поверх.
@@ -143,11 +154,16 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
   const pawFill = pat === 'points' ? pointC : fill;
   const ear = d => `<path d="${d}" fill="${earFill}" stroke="${s}" stroke-width="4" stroke-linejoin="round"/>`;
 
+  const arc = neckArc(hrx, hry);
+  const ctx = { top: 86 - hry, arc };
+
   return `<svg class="cat-svg" viewBox="0 -8 200 208" aria-hidden="true">${defs}
+    ${accSVG('back', acc.back, ctx)}
     <path class="cat-tail" d="${tailPath}" fill="${tailFill}" stroke="${s}" stroke-width="4" stroke-linejoin="round"/>
     <ellipse cx="100" cy="155" rx="52" ry="40" fill="${fill}" stroke="${s}" stroke-width="4"/>
     <g clip-path="url(#bc${id})">${bodyPat}</g>
     <ellipse cx="100" cy="163" rx="27" ry="23" fill="#fff" opacity=".5"/>
+    ${accSVG('paw', acc.paw, ctx)}
     <ellipse cx="78" cy="190" rx="16" ry="9" fill="${pawFill}" stroke="${s}" stroke-width="4"/>
     <ellipse cx="122" cy="190" rx="16" ry="9" fill="${pawFill}" stroke="${s}" stroke-width="4"/>
     ${ear(ears.outer)}${ear(mirrorPath(ears.outer))}
@@ -163,22 +179,43 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
     <g stroke="${s}" stroke-width="2.5" stroke-linecap="round" opacity=".8">
       <path d="M60 98 L28 92"/><path d="M60 105 L28 108"/><path d="M140 98 L172 92"/><path d="M140 105 L172 108"/>
     </g>
-    ${neckSVG(findItem('neck', acc.neck), hrx, hry)}
-    ${acc.glasses ? emojiSVG(findItem('glasses', acc.glasses).emoji, findItem('glasses', acc.glasses).pos) : ''}
-    ${hatSVG(findItem('hat', acc.hat), hry)}
+    ${neckSVG(findItem('neck', acc.neck), arc, hry)}
+    ${accSVG('glasses', acc.glasses, ctx)}
+    ${accSVG('hat', acc.hat, ctx, -(hry - 48))}
   </svg>`;
 }
 
-// Шапка садится на макушку: у круглоголовых пород макушка чуть выше.
-function hatSVG(it, hry) {
+// Любая вещь: нарисованная (art) или эмодзи по координатам pos. dy — сдвиг для круглых голов.
+function accSVG(slot, id, ctx, dy = 0) {
+  const it = id && findItem(slot, id);
   if (!it) return '';
-  return emojiSVG(it.emoji, { ...it.pos, y: it.pos.y - (hry - 48) });
+  if (it.art) return ART[it.art](ctx);
+  return emojiSVG(it.emoji, { ...it.pos, y: it.pos.y + dy });
+}
+
+// Анимированное сияние вокруг котика (HTML поверх фона, позади котика).
+const AURA_LAYOUT = {
+  sparkles: { sym: '✨', pts: [[12, 20], [84, 14], [8, 62], [88, 54], [20, 88], [80, 86], [50, 6]] },
+  hearts:   { sym: '💖', pts: [[10, 90], [86, 92], [24, 96], [72, 98], [48, 100]] },
+  snow:     { sym: '❄️', pts: [[8, -10], [30, -10], [52, -10], [74, -10], [92, -10], [18, -10], [64, -10]] },
+  fire:     { sym: '🔥', pts: [[6, 78], [20, 84], [80, 84], [94, 78], [2, 60], [98, 60]] },
+  gold:     { sym: '⭐', pts: [[12, 18], [86, 22], [10, 70], [90, 66]] },
+};
+
+function auraHTML(id) {
+  if (!id) return '';
+  if (id === 'rainbow') return '<div class="aura aura-rainbow"><i class="ring"></i></div>';
+  if (id === 'orbit') return '<div class="aura aura-orbit"><i class="orbit">' + '<b>⭐</b>'.repeat(4) + '</i></div>';
+  const L = AURA_LAYOUT[id];
+  const spans = L.pts.map(([x, y], i) => `<span style="left:${x}%;top:${y}%;animation-delay:${(i * 0.37).toFixed(2)}s">${L.sym}</span>`).join('');
+  return `<div class="aura aura-${id}">${id === 'gold' ? '<i class="glow"></i>' : ''}${spans}</div>`;
 }
 
 // cat: {fur, breed, hat, glasses, neck, bg}; withBg — рисовать фон.
 function catHTML(cat, size, mood = 'normal', withBg = true) {
   const bg = withBg ? (findItem('bg', cat.bg) || SHOP.bg.items[0]).css : 'transparent';
-  return `<div class="cat ${withBg ? 'with-bg' : ''}" style="width:${size}px;height:${size}px;background:${bg}">
+  return `<div class="cat ${withBg ? 'with-bg' : ''}" style="width:${size}px;height:${size}px;--s:${size}px;background:${bg}">
+    ${auraHTML(cat.aura)}
     ${catSVG(cat.fur, mood, cat.breed, cat)}
   </div>`;
 }

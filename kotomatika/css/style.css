@@ -333,7 +333,7 @@ h2 { font-size: 1.5rem; }
 /* ---------- Магазин ---------- */
 
 .shop-preview { display: flex; justify-content: center; margin: 10px 0; }
-.tabs { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .tab { background: #fff; border-radius: 14px; padding: 6px 2px; font-size: 1.5rem; display: flex; flex-direction: column; align-items: center; box-shadow: 0 3px 0 #e2cdb8; }
 .tab small { font-size: .7rem; font-weight: 800; }
 .tab.sel { background: var(--primary); color: #fff; box-shadow: 0 3px 0 var(--primary-d); }
@@ -497,6 +497,50 @@ h2 { font-size: 1.5rem; }
 .breed-card.on { border-color: var(--green); }
 .breed-card small { color: var(--muted); font-size: .75rem; line-height: 1.2; }
 .silhouette .cat-svg { filter: brightness(0) opacity(.25); }
+
+/* ---------- Редкость вещей ---------- */
+
+.item { position: relative; overflow: hidden; }
+.item .cat { border-radius: 16px; }
+.tier-badge { position: absolute; top: 4px; left: 4px; z-index: 2; font-size: .6rem; font-weight: 900; padding: 1px 6px; border-radius: 999px; color: #fff; text-transform: uppercase; letter-spacing: .3px; }
+.tier-rare { border-color: #5ab0ff; }
+.tier-rare .tier-badge, .tier-badge.tier-rare { background: #3f8fe0; }
+.tier-epic { border-color: #a78bfa; background: linear-gradient(#fff, #f6f0ff); }
+.tier-epic .tier-badge, .tier-badge.tier-epic { background: #8b5cf6; }
+.tier-legend { border-color: #ffc93c; background: linear-gradient(#fffaf0, #fff1c2); box-shadow: 0 4px 0 #e2b73a, 0 0 14px rgba(255, 201, 60, .55); }
+.tier-legend .tier-badge, .tier-badge.tier-legend { background: linear-gradient(90deg, #ff9a3d, #ffc93c, #ff9a3d); background-size: 200% 100%; animation: shine 2s linear infinite; }
+.item.on { border-color: var(--green); }
+@keyframes shine { to { background-position: -200% 0; } }
+.tier-badge.big { position: static; display: inline-block; font-size: .85rem; padding: 4px 14px; }
+.try-on { display: flex; justify-content: center; margin: 8px 0; }
+.shop-count { margin: 10px 0 0; text-align: center; max-width: none; }
+
+/* ---------- Сияния вокруг котика ---------- */
+
+.aura { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: inherit; }
+.aura span { position: absolute; font-size: calc(var(--s) * .12); line-height: 1; transform: translate(-50%, -50%); }
+.aura-sparkles span { animation: twinkle 1.6s ease-in-out infinite; }
+.aura-gold span { animation: twinkle 1.8s ease-in-out infinite; }
+.aura-hearts span { animation: rise 2.6s ease-in infinite; opacity: 0; }
+.aura-snow span { font-size: calc(var(--s) * .09); animation: snowfall 3.4s linear infinite; }
+.aura-fire span { font-size: calc(var(--s) * .16); animation: flicker .5s ease-in-out infinite alternate; }
+.aura .glow { position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(circle, rgba(255, 226, 110, .85), rgba(255, 190, 40, .35) 50%, transparent 70%); animation: glowPulse 2s ease-in-out infinite; }
+.aura .ring { position: absolute; inset: 6%; border-radius: 50%; background: conic-gradient(#ff6b6b, #ffb020, #ffe14a, #5bd96b, #4aa3ff, #a78bfa, #ff6b6b);
+  -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 68%, transparent 69%); mask: radial-gradient(circle, transparent 60%, #000 61%, #000 68%, transparent 69%);
+  animation: spin 4s linear infinite; }
+.aura .orbit { position: absolute; inset: 4%; animation: spin 6s linear infinite; }
+.aura .orbit b { position: absolute; font-size: calc(var(--s) * .1); line-height: 1; transform: translate(-50%, -50%); }
+.aura .orbit b:nth-child(1) { left: 50%; top: 0; }
+.aura .orbit b:nth-child(2) { left: 100%; top: 50%; }
+.aura .orbit b:nth-child(3) { left: 50%; top: 100%; }
+.aura .orbit b:nth-child(4) { left: 0; top: 50%; }
+@keyframes twinkle { 0%, 100% { opacity: .2; scale: .6; } 50% { opacity: 1; scale: 1.1; } }
+@keyframes rise { 0% { opacity: 0; translate: 0 0; } 20% { opacity: 1; } 100% { opacity: 0; translate: 0 calc(var(--s) * -.7); } }
+@keyframes snowfall { from { translate: 0 0; } to { translate: calc(var(--s) * .06) calc(var(--s) * 1.15); } }
+@keyframes flicker { from { scale: .85; opacity: .75; } to { scale: 1.1; opacity: 1; } }
+@keyframes glowPulse { 50% { scale: 1.08; opacity: .7; } }
+@keyframes spin { to { rotate: 360deg; } }
+.cat-svg .flame { transform-box: fill-box; transform-origin: top; animation: flicker .25s ease-in-out infinite alternate; }
 
 @media (max-width: 380px) {
   .pin-pad { grid-template-columns: repeat(3, 74px); }

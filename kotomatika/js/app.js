@@ -731,6 +731,7 @@ function finishBoss(win) {
     P.bossWins++;
     P.bossLevel++;
     if (P.bossWins === 1) grantSpecial('neck', 'medal', '🏅 Ты получила «Медаль чемпиона» для котика!');
+    if (P.bossWins === 5) grantSpecial('paw', 'trophy', '🏆 Ты получила «Кубок чемпиона» для котика!');
     checkAchievements();
     save();
     Sound.win();
@@ -756,53 +757,92 @@ function finishBoss(win) {
 
 let shopTab = 'fur';
 
+const TIERS = {
+  rare:   { name: 'Редкое' },
+  epic:   { name: 'Эпическое' },
+  legend: { name: 'Легендарное' },
+};
+
+// Редкость вещи по цене: чем дороже, тем круче рамка.
+function itemTier(it) {
+  if (it.special) return 'epic';
+  if (it.price >= 1000) return 'legend';
+  if (it.price >= 400) return 'epic';
+  if (it.price >= 150) return 'rare';
+  return '';
+}
+
+// Котик в карточке примеряет одну вещь.
+function itemPreview(slot, it, size) {
+  if (slot === 'bg') return `<div class="bg-swatch" style="background:${it.css};width:${size}px;height:${size}px"></div>`;
+  const cat = { fur: P.cat.fur, breed: P.cat.breed, bg: 'room' };
+  cat[slot] = it.id;
+  return catHTML(cat, size, 'normal');
+}
+
 function screenShop() {
   const slot = SHOP[shopTab];
-  const items = slot.items.map(it => {
+  const sorted = [...slot.items].sort((x, y) => (x.special ? 1e6 : x.price) - (y.special ? 1e6 : y.price));
+  const items = sorted.map(it => {
     const have = owns(shopTab, it);
     const on = P.cat[shopTab] === it.id;
-    let preview;
-    if (shopTab === 'fur') preview = catHTML({ fur: it.id, breed: P.cat.breed, bg: 'room' }, 64, 'normal');
-    else if (shopTab === 'bg') preview = `<div class="bg-swatch" style="background:${it.css}"></div>`;
-    else preview = `<span class="item-emoji">${it.emoji}</span>`;
+    const tier = itemTier(it);
     let label;
     if (on) label = '<span class="tag on">Надето</span>';
     else if (have) label = '<span class="tag">Надеть</span>';
     else if (it.special) label = `<span class="tag special">🔒 ${it.special}</span>`;
     else label = `<span class="tag price ${P.fish >= it.price ? '' : 'poor'}">🐟 ${it.price}</span>`;
-    return `<button class="item ${on ? 'on' : ''} ${!have ? 'not-owned' : ''}" data-action="shopItem" data-id="${it.id}">
-      ${preview}<b>${it.name}</b>${label}</button>`;
+    return `<button class="item tier-${tier || 'common'} ${on ? 'on' : ''} ${!have ? 'not-owned' : ''}" data-action="shopItem" data-id="${it.id}">
+      ${tier ? `<span class="tier-badge">${TIERS[tier].name}</span>` : ''}
+      ${itemPreview(shopTab, it, 76)}<b>${it.name}</b>${label}</button>`;
   }).join('');
+  const own = slot.items.filter(it => owns(shopTab, it)).length;
   show(`<div class="screen shop">
     <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>Мой котик</h2><div class="pill fish">🐟 ${P.fish}</div></div>
     <div class="shop-preview"><button class="cat-pet" data-action="petCat">${catHTML(P.cat, 190, 'happy')}</button></div>
     <div class="tabs">${Object.entries(SHOP).map(([k, s]) => `<button class="tab ${k === shopTab ? 'sel' : ''}" data-action="shopTab" data-tab="${k}">${s.icon}<small>${s.title}</small></button>`).join('')}</div>
+    <p class="subtitle shop-count">${slot.title}: собрано ${own} из ${slot.items.length}</p>
     <div class="items">${items}</div>
   </div>`);
 }
 
 function shopItem(id) {
   const it = findItem(shopTab, id);
-  const removable = ['hat', 'glasses', 'neck'].includes(shopTab);
+  const removable = ['hat', 'glasses', 'neck', 'back', 'paw', 'aura'].includes(shopTab);
   if (owns(shopTab, it)) {
     P.cat[shopTab] = (removable && P.cat[shopTab] === id) ? null : id;
     Sound.click();
+    save();
+    screenShop();
   } else if (it.special) {
     toast(`🔒 Эту вещь нельзя купить. ${it.special}!`);
-    return;
-  } else if (P.fish >= it.price) {
-    P.fish -= it.price;
-    P.owned.push(shopTab + ':' + id);
-    P.purchases++;
-    P.cat[shopTab] = id;
-    Sound.coin();
-    toast(`🛍️ Куплено: <b>${it.name}</b>!`);
-    checkAchievements();
   } else {
-    toast(`Не хватает ${it.price - P.fish} 🐟. Решай примеры — и рыбки появятся!`);
-    Sound.wrong();
-    return;
+    // Сначала примерка: котик показывает вещь на себе, покупка — только по кнопке.
+    const tryCat = { ...P.cat, [shopTab]: id };
+    const tier = itemTier(it);
+    const enough = P.fish >= it.price;
+    modal(`${tier ? `<div class="tier-badge big tier-${tier}">${TIERS[tier].name}</div>` : ''}
+      <div class="try-on">${catHTML(tryCat, 200, 'happy')}</div>
+      <h2>${it.name}</h2>
+      <p>Цена: <b>🐟 ${it.price}</b> · у тебя 🐟 ${P.fish}</p>
+      ${enough
+        ? `<button class="btn big primary wide" data-action="buyItem" data-id="${id}">Купить!</button>`
+        : `<p class="hint">Не хватает ${it.price - P.fish} 🐟 — решай примеры и лови рыбу на ферме!</p>`}
+      <button class="btn wide ghost" data-action="closeModal">${enough ? 'Не сейчас' : 'Понятно'}</button>`, 'try-modal');
   }
+}
+
+function buyItem(id) {
+  const it = findItem(shopTab, id);
+  if (owns(shopTab, it) || P.fish < it.price) return;
+  P.fish -= it.price;
+  P.owned.push(shopTab + ':' + id);
+  P.purchases++;
+  P.cat[shopTab] = id;
+  Sound.coin();
+  if (itemTier(it) === 'legend' || itemTier(it) === 'epic') confetti(['✨', '⭐', '💎', '🐟']);
+  toast(`🛍️ Куплено: <b>${it.name}</b>!`);
+  checkAchievements();
   save();
   screenShop();
 }
@@ -973,6 +1013,7 @@ const actions = {
   shop() { S = null; screenShop(); },
   shopTab(el) { shopTab = el.dataset.tab; screenShop(); },
   shopItem(el) { shopItem(el.dataset.id); },
+  buyItem(el) { buyItem(el.dataset.id); },
   knowledge: screenKnowledge,
   factInfo(el) {
     const a = Number(el.dataset.a), b = Number(el.dataset.b);
