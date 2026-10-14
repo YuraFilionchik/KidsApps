@@ -459,6 +459,7 @@ MODES.adventure = {
       S.mood = 'happy';
       S.say = S.combo >= 5 ? `${S.combo} подряд! Ты огонь! 🔥` : pick(PRAISE);
       renderAdvStage();
+      heroFx(S.combo % 5 === 0 ? 'combo' : 'hop');
       later(() => {
         if (S.correct >= LEVEL_TARGET) finishAdventure();
         else { S.mood = 'normal'; renderAdvStage(); nextQuestion(); }
@@ -468,6 +469,7 @@ MODES.adventure = {
       S.say = pick(COMFORT);
       S.retry.push({ a: S.q.a, b: S.q.b, type: S.q.type, wait: 3 });
       renderAdvStage();
+      heroFx('droop');
       later(() => hintModal(S.q), 600);
     }
   },
@@ -530,7 +532,7 @@ function screenResult(r) {
     <h1>${r.title}</h1>
     ${starsHtml}
     ${r.big || ''}
-    <div class="cat-with-pet">${catHTML(P.cat, 150, r.mood)}${petHTML(P.pet, 44)}</div>
+    <div class="cat-with-pet ${r.mood === 'sad' ? 'fx-sulk' : 'fx-dance'}">${catHTML(P.cat, 150, r.mood)}${petHTML(P.pet, 44)}</div>
     <div class="result-lines">${r.lines.map(l => `<div>${l}</div>`).join('')}</div>
     <div class="result-btns">${r.buttons.join('')}</div>
   </div>`);
@@ -576,7 +578,7 @@ function renderBlitzStage() {
   document.getElementById('qprogress').innerHTML = `<div class="timebar"><i id="timebar" style="width:${S.timeLeft / S.total * 100}%"></i><span id="timesec">${Math.ceil(S.timeLeft / 1000)}</span></div>`;
   document.getElementById('stage').innerHTML = `<div class="blitz-stage">
     <div class="score"><small>Очки</small><b>${S.correct}</b></div>
-    ${catHTML(P.cat, 90, S.combo >= 3 ? 'happy' : 'normal')}
+    <div class="cat-with-pet">${catHTML(P.cat, 90, S.combo >= 3 ? 'happy' : 'normal')}</div>
     <div class="score"><small>Рекорд</small><b>${Math.max(P.blitzBest, S.correct)}</b></div>
     ${comboBadge()}
   </div>`;
@@ -587,11 +589,13 @@ MODES.blitz = {
     if (ok) {
       if (S.combo > 0 && S.combo % 5 === 0) addFish(1);
       renderBlitzStage();
+      heroFx(S.combo % 5 === 0 ? 'combo' : 'nod');
       later(nextQuestion, 250);
     } else {
       const d = document.getElementById('kpDisplay');
       if (d) { d.innerHTML = `<s>${esc(S.typed)}</s> → ${S.q.answer}`; d.classList.add('bad'); }
       renderBlitzStage();
+      heroFx('droop');
       later(nextQuestion, 1100);
     }
   },
@@ -691,6 +695,7 @@ MODES.boss = {
       S.mood = 'happy';
       Sound.hit();
       renderBossStage('shake');
+      heroFx(crit ? 'crit' : 'pounce');
       floatText(crit ? `КРИТ! −${dmg}` : `−${dmg}`, crit ? 'crit' : 'dmg');
       if (S.hp <= 0) { S.over = true; later(() => finishBoss(true), 700); return; }
       later(() => { S.mood = 'normal'; nextQuestion(); }, 600);
@@ -710,6 +715,7 @@ function loseHeart() {
   document.body.classList.add('flash');
   setTimeout(() => document.body.classList.remove('flash'), 350);
   renderBossStage('attack');
+  heroFx('hurt');
   floatText('−❤️', 'hurt');
   if (S.hearts <= 0) { S.over = true; S.locked = true; later(() => finishBoss(false), 900); }
 }
@@ -818,6 +824,7 @@ function shopItem(id) {
     Sound.click();
     save();
     screenShop();
+    if (P.cat[shopTab]) heroFx('twirl', document.querySelector('.shop-preview'));
   } else if (it.special) {
     toast(`🔒 Эту вещь нельзя купить. ${it.special}!`);
   } else {
@@ -826,13 +833,14 @@ function shopItem(id) {
     const tier = itemTier(it);
     const enough = P.fish >= it.price;
     modal(`${tier ? `<div class="tier-badge big tier-${tier}">${TIERS[tier].name}</div>` : ''}
-      <div class="try-on">${catHTML(tryCat, 200, 'happy')}</div>
+      <div class="try-on"><div class="cat-with-pet">${catHTML(tryCat, 200, 'happy')}</div></div>
       <h2>${it.name}</h2>
       <p>Цена: <b>🐟 ${it.price}</b> · у тебя 🐟 ${P.fish}</p>
       ${enough
         ? `<button class="btn big primary wide" data-action="buyItem" data-id="${id}">Купить!</button>`
         : `<p class="hint">Не хватает ${it.price - P.fish} 🐟 — решай примеры и лови рыбу на ферме!</p>`}
       <button class="btn wide ghost" data-action="closeModal">${enough ? 'Не сейчас' : 'Понятно'}</button>`, 'try-modal');
+    heroFx('twirl', document.getElementById('modal'));
   }
 }
 
@@ -849,6 +857,7 @@ function buyItem(id) {
   checkAchievements();
   save();
   screenShop();
+  heroFx('twirl', document.querySelector('.shop-preview'));
 }
 
 // ---------- Карта знаний ----------

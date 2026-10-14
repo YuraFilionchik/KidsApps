@@ -108,6 +108,7 @@ Object.assign(actions, {
     save();
     Sound.click();
     screenPets();
+    if (P.pet) heroFx('twirl', document.querySelector('.companion'));
   },
   unknownPet() { toast('❓ Этого питомца можно найти в яйце!'); },
   collection() { S = null; screenCollection(); },

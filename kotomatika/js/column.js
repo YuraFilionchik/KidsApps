@@ -175,6 +175,7 @@ function colPress(v) {
     save();
   }
   renderColumn();
+  heroFx(S.bad ? 'droop' : 'nod');
 }
 
 function columnSolved() {
@@ -188,6 +189,7 @@ function columnSolved() {
   onAnyCorrect();
   save();
   renderColumn();
+  heroFx('hop');
   later(() => (S.solved >= COLUMN_PER_LEVEL ? finishColumn() : nextColumn()), 1300);
 }
 

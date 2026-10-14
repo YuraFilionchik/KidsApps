@@ -142,9 +142,11 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
     mouth = '<path d="M92 114 Q100 106 108 114" stroke="#5a3a3a" stroke-width="3" fill="none" stroke-linecap="round"/>';
   } else {
     const c = iris || '#2b2b3a';
-    eyes = `<ellipse cx="78" cy="82" rx="9" ry="12" fill="${c}"/><ellipse cx="122" cy="82" rx="9" ry="12" fill="${c}"/>
+    // Котик моргает; у каждого котика свой ритм, чтобы не моргали хором.
+    eyes = `<g class="cat-eyes" style="animation-delay:-${((id * 1.7) % 5).toFixed(1)}s">
+            <ellipse cx="78" cy="82" rx="9" ry="12" fill="${c}"/><ellipse cx="122" cy="82" rx="9" ry="12" fill="${c}"/>
             ${iris ? '<ellipse cx="78" cy="83" rx="3" ry="8" fill="#1a1a22"/><ellipse cx="122" cy="83" rx="3" ry="8" fill="#1a1a22"/>' : ''}
-            <circle cx="81" cy="77" r="3.6" fill="#fff"/><circle cx="125" cy="77" r="3.6" fill="#fff"/>`;
+            <circle cx="81" cy="77" r="3.6" fill="#fff"/><circle cx="125" cy="77" r="3.6" fill="#fff"/></g>`;
   }
 
   const tailPath = br.fluffy
@@ -232,4 +234,40 @@ function catHTML(cat, size, mood = 'normal', withBg = true) {
 function petHTML(petId, size) {
   const pet = PETS.find(p => p.id === petId);
   return pet ? `<span class="pet" style="font-size:${size}px" title="${pet.name}">${pet.icon}</span>` : '';
+}
+
+// ---------- Анимации героя на события ----------
+// Котик и питомец реагируют на игру. Сцены перерисовываются целиком,
+// поэтому heroFx вызываем сразу после рендера. dir — куда разлетаются значки (угол).
+const HERO_FX = {
+  hop:    { ms: 650, bits: ['✨', '⭐'], dir: -Math.PI / 2 },   // верный ответ: прыжок
+  combo:  { ms: 950, bits: ['🔥', '✨', '🔥', '⭐'], dir: -Math.PI / 2 }, // серия ×5: сальто
+  nod:    { ms: 400 },                                           // верная цифра в столбике: кивок
+  droop:  { ms: 1000, bits: ['💧'], dir: Math.PI / 2 },          // ошибка: грустно оседает
+  pounce: { ms: 550, bits: ['💥'], dir: 0 },                     // удар по боссу: прыжок вперёд
+  crit:   { ms: 750, bits: ['⚡', '💥', '⚡'], dir: 0 },           // критический удар
+  hurt:   { ms: 700, bits: ['💫', '⭐'], dir: -Math.PI / 2 },     // босс атакует: отлетает
+  twirl:  { ms: 1000, bits: ['✨', '💖', '✨', '⭐'], dir: -Math.PI / 2 }, // обновка: красуется
+};
+
+function heroFx(name, root = document.getElementById('stage')) {
+  const fx = HERO_FX[name];
+  const hero = root && root.querySelector('.cat-with-pet, .cat-pet');
+  if (!fx || !hero) return;
+  const cls = 'fx-' + name;
+  hero.classList.remove(cls); void hero.offsetWidth; hero.classList.add(cls);
+  setTimeout(() => hero.classList.remove(cls), fx.ms);
+  const bits = fx.bits || [];
+  bits.forEach((sym, i) => {
+    const ang = fx.dir + (i - (bits.length - 1) / 2) * 0.8 + (Math.random() - 0.5) * 0.4;
+    const dist = 55 + Math.random() * 25;
+    const b = document.createElement('span');
+    b.className = 'fx-bit';
+    b.textContent = sym;
+    b.style.setProperty('--dx', (Math.cos(ang) * dist).toFixed(0) + 'px');
+    b.style.setProperty('--dy', (Math.sin(ang) * dist).toFixed(0) + 'px');
+    b.style.animationDelay = i * 70 + 'ms';
+    hero.appendChild(b);
+    setTimeout(() => b.remove(), 900 + i * 70);
+  });
 }

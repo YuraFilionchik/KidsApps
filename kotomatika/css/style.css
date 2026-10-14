@@ -580,6 +580,98 @@ h2 { font-size: 1.5rem; }
   .map-step { transform: translateX(calc(var(--x) * 38px)); }
 }
 
+/* ---------- Анимации героя на события (heroFx в cat.js) ---------- */
+.cat-svg { transform-origin: 50% 96%; }
+.cat-eyes { transform-box: fill-box; transform-origin: center; animation: blink 5s infinite; }
+@keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(.1); } }
+
+.fx-bit { position: absolute; left: 50%; top: 40%; font-size: 1.5rem; line-height: 1; pointer-events: none; z-index: 2; opacity: 0;
+  animation: bitFly .8s ease-out forwards; }
+@keyframes bitFly {
+  0% { transform: translate(-50%, -50%) scale(.3); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1.2) rotate(20deg); opacity: 0; }
+}
+
+/* Верный ответ: присел — прыгнул — приземлился. Питомец прыгает следом. */
+.fx-hop .cat-svg { animation: hop .65s cubic-bezier(.3, .7, .4, 1); }
+@keyframes hop {
+  15% { transform: scale(1.12, .86); }
+  45% { transform: translateY(-6%) scale(.94, 1.06); }
+  75% { transform: scale(1.08, .92); }
+}
+.fx-hop .pet, .fx-twirl .pet { animation: petHop .55s .12s ease-out; }
+@keyframes petHop { 40% { transform: translateY(-40%) rotate(-12deg); } 70% { transform: translateY(0) scale(1.15, .85); } }
+
+/* Серия ×5: сальто. */
+.fx-combo .cat-svg { animation: flip .95s ease-in-out; }
+@keyframes flip {
+  12% { transform: scale(1.12, .85); }
+  50% { transform: translateY(-8%) rotate(360deg) scale(.85); }
+  82% { transform: rotate(360deg) scale(1.08, .92); }
+  100% { transform: rotate(360deg); }
+}
+.fx-combo .pet { animation: petSpin .8s .1s ease-in-out; }
+@keyframes petSpin { 50% { transform: translateY(-35%) rotate(-360deg); } 100% { transform: rotate(-360deg); } }
+
+/* Верная цифра: быстрый кивок. */
+.fx-nod .cat-svg { animation: nod .4s ease-out; }
+@keyframes nod { 40% { transform: scale(1.06, .92); } }
+
+/* Ошибка: оседает и качает головой, питомец тоже грустит. */
+.fx-droop .cat-svg { animation: droop 1s ease-in-out; }
+@keyframes droop {
+  20% { transform: scale(1.05, .9) rotate(-4deg); }
+  45% { transform: scale(1.05, .9) rotate(4deg); }
+  70% { transform: scale(1.03, .94) rotate(-2deg); }
+}
+.fx-droop .pet { animation: petSad 1s ease-in-out; }
+@keyframes petSad { 30%, 70% { transform: translateY(10%) rotate(15deg); filter: grayscale(.6); } }
+
+/* Удар по боссу: бросок вперёд. */
+.fx-pounce > .cat { animation: pounce .55s ease-out; }
+@keyframes pounce { 15% { transform: translateX(-6%) scale(.95); } 45% { transform: translateX(28%) translateY(-6%) rotate(8deg); } }
+.fx-crit > .cat { animation: critPounce .75s ease-out; }
+@keyframes critPounce {
+  15% { transform: translateX(-10%) scale(.9); }
+  45% { transform: translateX(42%) translateY(-12%) rotate(14deg) scale(1.15); filter: drop-shadow(0 0 10px #ffd84a) brightness(1.2); }
+  65% { transform: translateX(30%) rotate(6deg) scale(1.1); filter: drop-shadow(0 0 10px #ffd84a); }
+}
+.fx-pounce .pet, .fx-crit .pet { animation: petDash .55s .1s ease-out; }
+@keyframes petDash { 45% { transform: translateX(60%) rotate(15deg); } }
+
+/* Босс атакует: отлетает назад и мигает красным. */
+.fx-hurt > .cat { animation: knock .7s .12s ease-out; }
+@keyframes knock {
+  20% { transform: translateX(-18%) rotate(-12deg); filter: sepia(1) saturate(5) hue-rotate(-50deg); }
+  35% { opacity: .4; }
+  50% { transform: translateX(-10%) rotate(-6deg); opacity: 1; filter: sepia(1) saturate(5) hue-rotate(-50deg); }
+  65% { opacity: .5; }
+  80% { opacity: 1; filter: none; }
+}
+.fx-hurt .pet { animation: shake .4s .12s; }
+
+/* Обновка: поворачивается, чтобы показать наряд. */
+.fx-twirl .cat-svg { animation: twirl 1s ease-in-out; }
+@keyframes twirl {
+  25% { transform: translateY(-5%) scaleX(-1); }
+  50% { transform: translateY(-7%) scaleX(1); }
+  75% { transform: scale(1.06, .94); }
+}
+
+/* Экран итогов: победный танец или грустные вздохи. */
+.fx-dance .cat-svg { animation: dance 1s ease-in-out infinite; }
+@keyframes dance {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: translateY(-5%) rotate(-7deg); }
+  50% { transform: scale(1.05, .95); }
+  75% { transform: translateY(-5%) rotate(7deg); }
+}
+.fx-dance .pet { animation: petHop .5s ease-out infinite; }
+.fx-sulk .cat-svg { animation: sulk 3s ease-in-out infinite; }
+@keyframes sulk { 50% { transform: scale(1.03, .95) rotate(-2deg); } }
+.fx-sulk .pet { animation: none; transform: rotate(-14deg); filter: grayscale(.5); }
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
