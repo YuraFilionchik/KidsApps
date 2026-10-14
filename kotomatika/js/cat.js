@@ -241,13 +241,13 @@ function petHTML(petId, size) {
 // поэтому heroFx вызываем сразу после рендера. dir — куда разлетаются значки (угол).
 const HERO_FX = {
   hop:    { ms: 650, bits: ['✨', '⭐'], dir: -Math.PI / 2 },   // верный ответ: прыжок
-  combo:  { ms: 950, bits: ['🔥', '✨', '🔥', '⭐'], dir: -Math.PI / 2 }, // серия ×5: сальто
+  combo:  { ms: 950, bits: ['🔥', '✨', '🔥', '⭐'], dir: -Math.PI / 2, snd: 'whoosh' }, // серия ×5: сальто
   nod:    { ms: 400 },                                           // верная цифра в столбике: кивок
   droop:  { ms: 1000 },                                          // ошибка: грустно оседает (слеза — в самом котике)
   pounce: { ms: 550, bits: ['💥'], dir: 0 },                     // удар по боссу: прыжок вперёд
   crit:   { ms: 750, bits: ['⚡', '💥', '⚡'], dir: 0 },           // критический удар
   hurt:   { ms: 700, bits: ['💫', '⭐'], dir: -Math.PI / 2 },     // босс атакует: отлетает
-  twirl:  { ms: 1000, bits: ['✨', '💖', '✨', '⭐'], dir: -Math.PI / 2 }, // обновка: красуется
+  twirl:  { ms: 1000, bits: ['✨', '💖', '✨', '⭐'], dir: -Math.PI / 2, snd: 'sparkle' }, // обновка: красуется
 };
 
 function heroFx(name, root = document.getElementById('stage')) {
@@ -256,6 +256,7 @@ function heroFx(name, root = document.getElementById('stage')) {
   if (!fx || !hero) return;
   const cls = 'fx-' + name;
   hero.classList.remove(cls); void hero.offsetWidth; hero.classList.add(cls);
+  if (fx.snd) Sound[fx.snd]();
   setTimeout(() => hero.classList.remove(cls), fx.ms);
   const bits = fx.bits || [];
   bits.forEach((sym, i) => {

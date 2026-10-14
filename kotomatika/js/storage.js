@@ -77,7 +77,7 @@ const Store = (() => {
       perfectCount: 0,
       purchases: 0,
       achievements: {},
-      settings: { sound: true },
+      settings: { sound: true, music: true, musicVol: 2 },
       colStars: {},
       farm: { food: 0, size: 3, pond: [null, null, null], harvested: 0 },
       pets: [],

@@ -30,5 +30,6 @@ document.addEventListener('keydown', e => {
 
 Store.load();
 Sound.setEnabledGetter(() => !P || P.settings.sound);
+Sound.setMusicGetters(() => !P || P.settings.music !== false, () => (P && P.settings.musicVol) || 2);
 P = Store.current();
 if (P) screenHub(); else screenProfiles();

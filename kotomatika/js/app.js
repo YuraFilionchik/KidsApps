@@ -19,6 +19,7 @@ function stopTimers() { timers.forEach(f => f()); timers = []; }
 function show(html) {
   stopTimers();
   closeModal();
+  Sound.music(S && S.mode === 'blitz' ? 'blitz' : S && S.mode === 'boss' ? 'boss' : 'calm');
   app.innerHTML = html;
   window.scrollTo(0, 0);
 }
@@ -94,7 +95,7 @@ function onAnyCorrect() {
   const lv = levelInfo(P.xp);
   if (lv.level > lvBefore) {
     toast(`🎉 Новый уровень ${lv.level}: <b>${lv.title}</b>!`);
-    Sound.win();
+    Sound.levelUp();
   }
   checkAchievements();
 }
@@ -115,6 +116,7 @@ function checkAchievements() {
       P.achievements[a.id] = Date.now();
       P.fish += 10;
       toast(`🏆 Новая награда: ${a.icon} <b>${a.name}</b> (+10 🐟)`);
+      Sound.achieve();
     }
   }
   for (const b of BREEDS) {
@@ -225,6 +227,7 @@ function login(p) {
   P = p;
   Store.setCurrent(p.id);
   ensureDaily();
+  Sound.musicChanged();
   Sound.meow();
   screenHub();
 }
@@ -281,7 +284,10 @@ function screenHub() {
 
 function settingsModal() {
   modal(`<h2>Настройки</h2>
-    <button class="btn wide" data-action="toggleSound">${P.settings.sound ? '🔊 Звук включён' : '🔇 Звук выключен'}</button>
+    <button class="btn wide" data-action="toggleSound">${P.settings.sound ? '🔊 Звуки включены' : '🔇 Звуки выключены'}</button>
+    <button class="btn wide" data-action="toggleMusic">${P.settings.music !== false ? '🎵 Музыка включена' : '🔇 Музыка выключена'}</button>
+    ${P.settings.music !== false ? `<div class="chips music-vol">${['🔈 Тихо', '🔉 Средне', '🔊 Громко'].map((t, i) =>
+      `<button class="chip ${(P.settings.musicVol || 2) === i + 1 ? 'sel' : ''}" data-action="musicVol" data-v="${i + 1}">${t}</button>`).join('')}</div>` : ''}
     <button class="btn wide" data-action="logout">👥 Сменить игрока</button>
     <button class="btn wide" data-action="parent">👨‍👩‍👧 Для родителей</button>
     <button class="btn wide danger" data-action="deleteProfile">🗑️ Удалить игрока</button>
@@ -404,7 +410,7 @@ function answer(val, btn) {
     P.bestCombo = Math.max(P.bestCombo, S.combo);
     qEl.innerHTML = q.text.replace('<span class="q-hole">?</span>', `<span class="q-ok">${q.answer}</span>`);
     if (btn) btn.classList.add('ok');
-    Sound.correct();
+    Sound.correct(S.combo);
     addFish(1);
     if (hasPet('bunny') && S.combo % 5 === 0) addFish(1);
     onAnyCorrect();
@@ -536,6 +542,7 @@ function screenResult(r) {
     <div class="result-lines">${r.lines.map(l => `<div>${l}</div>`).join('')}</div>
     <div class="result-btns">${r.buttons.join('')}</div>
   </div>`);
+  Sound.music('calm');
 }
 
 // ---------- Режим: блиц ----------
@@ -569,7 +576,9 @@ function startBlitz() {
     const bar = document.getElementById('timebar');
     if (bar) bar.style.width = (S.timeLeft / S.total * 100) + '%';
     const sec = document.getElementById('timesec');
-    if (sec) sec.textContent = Math.ceil(S.timeLeft / 1000);
+    const left = Math.ceil(S.timeLeft / 1000);
+    if (sec) sec.textContent = left;
+    if (left <= 10 && left > 0 && left !== S.tickSec) { S.tickSec = left; Sound.tick(left <= 3); }
     if (S.timeLeft <= 0) finishBlitz();
   }, 100);
 }
@@ -652,6 +661,11 @@ function startBoss() {
     last = now;
     if (S.locked || S.over) return;
     S.attackLeft -= dt;
+    // Босс замахивается — предупреждаем; на последней жизни слышно сердце.
+    const part = S.attackLeft / S.boss.attackMs;
+    if (part < 0.3 && !S.warned) { S.warned = true; Sound.warn(); }
+    if (part > 0.5) S.warned = false;
+    if (S.hearts === 1 && (S.beat = (S.beat || 0) + dt) > 1100) { S.beat = 0; Sound.heartbeat(); }
     const bar = document.getElementById('attackbar');
     if (bar) bar.style.width = Math.max(0, S.attackLeft / S.boss.attackMs * 100) + '%';
     if (S.attackLeft <= 0) bossAttack();
@@ -693,7 +707,7 @@ MODES.boss = {
       S.hp = Math.max(0, S.hp - dmg);
       S.attackLeft = S.boss.attackMs;
       S.mood = 'happy';
-      Sound.hit();
+      if (crit) Sound.crit(); else Sound.hit();
       renderBossStage('shake');
       heroFx(crit ? 'crit' : 'pounce');
       floatText(crit ? `КРИТ! −${dmg}` : `−${dmg}`, crit ? 'crit' : 'dmg');
@@ -851,7 +865,7 @@ function buyItem(id) {
   P.owned.push(shopTab + ':' + id);
   P.purchases++;
   P.cat[shopTab] = id;
-  Sound.coin();
+  Sound.register();
   if (itemTier(it) === 'legend' || itemTier(it) === 'epic') confetti(['✨', '⭐', '💎', '🐟']);
   toast(`🛍️ Куплено: <b>${it.name}</b>!`);
   checkAchievements();
@@ -966,8 +980,10 @@ const actions = {
   map() { S = null; screenMap(); },
   settings: settingsModal,
   closeModal,
-  toggleSound() { P.settings.sound = !P.settings.sound; save(); settingsModal(); },
-  logout() { Store.setCurrent(null); P = null; screenProfiles(); },
+  toggleSound() { P.settings.sound = !P.settings.sound; save(); settingsModal(); Sound.click(); },
+  toggleMusic() { P.settings.music = P.settings.music === false; save(); Sound.musicChanged(); settingsModal(); },
+  musicVol(el) { P.settings.musicVol = Number(el.dataset.v); save(); Sound.musicChanged(); settingsModal(); },
+  logout() { Store.setCurrent(null); P = null; Sound.musicChanged(); screenProfiles(); },
   deleteProfile() {
     modal(`<h2>Удалить игрока ${esc(P.name)}?</h2><p>Все звёзды, рыбки и наряды пропадут навсегда.</p>
       <button class="btn wide danger" data-action="deleteYes">Да, удалить</button>
@@ -975,7 +991,7 @@ const actions = {
   },
   deleteYes() { Store.remove(P.id); P = null; screenProfiles(); },
   petCat(el) {
-    Sound.meow();
+    if (Math.random() < 0.4) Sound.purr(); else Sound.meow();
     const c = el.querySelector('.cat');
     c.classList.remove('wiggle'); void c.offsetWidth; c.classList.add('wiggle');
     const h = document.createElement('span');
@@ -992,7 +1008,7 @@ const actions = {
     P.fish += reward;
     checkAchievements();
     save();
-    Sound.coin();
+    Sound.chest();
     confetti(['🐟', '🎁', '💎']);
     modal(`<div class="chest">🎁</div><h2>Сундук дня!</h2><p>Внутри <b>${reward} 🐟</b></p>
       <p>Серия: 🔥 ${P.streak.count} дн. Чем длиннее серия, тем больше рыбок в сундуке!</p>

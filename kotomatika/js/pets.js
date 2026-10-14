@@ -64,10 +64,11 @@ function hatchEgg(egg) {
   Sound.click();
   modal(`<div class="hatch"><span class="egg big wobble ${egg.id === 'gold' ? 'egg-gold' : ''}">🥚</span></div>
     <h2>Кто же там?..</h2>`, 'hatch-modal');
+  [350, 850, 1300].forEach(ms => setTimeout(() => { if (document.getElementById('modal')) Sound.crack(); }, ms));
   setTimeout(() => {
     if (!document.getElementById('modal')) return;
     const rar = RARITY[pet.rarity];
-    Sound.win();
+    Sound.hatch(['common', 'rare', 'legendary'].indexOf(pet.rarity));
     confetti([pet.icon, '✨', '⭐', '💖']);
     modal(`<div class="hatch revealed" style="--rc:${rar.color}"><span class="pet-big">${pet.icon}</span></div>
       <div class="rarity" style="background:${rar.color}">${rar.name}</div>

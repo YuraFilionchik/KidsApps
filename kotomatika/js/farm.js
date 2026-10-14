@@ -83,7 +83,7 @@ function feedFish(i) {
   const give = Math.min(F.food, needFood, 5);
   F.food -= give;
   f.fed = Math.min(sp.need, f.fed + give * mult);
-  Sound.click();
+  Sound.munch();
   save();
   screenFarm();
   const slot = document.getElementById('slot' + i);
@@ -105,6 +105,7 @@ function harvestFish(i) {
   const newSp = FARM_SPECIES.find(x => x.unlock === F.harvested);
   checkAchievements();
   save();
+  Sound.splash();
   Sound.win();
   confetti([sp.icon, '🐟', '💦', '⭐']);
   screenFarm();
@@ -120,7 +121,7 @@ Object.assign(actions, {
     if (P.fish < sp.price) { toast(`Не хватает ${sp.price - P.fish} 🐟`); Sound.wrong(); return; }
     P.fish -= sp.price;
     P.farm.pond[Number(el.dataset.i)] = { sp: sp.id, fed: 0 };
-    Sound.coin();
+    Sound.splash();
     save();
     screenFarm();
     toast(`🫧 Икринка ${sp.icon} в пруду! Покорми её.`);
@@ -135,7 +136,7 @@ Object.assign(actions, {
     P.fish -= price;
     F.size++;
     F.pond.push(null);
-    Sound.coin();
+    Sound.splash();
     save();
     screenFarm();
     toast('🌊 Пруд стал больше!');

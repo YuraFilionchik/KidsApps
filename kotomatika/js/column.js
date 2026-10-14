@@ -155,7 +155,7 @@ function colPress(v) {
   if (d === st.digit) {
     S.ans[S.col] = d;
     S.bad = false;
-    Sound.click();
+    Sound.digit(S.col);
     if (st.cout) {
       S.marks[S.col + 1] = S.op === '+' ? '1' : '•';
       S.say = S.op === '+' ? `Пишем ${st.digit}, а 1 держим в уме ☝️` : `Заняли десяток — ставим точку над соседом •`;
@@ -183,7 +183,7 @@ function columnSolved() {
   S.solved++;
   S.n++;
   S.say = `Верно! ${S.a} ${S.op === '+' ? '+' : '−'} ${S.b} = ${S.res} 🎉`;
-  Sound.correct();
+  Sound.correct(S.solved);
   addFish(2);
   P.farm.food++; // за пример в столбик корма больше
   onAnyCorrect();

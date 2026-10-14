@@ -329,6 +329,8 @@ h2 { font-size: 1.5rem; }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
 .chip { padding: 10px 16px; border-radius: 14px; background: #fff; font-weight: 900; font-size: 1.2rem; box-shadow: 0 4px 0 #e2cdb8; }
 .chip.sel { background: var(--gold); box-shadow: 0 4px 0 var(--gold-d); }
+.music-vol { margin: 2px 0 6px; gap: 6px; }
+.music-vol .chip { font-size: .95rem; padding: 8px 10px; }
 
 /* ---------- Магазин ---------- */
 
