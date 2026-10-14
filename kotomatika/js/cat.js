@@ -138,7 +138,7 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
             ${iris ? '<ellipse cx="78" cy="85" rx="2.5" ry="7" fill="#1a1a22"/><ellipse cx="122" cy="85" rx="2.5" ry="7" fill="#1a1a22"/>' : ''}
             <circle cx="80" cy="80" r="3" fill="#fff"/><circle cx="124" cy="80" r="3" fill="#fff"/>
             <path d="M66 70 L88 66 M134 70 L112 66" stroke="${s}" stroke-width="4" stroke-linecap="round"/>
-            <path d="M130 94 Q127 102 130 106 Q134 102 130 94 Z" fill="#7cc8ff"/>`;
+            <path class="cat-tear" d="M124 92 Q119 102 124 106 Q129 102 124 92 Z" fill="#7cc8ff" stroke="#4aa6e8" stroke-width="1"/>`;
     mouth = '<path d="M92 114 Q100 106 108 114" stroke="#5a3a3a" stroke-width="3" fill="none" stroke-linecap="round"/>';
   } else {
     const c = iris || '#2b2b3a';
@@ -243,7 +243,7 @@ const HERO_FX = {
   hop:    { ms: 650, bits: ['✨', '⭐'], dir: -Math.PI / 2 },   // верный ответ: прыжок
   combo:  { ms: 950, bits: ['🔥', '✨', '🔥', '⭐'], dir: -Math.PI / 2 }, // серия ×5: сальто
   nod:    { ms: 400 },                                           // верная цифра в столбике: кивок
-  droop:  { ms: 1000, bits: ['💧'], dir: Math.PI / 2 },          // ошибка: грустно оседает
+  droop:  { ms: 1000 },                                          // ошибка: грустно оседает (слеза — в самом котике)
   pounce: { ms: 550, bits: ['💥'], dir: 0 },                     // удар по боссу: прыжок вперёд
   crit:   { ms: 750, bits: ['⚡', '💥', '⚡'], dir: 0 },           // критический удар
   hurt:   { ms: 700, bits: ['💫', '⭐'], dir: -Math.PI / 2 },     // босс атакует: отлетает
