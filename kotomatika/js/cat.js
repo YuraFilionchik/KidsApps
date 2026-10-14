@@ -138,7 +138,7 @@ function catSVG(furId, mood = 'normal', breedId = 'home', acc = {}) {
             ${iris ? '<ellipse cx="78" cy="85" rx="2.5" ry="7" fill="#1a1a22"/><ellipse cx="122" cy="85" rx="2.5" ry="7" fill="#1a1a22"/>' : ''}
             <circle cx="80" cy="80" r="3" fill="#fff"/><circle cx="124" cy="80" r="3" fill="#fff"/>
             <path d="M66 70 L88 66 M134 70 L112 66" stroke="${s}" stroke-width="4" stroke-linecap="round"/>
-            <path class="cat-tear" d="M124 92 Q119 102 124 106 Q129 102 124 92 Z" fill="#7cc8ff" stroke="#4aa6e8" stroke-width="1"/>`;
+            <path class="cat-tear" d="M124 92 Q114 112 124 120 Q134 112 124 92 Z" fill="#7cc8ff" stroke="#4aa6e8" stroke-width="1.5"/>`;
     mouth = '<path d="M92 114 Q100 106 108 114" stroke="#5a3a3a" stroke-width="3" fill="none" stroke-linecap="round"/>';
   } else {
     const c = iris || '#2b2b3a';
