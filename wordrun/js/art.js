@@ -25,13 +25,14 @@ const WRArt = (() => {
 
   // Загрузить картинки мира заранее (до старта забега), чтобы ворота сразу были с картинками.
   function preloadWorld(world) {
-    const jobs = world.words.map(w => load(wordPath(w.en)).promise);
+    const jobs = world.words.filter(w => !w.color).map(w => load(wordPath(w.en)).promise);
     jobs.push(load(bossPath(world.id)).promise);
     return Promise.all(jobs);
   }
 
   function preloadWords(words) {
-    return Promise.all(words.map(w => load(wordPath(w.en)).promise));
+    // у цветов вместо картинки — цветной кружок, PNG не нужен
+    return Promise.all(words.filter(w => !w.color).map(w => load(wordPath(w.en)).promise));
   }
 
   function ready(path) {

@@ -230,9 +230,10 @@ class WordRunner3D {
     add(new THREE.BoxGeometry(0.9, 2.2, 0.9), purple, -2.1, 4.4);
     add(new THREE.BoxGeometry(0.9, 2.2, 0.9), purple, 2.1, 4.4);
     this.bossBlocky = blocky;
-    this.bossSprite = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true }));
-    this.bossSprite.scale.set(7, 7, 1);
-    this.bossSprite.position.y = 4.8;
+    // Страж — главный момент мира: крупно, над воротами и без тумана.
+    this.bossSprite = new THREE.Sprite(new THREE.SpriteMaterial({ transparent: true, fog: false }));
+    this.bossSprite.scale.set(13, 13, 1);
+    this.bossSprite.position.y = 8.2;
     this.bossSprite.visible = false;
     this.boss.add(blocky, this.bossSprite);
     this.boss.position.set(0, 0, -62);
