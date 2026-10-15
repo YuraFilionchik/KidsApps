@@ -1,0 +1,13 @@
+{
+  "name": "Word Run",
+  "short_name": "Word Run",
+  "description": "Бегай и учи английские слова",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#7dd3fc",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
