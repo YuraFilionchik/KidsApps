@@ -83,6 +83,8 @@ const Store = (() => {
       pets: [],
       pet: null,
       breedsSeen: ['home'],
+      house: { wallpaper: 'peach', floor: 'oak', rug: 'braided', bed: 'sofa', scratcher: 'cat_tree', window: 'cozy', decor: 'garland', bowl: 'milk' },
+      houseOwned: ['wallpaper:peach', 'floor:oak', 'rug:braided', 'bed:sofa', 'scratcher:cat_tree', 'window:cozy', 'decor:garland', 'bowl:milk'],
       updatedAt: Date.now(),
     };
   }
@@ -91,7 +93,8 @@ const Store = (() => {
   function migrate(p) {
     const d = defaultProfile();
     const out = Object.assign(d, p);
-    for (const k of ['cat', 'daily', 'streak', 'settings', 'farm']) out[k] = Object.assign(defaultProfile()[k], p[k] || {});
+    for (const k of ['cat', 'daily', 'streak', 'settings', 'farm', 'house']) out[k] = Object.assign(defaultProfile()[k], p[k] || {});
+    out.houseOwned = Array.isArray(p.houseOwned) ? p.houseOwned : defaultProfile().houseOwned;
     if (out.pin && !out.pinHash) out.pinHash = hashPin(out.id, out.pin);
     delete out.pin;
     return out;

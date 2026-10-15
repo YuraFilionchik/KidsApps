@@ -1,0 +1,577 @@
+{
+  "style": "cute cozy cartoon, thick cocoa outline, pastel",
+  "packs": [
+    {
+      "id": "kitchen",
+      "title": "Кухня котика",
+      "for": "домик",
+      "sheet": "sheets/kitchen.png",
+      "items": [
+        {
+          "id": "cookie_jar",
+          "name": "Банка-котик",
+          "file": "items/cookie_jar.png",
+          "canvas": 468
+        },
+        {
+          "id": "kettle",
+          "name": "Мятный чайник",
+          "file": "items/kettle.png",
+          "canvas": 468
+        },
+        {
+          "id": "muffins",
+          "name": "Форма с кексами",
+          "file": "items/muffins.png",
+          "canvas": 468
+        },
+        {
+          "id": "fruit_basket",
+          "name": "Корзина фруктов",
+          "file": "items/fruit_basket.png",
+          "canvas": 468
+        },
+        {
+          "id": "teapot",
+          "name": "Персиковый чайник",
+          "file": "items/teapot.png",
+          "canvas": 468
+        },
+        {
+          "id": "pancakes",
+          "name": "Блинчики",
+          "file": "items/pancakes.png",
+          "canvas": 468
+        }
+      ]
+    },
+    {
+      "id": "garden",
+      "title": "Балконный сад",
+      "for": "домик",
+      "sheet": "sheets/garden.png",
+      "items": [
+        {
+          "id": "watering_can",
+          "name": "Лейка",
+          "file": "items/watering_can.png",
+          "canvas": 416
+        },
+        {
+          "id": "daisy_pot",
+          "name": "Горшок с ромашками",
+          "file": "items/daisy_pot.png",
+          "canvas": 416
+        },
+        {
+          "id": "birdhouse",
+          "name": "Скворечник",
+          "file": "items/birdhouse.png",
+          "canvas": 416
+        },
+        {
+          "id": "egg_chair",
+          "name": "Подвесное кресло",
+          "file": "items/egg_chair.png",
+          "canvas": 416
+        },
+        {
+          "id": "lantern",
+          "name": "Фонарь с бабочкой",
+          "file": "items/lantern.png",
+          "canvas": 416
+        },
+        {
+          "id": "rain_boots",
+          "name": "Сапожки",
+          "file": "items/rain_boots.png",
+          "canvas": 416
+        }
+      ]
+    },
+    {
+      "id": "toys",
+      "title": "Игровая",
+      "for": "домик",
+      "sheet": "sheets/toys.png",
+      "items": [
+        {
+          "id": "plush_mouse",
+          "name": "Плюшевая мышка",
+          "file": "items/plush_mouse.png",
+          "canvas": 452
+        },
+        {
+          "id": "yarn_ball",
+          "name": "Клубок",
+          "file": "items/yarn_ball.png",
+          "canvas": 452
+        },
+        {
+          "id": "toy_train",
+          "name": "Паровозик",
+          "file": "items/toy_train.png",
+          "canvas": 452
+        },
+        {
+          "id": "stacking_rings",
+          "name": "Пирамидка",
+          "file": "items/stacking_rings.png",
+          "canvas": 452
+        },
+        {
+          "id": "kite",
+          "name": "Воздушный змей",
+          "file": "items/kite.png",
+          "canvas": 452
+        },
+        {
+          "id": "music_box",
+          "name": "Шкатулка",
+          "file": "items/music_box.png",
+          "canvas": 452
+        }
+      ]
+    },
+    {
+      "id": "snacks",
+      "title": "Угощения для деления",
+      "for": "деление",
+      "sheet": "sheets/snacks.png",
+      "items": [
+        {
+          "id": "pizza",
+          "name": "Пицца",
+          "file": "items/pizza.png",
+          "canvas": 436
+        },
+        {
+          "id": "strawberry_basket",
+          "name": "Корзинка клубники",
+          "file": "items/strawberry_basket.png",
+          "canvas": 436
+        },
+        {
+          "id": "cookie",
+          "name": "Печенье",
+          "file": "items/cookie.png",
+          "canvas": 436
+        },
+        {
+          "id": "cheese",
+          "name": "Сырная голова",
+          "file": "items/cheese.png",
+          "canvas": 436
+        },
+        {
+          "id": "watermelon",
+          "name": "Арбуз",
+          "file": "items/watermelon.png",
+          "canvas": 436
+        },
+        {
+          "id": "cake",
+          "name": "Праздничный торт",
+          "file": "items/cake.png",
+          "canvas": 436
+        }
+      ]
+    },
+    {
+      "id": "study",
+      "title": "Уголок учёбы",
+      "for": "домик",
+      "sheet": "sheets/study.png",
+      "items": [
+        {
+          "id": "abacus",
+          "name": "Счёты",
+          "file": "items/abacus.png",
+          "canvas": 376
+        },
+        {
+          "id": "globe",
+          "name": "Глобус",
+          "file": "items/globe.png",
+          "canvas": 376
+        },
+        {
+          "id": "pencils",
+          "name": "Стакан карандашей",
+          "file": "items/pencils.png",
+          "canvas": 376
+        },
+        {
+          "id": "hourglass",
+          "name": "Песочные часы",
+          "file": "items/hourglass.png",
+          "canvas": 376
+        },
+        {
+          "id": "easel",
+          "name": "Мольберт",
+          "file": "items/easel.png",
+          "canvas": 376
+        },
+        {
+          "id": "notebooks",
+          "name": "Стопка тетрадей",
+          "file": "items/notebooks.png",
+          "canvas": 376
+        }
+      ]
+    },
+    {
+      "id": "winter",
+      "title": "Зимний домик",
+      "for": "домик",
+      "sheet": "sheets/winter.png",
+      "items": [
+        {
+          "id": "snowman_plush",
+          "name": "Вязаный снеговик",
+          "file": "items/snowman_plush.png",
+          "canvas": 520
+        },
+        {
+          "id": "pine_pot",
+          "name": "Ёлочка в горшке",
+          "file": "items/pine_pot.png",
+          "canvas": 520
+        },
+        {
+          "id": "cocoa",
+          "name": "Какао",
+          "file": "items/cocoa.png",
+          "canvas": 520
+        },
+        {
+          "id": "sled",
+          "name": "Санки",
+          "file": "items/sled.png",
+          "canvas": 520
+        },
+        {
+          "id": "skates",
+          "name": "Коньки",
+          "file": "items/skates.png",
+          "canvas": 520
+        },
+        {
+          "id": "snowflake_lantern",
+          "name": "Фонарик-снежинка",
+          "file": "items/snowflake_lantern.png",
+          "canvas": 520
+        }
+      ]
+    },
+    {
+      "id": "pond",
+      "title": "Новые жители пруда",
+      "for": "ферма",
+      "sheet": "sheets/pond.png",
+      "items": [
+        {
+          "id": "seahorse",
+          "name": "Морской конёк",
+          "file": "items/seahorse.png",
+          "canvas": 356
+        },
+        {
+          "id": "crab",
+          "name": "Крабик",
+          "file": "items/crab.png",
+          "canvas": 356
+        },
+        {
+          "id": "jellyfish",
+          "name": "Медузка",
+          "file": "items/jellyfish.png",
+          "canvas": 356
+        },
+        {
+          "id": "starfish",
+          "name": "Морская звезда",
+          "file": "items/starfish.png",
+          "canvas": 356
+        },
+        {
+          "id": "narwhal",
+          "name": "Нарвалёнок",
+          "file": "items/narwhal.png",
+          "canvas": 356
+        },
+        {
+          "id": "betta",
+          "name": "Рыбка-петушок",
+          "file": "items/betta.png",
+          "canvas": 356
+        }
+      ]
+    },
+    {
+      "id": "pets",
+      "title": "Новые питомцы",
+      "for": "питомцы",
+      "sheet": "sheets/pets.png",
+      "items": [
+        {
+          "id": "otter",
+          "name": "Выдра",
+          "file": "items/otter.png",
+          "canvas": 360
+        },
+        {
+          "id": "hedgehog",
+          "name": "Ёжик",
+          "file": "items/hedgehog.png",
+          "canvas": 360
+        },
+        {
+          "id": "capybara",
+          "name": "Капибара",
+          "file": "items/capybara.png",
+          "canvas": 360
+        },
+        {
+          "id": "penguin",
+          "name": "Пингвин",
+          "file": "items/penguin.png",
+          "canvas": 360
+        },
+        {
+          "id": "red_panda",
+          "name": "Красная панда",
+          "file": "items/red_panda.png",
+          "canvas": 360
+        },
+        {
+          "id": "frog",
+          "name": "Лягушонок",
+          "file": "items/frog.png",
+          "canvas": 360
+        }
+      ]
+    },
+    {
+      "id": "bathroom",
+      "title": "Ванная котика",
+      "for": "домик",
+      "sheet": "sheets/bathroom.png",
+      "items": [
+        {
+          "id": "cat_tub",
+          "name": "Ванночка",
+          "file": "items/cat_tub.png",
+          "canvas": 600
+        },
+        {
+          "id": "rubber_duck",
+          "name": "Уточка",
+          "file": "items/rubber_duck.png",
+          "canvas": 600
+        },
+        {
+          "id": "fish_towel",
+          "name": "Полотенце с рыбками",
+          "file": "items/fish_towel.png",
+          "canvas": 600
+        },
+        {
+          "id": "lily_mat",
+          "name": "Коврик-кувшинка",
+          "file": "items/lily_mat.png",
+          "canvas": 600
+        },
+        {
+          "id": "bubble_bottle",
+          "name": "Флакон для пены",
+          "file": "items/bubble_bottle.png",
+          "canvas": 600
+        },
+        {
+          "id": "cat_mirror",
+          "name": "Зеркало с бантом",
+          "file": "items/cat_mirror.png",
+          "canvas": 600
+        }
+      ]
+    },
+    {
+      "id": "bosses",
+      "title": "Новые боссы",
+      "for": "битвы",
+      "sheet": "sheets/bosses.png",
+      "items": [
+        {
+          "id": "cake_golem",
+          "name": "Тортик-голем",
+          "file": "items/cake_golem.png",
+          "canvas": 380
+        },
+        {
+          "id": "sock_monster",
+          "name": "Носочный монстр",
+          "file": "items/sock_monster.png",
+          "canvas": 380
+        },
+        {
+          "id": "storm_cloud",
+          "name": "Тучка",
+          "file": "items/storm_cloud.png",
+          "canvas": 380
+        },
+        {
+          "id": "dust_king",
+          "name": "Пыльный король",
+          "file": "items/dust_king.png",
+          "canvas": 380
+        },
+        {
+          "id": "teacup",
+          "name": "Чашка-ходок",
+          "file": "items/teacup.png",
+          "canvas": 380
+        },
+        {
+          "id": "mitten_monster",
+          "name": "Варежка",
+          "file": "items/mitten_monster.png",
+          "canvas": 380
+        }
+      ]
+    },
+    {
+      "id": "cozy",
+      "title": "Уютная гостиная",
+      "for": "домик",
+      "sheet": "sheets/cozy.png",
+      "items": [
+        {
+          "id": "fireplace",
+          "name": "Камин",
+          "file": "items/fireplace.png",
+          "canvas": 436
+        },
+        {
+          "id": "bookshelf",
+          "name": "Книжная полка",
+          "file": "items/bookshelf.png",
+          "canvas": 436
+        },
+        {
+          "id": "floor_lamp",
+          "name": "Торшер",
+          "file": "items/floor_lamp.png",
+          "canvas": 436
+        },
+        {
+          "id": "star_mobile",
+          "name": "Мобиль со звёздами",
+          "file": "items/star_mobile.png",
+          "canvas": 436
+        },
+        {
+          "id": "moon_lamp",
+          "name": "Ночник-луна",
+          "file": "items/moon_lamp.png",
+          "canvas": 436
+        },
+        {
+          "id": "record_player",
+          "name": "Проигрыватель",
+          "file": "items/record_player.png",
+          "canvas": 436
+        }
+      ]
+    },
+    {
+      "id": "hats",
+      "title": "Новые шапки",
+      "for": "магазин",
+      "sheet": "sheets/hats.png",
+      "items": [
+        {
+          "id": "beret",
+          "name": "Берет",
+          "file": "items/beret.png",
+          "canvas": 456
+        },
+        {
+          "id": "strawberry_hat",
+          "name": "Шапка-клубника",
+          "file": "items/strawberry_hat.png",
+          "canvas": 456
+        },
+        {
+          "id": "frog_hood",
+          "name": "Капюшон-лягушка",
+          "file": "items/frog_hood.png",
+          "canvas": 456
+        },
+        {
+          "id": "mushroom_hat",
+          "name": "Шапка-мухомор",
+          "file": "items/mushroom_hat.png",
+          "canvas": 456
+        },
+        {
+          "id": "sun_hat",
+          "name": "Шляпа от солнца",
+          "file": "items/sun_hat.png",
+          "canvas": 456
+        },
+        {
+          "id": "fox_hood",
+          "name": "Капюшон-лис",
+          "file": "items/fox_hood.png",
+          "canvas": 456
+        }
+      ]
+    },
+    {
+      "id": "held",
+      "title": "Игрушки в лапку",
+      "for": "магазин",
+      "sheet": "sheets/held.png",
+      "items": [
+        {
+          "id": "star_wand",
+          "name": "Звёздная палочка",
+          "file": "items/star_wand.png",
+          "canvas": 332
+        },
+        {
+          "id": "cupcake",
+          "name": "Кексочка",
+          "file": "items/cupcake.png",
+          "canvas": 332
+        },
+        {
+          "id": "paintbrush",
+          "name": "Кисточка",
+          "file": "items/paintbrush.png",
+          "canvas": 332
+        },
+        {
+          "id": "daisy_bouquet",
+          "name": "Букет ромашек",
+          "file": "items/daisy_bouquet.png",
+          "canvas": 332
+        },
+        {
+          "id": "paw_bell",
+          "name": "Колокольчик",
+          "file": "items/paw_bell.png",
+          "canvas": 332
+        },
+        {
+          "id": "honey_dipper",
+          "name": "Ложка для мёда",
+          "file": "items/honey_dipper.png",
+          "canvas": 332
+        }
+      ]
+    }
+  ]
+}

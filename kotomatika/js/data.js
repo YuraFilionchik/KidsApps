@@ -90,6 +90,12 @@ const SHOP = {
       { id: 'cowboy', name: 'Ковбойская шляпа', price: 320, art: 'cowboy' },
       { id: 'pumpkinHat', name: 'Шапка-тыква', price: 200, art: 'pumpkinHat' },
       { id: 'witch',  name: 'Шляпа ведьмы', price: 380, art: 'witchHat' },
+      { id: 'beret',         name: 'Берет',              price: 140, img: 'img/updates/items/beret.png',          pos: { x: 26, y: -43, w: 147, h: 147 } },
+      { id: 'strawberryHat', name: 'Шапка-клубника',     price: 240, img: 'img/updates/items/strawberry_hat.png', pos: { x: 37, y: -32, w: 126, h: 126 } },
+      { id: 'mushroomHat',   name: 'Шапка-мухомор',      price: 260, img: 'img/updates/items/mushroom_hat.png',   pos: { x: 34, y: -35, w: 133, h: 133 } },
+      { id: 'frogHood',      name: 'Капюшон-лягушка',    price: 340, img: 'img/updates/items/frog_hood.png',      pos: { x: 42, y: -26, w: 115, h: 115 } },
+      { id: 'sunHat',        name: 'Шляпа от солнца',    price: 200, img: 'img/updates/items/sun_hat.png',        pos: { x: 38, y: -28, w: 123, h: 123 } },
+      { id: 'foxHood',       name: 'Капюшон-лис',        price: 400, img: 'img/updates/items/fox_hood.png',       pos: { x: 40, y: -29, w: 120, h: 120 } },
     ],
   },
   glasses: {
@@ -160,6 +166,12 @@ const SHOP = {
       { id: 'candyCorn', name: 'Конфета-кукуруза', price: 50, art: 'candyCorn' },
       { id: 'candyBucket', name: 'Ведёрко сладостей', price: 160, art: 'candyBucket' },
       { id: 'trophy',  name: 'Кубок чемпиона', special: 'Победи 5 боссов', emoji: '🏆', pos: { x: 152, y: 160, s: 46 } },
+      { id: 'pawBell',      name: 'Колокольчик-лапка', price: 50,  img: 'img/updates/items/paw_bell.png',      pos: { x: 119, y: 118, w: 82, h: 82 } },
+      { id: 'cupcake',      name: 'Кексочка',          price: 80,  img: 'img/updates/items/cupcake.png',       pos: { x: 121, y: 120, w: 79, h: 79 } },
+      { id: 'honeyDipper',  name: 'Ложка для мёда',    price: 110, img: 'img/updates/items/honey_dipper.png',  pos: { x: 122, y: 121, w: 76, h: 76 } },
+      { id: 'paintbrush',   name: 'Кисточка',          price: 140, img: 'img/updates/items/paintbrush.png',    pos: { x: 120, y: 118, w: 81, h: 81 } },
+      { id: 'daisyBouquet', name: 'Букет ромашек',     price: 200, img: 'img/updates/items/daisy_bouquet.png', pos: { x: 122, y: 121, w: 77, h: 77 } },
+      { id: 'starWand',     name: 'Звёздная палочка',  price: 280, img: 'img/updates/items/star_wand.png',     pos: { x: 121, y: 120, w: 79, h: 79 } },
     ],
   },
   aura: {
@@ -324,6 +336,7 @@ const PETS = [
   { id: 'puppy',   name: 'Щенок',        icon: '🐶', rarity: 'rare',      bonus: '+1 жизнь в битве с боссом' },
   { id: 'owl',     name: 'Сова',         icon: '🦉', rarity: 'rare',      bonus: '+10 секунд в Блице' },
   { id: 'axolotl', name: 'Аксолотль',    icon: '🦎', rarity: 'rare',      bonus: 'Рыбы на ферме растут в 2 раза быстрее' },
+  { id: 'panda',   name: 'Пандочка Бамбу', icon: '🐼', img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.panda_pet) || 'img/house/panda_pet.png', rarity: 'rare', bonus: '+2 🦐 корма за каждые 3 ответа подряд' },
   { id: 'unicorn', name: 'Единорог',     icon: '🦄', rarity: 'legendary', bonus: '×2 рыбки за звёзды в приключении и столбике' },
   { id: 'dragon',  name: 'Дракончик',    icon: '🐲', rarity: 'legendary', bonus: '+1 урон боссу за каждый удар' },
   { id: 'fox',     name: 'Лисёнок',      icon: '🦊', rarity: 'legendary', bonus: 'Сундук дня в 2 раза больше' },
@@ -348,5 +361,78 @@ const BREEDS = [
   { id: 'calico',  name: 'Трёхцветный',  fur: 'white',    ears: 'normal', pattern: 'calico',   cond: 'Пройди 3 уровня в столбик',    test: p => Object.keys(p.colStars).length >= 3 },
   { id: 'persian', name: 'Персидский',   fur: 'white',    ears: 'small',  pattern: 'none', fluffy: true, round: true, eye: '#f0a020', cond: 'Поймай 5 рыб на ферме', test: p => p.farm.harvested >= 5 },
   { id: 'ragdoll', name: 'Рэгдолл',      fur: 'cream',    ears: 'normal', pattern: 'points', fluffy: true, eye: '#4aa3ff', cond: 'Пройди 3 мира деления', test: p => DIV_WORLDS.filter(w => (p.stars[w.id] || 0) > 0).length >= 3 },
+  { id: 'panda',   name: 'Пандочка',     fur: 'white',    ears: 'round',  pattern: 'panda', round: true, eye: '#4aa3ff', cond: 'Обустрой Кото-домик (купи 3 предмета)', test: p => (p.houseOwned || []).length >= 11 },
   { id: 'cosmo',   name: 'Космокот',     fur: 'lavender', ears: 'tuft',   pattern: 'stars', eye: '#ffd84a', cond: 'Собери 3 звезды во всех мирах умножения', test: p => WORLDS.every(w => (p.stars[w.id] || 0) === 3) },
 ];
+
+// ---------- Кото-домик ----------
+const HOUSE_CATEGORIES = {
+  wallpaper: { title: 'Обои', icon: '🎨' },
+  floor:     { title: 'Пол', icon: '🪵' },
+  rug:       { title: 'Коврик', icon: '🧶' },
+  bed:       { title: 'Лежанка', icon: '🛏️' },
+  scratcher: { title: 'Игры', icon: '🌵' },
+  window:    { title: 'Окно', icon: '🪟' },
+  decor:     { title: 'Декор', icon: '🖼️' },
+  bowl:      { title: 'Мисочка', icon: '🥛' },
+};
+
+const HOUSE_ITEMS = {
+  wallpaper: [
+    { id: 'peach',   name: 'Персиковый уют', price: 0,   css: 'linear-gradient(180deg, #ffe5ec, #fad2e1)' },
+    { id: 'mint',    name: 'Мятная пастель', price: 0,   css: 'linear-gradient(180deg, #e8f5e9, #c8e6c9)' },
+    { id: 'cream',   name: 'Кремовый лофт',  price: 30,  css: 'linear-gradient(180deg, #fff3e0, #ffe0b2)' },
+    { id: 'cottage', name: 'Уютный домик',   price: 50,  css: 'repeating-linear-gradient(45deg, #fdf2e9 0 20px, #fae5d3 20px 40px)' },
+    { id: 'wood',    name: 'Тёплое дерево',  price: 60,  css: 'repeating-linear-gradient(90deg, #d7ccc8 0 24px, #bcaaa4 24px 26px)' },
+    { id: 'candy',   name: 'Конфетные полоски', price: 70, css: 'repeating-linear-gradient(45deg, #fce4ec 0 16px, #fff 16px 32px)' },
+    { id: 'space',   name: 'Звёздная ночь',  price: 80,  css: 'radial-gradient(circle at 50% 20%, #2a1b4e, #0f0a20)' },
+    { id: 'catpaws', name: 'Лапки на обоях', price: 80,  css: 'radial-gradient(circle at 20% 20%, #ffd6e0 10px, transparent 11px), radial-gradient(circle at 80% 80%, #ffd6e0 10px, transparent 11px), linear-gradient(180deg, #fff0f5, #ffe4ec)' },
+    { id: 'sky',     name: 'Небесная лазурь', price: 90,  css: 'linear-gradient(180deg, #e1f5fe, #b3e5fc)' },
+    { id: 'sakura',  name: 'Цветущая сакура', price: 120, css: 'linear-gradient(180deg, #f8bbd0, #f48fb1)' },
+  ],
+  floor: [
+    { id: 'oak',     name: 'Тёплый дуб',     price: 0,   css: 'linear-gradient(180deg, #c89666, #8f5c38)' },
+    { id: 'birch',   name: 'Светлый паркет', price: 40,  css: 'linear-gradient(180deg, #e2cca8, #bba27e)' },
+    { id: 'checker', name: 'Ретро-плитка',   price: 60,  css: 'repeating-conic-gradient(#f5f5f5 0% 25%, #424242 0% 50%) 50% / 32px 32px' },
+    { id: 'carpet',  name: 'Мягкий ковролин', price: 70, css: 'linear-gradient(180deg, #a5d6a7, #81c784)' },
+    { id: 'blue',    name: 'Морской настил', price: 90,  css: 'linear-gradient(180deg, #81d4fa, #4fc3f7)' },
+  ],
+  rug: [
+    { id: 'braided', name: 'Узорчатый коврик', price: 0,   img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_rug) || 'img/house/cat_rug.png' },
+    { id: 'paw',     name: 'Кошачья лапка',   price: 40,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.rug_paw) || 'img/house/rug_paw.png' },
+    { id: 'rainbow', name: 'Радужный овал',   price: 60,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.rainbow_rug) || 'img/house/rainbow_rug.png' },
+    { id: 'cloud',   name: 'Облачко',         price: 70,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cloud_rug) || 'img/house/cloud_rug.png' },
+    { id: 'fish',    name: 'Рыбий коврик',    price: 80,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.fish_rug) || 'img/house/fish_rug.png' },
+  ],
+  bed: [
+    { id: 'sofa',     name: 'Большой диванчик',   price: 0,   img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_sofa) || 'img/house/cat_sofa.png' },
+    { id: 'cushion',  name: 'Мягкая подушка',     price: 40,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_cushion) || 'img/house/cat_cushion.png' },
+    { id: 'princess', name: 'Кроватка принцессы', price: 100, img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.princess_bed) || 'img/house/princess_bed.png' },
+    { id: 'tent',     name: 'Вигвам-палатка',     price: 90,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_tent) || 'img/house/cat_tent.png' },
+    { id: 'basket',   name: 'Плетёная корзинка',  price: 60,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_basket) || 'img/house/cat_basket.png' },
+    { id: 'box',      name: 'Коробка из картона', price: 30,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_box) || 'img/house/cat_box.png' },
+  ],
+  scratcher: [
+    { id: 'cat_tree', name: 'Кошачье дерево', price: 0,   img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_tree) || 'img/house/cat_tree.png' },
+    { id: 'cactus',  name: 'Кактус-когтеточка', price: 30, img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cactus_scratcher) || 'img/house/cactus_scratcher.png' },
+    { id: 'castle',  name: 'Кошачий замок',   price: 130, img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_castle) || 'img/house/cat_castle.png' },
+    { id: 'wheel',   name: 'Беговое колесо',  price: 160, img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_wheel) || 'img/house/cat_wheel.png' },
+  ],
+  window: [
+    { id: 'cozy',    name: 'Цветущий сад',    price: 0,   img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cozy_window) || 'img/house/cozy_window.png' },
+    { id: 'sunny',   name: 'Солнечный день',  price: 35,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.window_sunny) || 'img/house/window_sunny.png' },
+    { id: 'night',   name: 'Звёзды и луна',   price: 50,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.window_night) || 'img/house/window_night.png' },
+    { id: 'aquarium',name: 'Подводный риф',   price: 90,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.window_aquarium) || 'img/house/window_aquarium.png' },
+  ],
+  decor: [
+    { id: 'shelf',   name: 'Цветок на полке', price: 0,   img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_shelf_plant) || 'img/house/cat_shelf_plant.png' },
+    { id: 'portrait',name: 'Портрет котика',  price: 50,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_portrait) || 'img/house/cat_portrait.png' },
+    { id: 'clock',   name: 'Часы с хвостиком',price: 60,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_clock) || 'img/house/cat_clock.png' },
+  ],
+  bowl: [
+    { id: 'milk',    name: 'Блюдце с молоком', price: 0,  img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.bowl_milk) || 'img/house/bowl_milk.png' },
+    { id: 'station', name: 'Столик с мисочками', price: 40, img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.cat_bowl_station) || 'img/house/cat_bowl_station.png' },
+    { id: 'fish',    name: 'Рыбка на тарелке', price: 45, img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.bowl_fish) || 'img/house/bowl_fish.png' },
+    { id: 'fountain',name: 'Золотой фонтан',   price: 120, img: (typeof HOUSE_ASSETS !== 'undefined' && HOUSE_ASSETS.gold_fountain) || 'img/house/gold_fountain.png' },
+  ],
+};

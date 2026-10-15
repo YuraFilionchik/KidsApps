@@ -5,7 +5,7 @@
 'use strict';
 
 const MERGE_MAX_FIELDS = ['xp', 'totalCorrect', 'totalWrong', 'bestCombo', 'blitzBest', 'bossWins', 'bossLevel', 'perfectCount', 'purchases'];
-const MERGE_UNION_FIELDS = ['owned', 'pets', 'breedsSeen'];
+const MERGE_UNION_FIELDS = ['owned', 'pets', 'breedsSeen', 'houseOwned'];
 
 function mergeProfiles(a, b) {
   const clone = x => JSON.parse(JSON.stringify(x));
@@ -37,7 +37,11 @@ function mergeProfiles(a, b) {
   }
   out.achievements = ach;
 
-  for (const k of MERGE_UNION_FIELDS) out[k] = [...new Set([...(a[k] || []), ...(b[k] || [])])].sort();
+  for (const k of MERGE_UNION_FIELDS) {
+    if (a[k] !== undefined || b[k] !== undefined) {
+      out[k] = [...new Set([...(a[k] || []), ...(b[k] || [])])].sort();
+    }
+  }
 
   // Выученные примеры — у какого устройства больше ответов на этот пример, тот и прав.
   const facts = {};
@@ -68,6 +72,11 @@ function mergeProfiles(a, b) {
   // Ферма: пруд и корм — из новой версии, число пойманных рыб — максимум.
   if (out.farm || older.farm) {
     out.farm = { ...(out.farm || {}), harvested: Math.max((a.farm || {}).harvested || 0, (b.farm || {}).harvested || 0) };
+  }
+
+  // Домик: комната — из новой версии, если нет — из старой.
+  if (!out.house && older.house) {
+    out.house = clone(older.house);
   }
   return out;
 }

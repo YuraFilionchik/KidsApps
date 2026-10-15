@@ -65,5 +65,18 @@ const Sound = (() => {
       o.start(t);
       o.stop(t + 0.6);
     },
+    purr() {
+      const c = ac();
+      if (!c) return;
+      [0, 0.07, 0.14, 0.21, 0.28].forEach((dt, i) => {
+        tone(90 + (i % 2) * 20, dt, 0.06, { type: 'triangle', vol: 0.1 });
+      });
+    },
+    crunch() {
+      const c = ac();
+      if (!c) return;
+      tone(850, 0, 0.04, { type: 'square', vol: 0.07, to: 350 });
+      tone(1100, 0.04, 0.05, { type: 'triangle', vol: 0.08, to: 420 });
+    },
   };
 })();
