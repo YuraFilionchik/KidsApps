@@ -88,6 +88,10 @@ function onAnyCorrect() {
   // Каждый верный ответ — корм для рыб на ферме.
   P.farm.food++;
   if (hasPet('hamster') && P.totalCorrect % 5 === 0) P.farm.food++;
+  if (hasPet('panda') && P.totalCorrect % 3 === 0) {
+    P.farm.food += 2;
+    toast('🐼 Пандочка нашла +2 🦐 корма!');
+  }
   if (P.daily.correct === DAILY_GOAL) {
     updateStreak();
     toast('🎁 Задание дня выполнено! Открой сундук в меню');
@@ -273,6 +277,7 @@ function screenHub() {
       <button class="tile t-col" data-action="columnMenu"><span class="ti">✏️</span><b>Столбик</b><small>Сложение и вычитание</small></button>
       <button class="tile t-blitz" data-action="blitzSetup"><span class="ti">⚡</span><b>Блиц</b><small>60 секунд на скорость</small></button>
       <button class="tile t-boss" data-action="bossIntro"><span class="ti">${boss.icon}</span><b>Битва с боссом</b><small>${boss.name}, ур. ${boss.level}</small></button>
+      <button class="tile t-house" data-action="house"><span class="ti">🏡</span><b>Кото-домик</b><small>Комната твоего котика</small></button>
       <button class="tile t-farm" data-action="farm"><span class="ti">🎣</span><b>Кото-ферма</b><small>${farmStatus()}</small></button>
       <button class="tile t-pets" data-action="pets"><span class="ti">🥚</span><b>Питомцы</b><small>${P.pets.length} из ${PETS.length} друзей</small></button>
       <button class="tile t-coll" data-action="collection"><span class="ti">🐈</span><b>Коллекция</b><small>${BREEDS.filter(b => b.test(P)).length} из ${BREEDS.length} пород</small></button>

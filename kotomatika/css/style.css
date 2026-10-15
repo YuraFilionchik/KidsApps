@@ -685,3 +685,542 @@ h2 { font-size: 1.5rem; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
 }
+
+/* ---------- Кото-домик ---------- */
+.t-house { --c: #52b788; --d: #2d6a4f; }
+
+.house-screen { display: flex; flex-direction: column; gap: 12px; }
+
+.house-stage-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.house-room {
+  position: relative;
+  width: 100%;
+  height: 330px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 10px 24px rgba(80, 40, 10, 0.12);
+  border: 4px solid #fff;
+  user-select: none;
+  touch-action: manipulation;
+  background: #fdf6ee;
+}
+
+/* Стена */
+.room-wall {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 56%;
+  overflow: hidden;
+  transition: background 0.3s ease;
+  z-index: 1;
+}
+
+/* Окно */
+.room-window-frame {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  width: 82px;
+  height: 98px;
+  border-radius: 41px 41px 6px 6px;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform 0.15s;
+}
+.room-window-frame:active { transform: scale(0.96); }
+.room-window-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.12));
+}
+.room-window-sky {
+  width: 100%;
+  height: 100%;
+  border-radius: 36px 36px 4px 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #fff;
+  background: #fff;
+}
+.room-window-sun { font-size: 2.2rem; position: relative; z-index: 1; animation: float 3s ease-in-out infinite alternate; }
+
+/* Декор на стене */
+.room-garland {
+  position: absolute;
+  top: 10px;
+  left: 110px;
+  right: 20px;
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.25rem;
+  z-index: 3;
+  animation: glowPulse 2s infinite ease-in-out;
+  cursor: pointer;
+}
+.room-wall-art {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 52px;
+  height: 62px;
+  background: #fff;
+  border: 4px solid #bcaaa4;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  z-index: 3;
+  transition: transform 0.15s;
+}
+.room-wall-art:active { transform: scale(0.95); }
+.decor-art-icon { font-size: 2rem; }
+
+/* Плинтус */
+.room-baseboard {
+  position: absolute;
+  top: 56%;
+  left: 0; right: 0;
+  height: 8px;
+  background: #5d4037;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  z-index: 2;
+}
+
+/* Пол (без overflow:hidden, чтобы персонажи и мебель не обрезались) */
+.room-floor {
+  position: absolute;
+  top: calc(56% + 8px);
+  bottom: 0; left: 0; right: 0;
+  transition: background 0.3s ease;
+  z-index: 1;
+}
+
+/* Задний план мебели: Большой диванчик возле стены */
+.room-layer-bed {
+  position: absolute;
+  left: 8px;
+  bottom: 36px;
+  width: 168px;
+  height: 126px;
+  cursor: pointer;
+  z-index: 7;
+  transition: transform 0.15s ease;
+  display: flex;
+  align-items: flex-end;
+}
+.room-layer-bed:active { transform: scale(1.06); }
+.room-bed-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.18));
+}
+.room-bed-emoji-big {
+  font-size: 5.4rem;
+  line-height: 1;
+  display: block;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15));
+}
+
+/* Задний план мебели: Высокое кошачье дерево-когтеточка справа */
+.room-layer-scratcher {
+  position: absolute;
+  right: 6px;
+  bottom: 22px;
+  width: 105px;
+  height: 195px;
+  cursor: pointer;
+  z-index: 8;
+  transition: transform 0.15s ease;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.room-layer-scratcher:active { transform: scale(1.05); }
+.room-scratcher-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.18));
+}
+.room-scratcher-emoji-big {
+  font-size: 5rem;
+  line-height: 1;
+  display: block;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,0.15));
+}
+
+/* Широкий коврик (узоры хорошо видны по краям, лежит НА полу ПОД мебелью) */
+.room-layer-rug {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 275px;
+  height: 94px;
+  cursor: pointer;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.15s ease;
+}
+.room-layer-rug:active { transform: translateX(-50%) scale(1.04); }
+.room-rug-img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.16));
+}
+.room-rug-css {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: inset 0 2px 6px rgba(255,255,255,0.4), 0 4px 10px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 18px;
+}
+.rug-pattern-left, .rug-pattern-right { font-size: 1.6rem; opacity: 0.8; }
+
+.room-layer-bowl {
+  position: absolute;
+  left: 24%;
+  bottom: 8px;
+  font-size: 2.2rem;
+  cursor: pointer;
+  z-index: 12;
+  transition: transform 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.room-layer-bowl:active { transform: scale(1.15); }
+.room-bowl-img {
+  width: 58px;
+  height: 48px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.18));
+}
+.room-decor-img {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+}
+
+/* Котик в центре (уши полностью открыты, z-index выше мебели и пола) */
+.room-layer-cat {
+  position: absolute;
+  left: 45%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 15;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.room-layer-cat .cat {
+  width: 126px;
+  height: 126px;
+  overflow: visible;
+}
+.cat-floor-shadow {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.18);
+  filter: blur(3px);
+  z-index: -1;
+}
+.room-cat-bubble {
+  position: absolute;
+  top: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #fff;
+  border-radius: 12px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  white-space: nowrap;
+  pointer-events: none;
+  animation: pop 0.3s ease;
+}
+.room-cat-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 5px 5px 0;
+  border-style: solid;
+  border-color: #fff transparent;
+}
+
+/* Питомец рядом с котиком (Пандочка) */
+.room-layer-pet {
+  position: absolute;
+  left: 66%;
+  bottom: 18px;
+  width: 72px;
+  height: 80px;
+  z-index: 16;
+  cursor: pointer;
+  touch-action: manipulation;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.room-pet-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.18));
+}
+.room-pet-img.panda-wiggle {
+  animation: pandaWiggle 2.5s infinite alternate ease-in-out;
+}
+@keyframes pandaWiggle {
+  0% { transform: rotate(-4deg); }
+  100% { transform: rotate(4deg) scale(1.06); }
+}
+.room-pet-icon {
+  font-size: 3rem;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+.pet-floor-shadow {
+  position: absolute;
+  bottom: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.16);
+  filter: blur(2px);
+  z-index: -1;
+}
+.room-pet-invite {
+  position: absolute;
+  left: 68%;
+  bottom: 22px;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.85);
+  border: 2px dashed #ff8a3d;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--primary-d);
+  cursor: pointer;
+  z-index: 16;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.room-pet-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px;
+  background: #fff;
+  border-radius: 14px;
+  margin-top: 8px;
+  box-shadow: var(--shadow);
+  font-size: 0.9rem;
+}
+
+/* Всплывающие сердечки и анимации */
+.room-heart-pop {
+  position: absolute;
+  font-size: 2rem;
+  animation: heart 0.95s forwards;
+  pointer-events: none;
+  z-index: 30;
+}
+.bounce-tap { animation: bump 0.4s ease; }
+
+/* Магазин мебели / Кастомизатор */
+.house-shop-card { margin: 8px 0; padding: 14px; }
+.house-tabs-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  position: relative;
+}
+.house-tabs-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 4px 2px 10px 2px;
+  scrollbar-width: thin;
+  scrollbar-color: #ff9f43 #f3e5d8;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  flex: 1;
+}
+.house-tabs-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+.house-tabs-scroll::-webkit-scrollbar-track {
+  background: #f3e5d8;
+  border-radius: 999px;
+}
+.house-tabs-scroll::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #ff9f43, #ff7b25);
+  border-radius: 999px;
+}
+.house-tabs-scroll::-webkit-scrollbar-thumb:hover {
+  background: #e66710;
+}
+.house-tab-scroll-btn {
+  width: 32px;
+  height: 38px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1px solid #ebd5c0;
+  color: #c46927;
+  font-weight: 900;
+  font-size: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+  transition: all 0.15s ease;
+  user-select: none;
+  margin-bottom: 8px;
+}
+.house-tab-scroll-btn:active {
+  transform: scale(0.92);
+  background: #fdf5ec;
+}
+
+.house-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  font-weight: 800;
+  background: #fdf5ec;
+  border: 1px solid #f0e1d0;
+  color: var(--ink);
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.12s;
+}
+.house-tab-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary-d);
+  box-shadow: 0 3px 0 var(--primary-d);
+}
+.house-tab-btn .tab-i { font-size: 1.1rem; }
+
+/* Сетка предметов */
+.house-items-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+@media (min-width: 480px) {
+  .house-items-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.house-item-card {
+  background: #fffdf9;
+  border: 2px solid #f0e4d7;
+  border-radius: 16px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.1s, border-color 0.1s, box-shadow 0.1s;
+  position: relative;
+  text-align: center;
+}
+.house-item-card:hover { border-color: var(--primary); }
+.house-item-card:active { transform: scale(0.97); }
+.house-item-card.equipped {
+  border-color: var(--green);
+  background: #f4fbf5;
+  box-shadow: 0 0 0 2px rgba(76, 199, 107, 0.25);
+}
+
+.house-item-preview {
+  height: 68px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: #fdf5ec;
+}
+.item-grid-img {
+  max-height: 60px;
+  max-width: 90%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.12));
+}
+.item-grid-fill {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.grid-rug-icon { font-size: 1.5rem; opacity: 0.8; }
+.house-item-preview .preview-emoji { font-size: 2.2rem; }
+.equipped-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: var(--green);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 900;
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+.house-item-info { margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
+.house-item-name { font-size: 0.82rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.house-item-price { font-size: 0.8rem; font-weight: 900; color: #b5621e; }
+.house-item-price.poor { color: var(--muted); opacity: 0.7; }
+.house-item-status { font-size: 0.75rem; font-weight: 900; }
+.house-item-status.active { color: var(--green-d); }
+.house-item-status.owned { color: var(--blue-d); }
+

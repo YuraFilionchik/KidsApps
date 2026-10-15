@@ -98,3 +98,20 @@ test('профиль старого формата без новых полей 
   assert.deepEqual(m.pets, ['puppy']);
   assert.equal(m.xp, 100);
 });
+
+test('домик: комната из новой версии, купленные вещи объединяются', () => {
+  const phone = profile({
+    updatedAt: 5000,
+    house: { wallpaper: 'space', bed: 'princess' },
+    houseOwned: ['wallpaper:peach', 'bed:sofa', 'wallpaper:space', 'bed:princess'],
+  });
+  const tablet = profile({
+    updatedAt: 4000,
+    house: { wallpaper: 'mint', bed: 'tent' },
+    houseOwned: ['wallpaper:peach', 'bed:sofa', 'wallpaper:mint', 'bed:tent', 'rug:rainbow'],
+  });
+  const m = mergeProfiles(phone, tablet);
+  assert.deepEqual(m.house, { wallpaper: 'space', bed: 'princess' });
+  assert.deepEqual(m.houseOwned, ['bed:princess', 'bed:sofa', 'bed:tent', 'rug:rainbow', 'wallpaper:mint', 'wallpaper:peach', 'wallpaper:space'].sort());
+});
+
