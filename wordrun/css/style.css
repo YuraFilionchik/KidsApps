@@ -157,11 +157,28 @@ button:disabled { cursor: default; opacity: 0.7; }
   margin-top: auto; width: 100%; max-width: 460px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;
 }
 .lanes button {
-  height: 64px; border-radius: 20px; border: 3px solid rgba(255,255,255,.9); background: rgba(255,255,255,.45);
-  font-size: 1.5rem; color: var(--ink); backdrop-filter: blur(4px);
+  --lc: var(--blue);
+  position: relative; height: 72px; padding: 6px 4px 4px; border-radius: 20px;
+  border: 4px solid var(--lc); background: rgba(255,255,255,.88); color: var(--ink);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  box-shadow: 0 4px 0 var(--lc); transition: transform .08s, background .12s;
+  animation: pop .25s ease-out;
 }
-.lanes button.on { background: rgba(255,255,255,.92); border-color: var(--blue); }
-.lanes.two .mid { opacity: .45; }
+/* цвета дорожек — те же, что у ворот в runner3d.js */
+.lanes .lane-l { --lc: #3b82f6; }
+.lanes .lane-c { --lc: #f59e0b; }
+.lanes .lane-r { --lc: #a855f7; }
+.lanes button.on { background: var(--lc); color: #fff; transform: translateY(-3px); }
+.lanes button.on .l-arrow { color: #fff; }
+.lanes button.empty { --lc: rgba(255,255,255,.7); background: rgba(255,255,255,.35); box-shadow: none; font-size: 1.4rem; animation: none; }
+.lanes button.empty.on { background: rgba(255,255,255,.75); color: var(--ink); }
+.lanes button.glow { border-color: var(--good); box-shadow: 0 0 0 4px #bbf7d0, 0 4px 0 var(--good); }
+.l-arrow { font-size: .75rem; line-height: 1; color: var(--lc); }
+.l-word { font-size: 1.35rem; font-weight: 900; line-height: 1.05; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.l-word.long { font-size: 1.05rem; }
+.l-pic { font-size: 2rem; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; object-fit: contain; }
+.l-pic.color-dot { width: 32px; height: 32px; }
+.l-pic.digit { font-size: 1.8rem; }
 
 .countdown { margin: auto; text-align: center; color: #fff; text-shadow: 0 4px 0 rgba(0,0,0,.25); }
 .cd-world { font-size: 1.4rem; font-weight: 900; }
@@ -238,6 +255,8 @@ button:disabled { cursor: default; opacity: 0.7; }
 .i-ic { font-size: 2rem; }
 
 @media (min-height: 760px) {
-  .lanes button { height: 74px; }
+  .lanes button { height: 82px; }
+  .l-word { font-size: 1.5rem; }
+  .l-word.long { font-size: 1.15rem; }
   .prompt { margin-top: 16px; }
 }

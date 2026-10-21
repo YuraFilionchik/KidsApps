@@ -13,6 +13,7 @@ let busy = false;       // идёт отсчёт или финальная ан�
 let shopTab = 'skin';
 let shopTry = null;     // вещь, которую примеряем в магазине
 let review = null;      // тренажёр «Мои ошибки»
+let laneGates = [];     // варианты текущих ворот — показываем их на кнопках дорожек
 
 const MODE = WRGame.MODE;
 const $ = sel => document.querySelector(sel);
@@ -166,13 +167,14 @@ function nextGate(first = false) {
   if (!it) return;
   const gates = WRGame.buildGates(run);
   runner.speed = run.speed;
+  laneGates = gates;
   runner.spawnGates(gates, {
     picMode: it.mode === MODE.PIC_GATES,
     boss: it.kind === 'boss',
     hint: run.hint,
     distance: first ? 66 : 56
   });
-  renderHUD(gates.length);
+  renderHUD();
   if (it.mode === MODE.AUDIO || run.hint) setTimeout(() => run && WRSound.speak(it.word.en), 350);
 }
 
@@ -195,7 +197,21 @@ function promptHTML(it) {
   return `<div class="prompt ${it.kind}">${tag}<div class="p-body">${body}</div>${hint}</div>`;
 }
 
-function renderHUD(gateCount = 3) {
+// Кнопка дорожки: вариант ворот этой дорожки крупно и цветом дорожки —
+// издалека табличку в 3D не прочитать, а кнопку видно сразу.
+function laneButtonHTML(lane, it) {
+  const opt = laneGates.find(g => g.lane === lane);
+  const arrow = lane < 0 ? '◀' : lane > 0 ? '▶' : '●';
+  const cls = `lane-${lane < 0 ? 'l' : lane > 0 ? 'r' : 'c'} ${runner.lane === lane ? 'on' : ''}`;
+  if (!opt) return `<button data-act="lane" data-lane="${lane}" class="${cls} empty">${arrow}</button>`;
+  const body = it && it.mode === MODE.PIC_GATES
+    ? WRArt.wordHTML(opt.word, 'l-pic')
+    : `<span class="l-word${opt.word.en.length > 6 ? ' long' : ''}">${opt.word.en}</span>`;
+  const glow = run.hint && opt.correct ? ' glow' : '';
+  return `<button data-act="lane" data-lane="${lane}" class="${cls}${glow}"><span class="l-arrow">${arrow}</span>${body}</button>`;
+}
+
+function renderHUD() {
   if (!run) { hud.innerHTML = ''; return; }
   const it = WRGame.current(run);
   if (!it) return;
@@ -211,11 +227,7 @@ function renderHUD(gateCount = 3) {
       <div class="bar"><i style="width:${WRGame.progressPct(run)}%"></i><em style="left:${bossPct}%">👑</em></div>
     </div>
     ${promptHTML(it)}
-    <div class="lanes ${gateCount === 2 ? 'two' : ''}">
-      <button data-act="lane" data-lane="-1" class="${runner.lane === -1 ? 'on' : ''}">◀</button>
-      <button data-act="lane" data-lane="0" class="mid ${runner.lane === 0 ? 'on' : ''}">●</button>
-      <button data-act="lane" data-lane="1" class="${runner.lane === 1 ? 'on' : ''}">▶</button>
-    </div>`;
+    <div class="lanes">${[-1, 0, 1].map(l => laneButtonHTML(l, it)).join('')}</div>`;
 }
 
 function syncLaneButtons() {
@@ -235,6 +247,7 @@ async function onGate(hit) {
   if (!run) return;
   const me = run;
   const it = WRGame.current(run);
+  laneGates = [];
   const res = WRGame.answer(st, run, hit ? hit.word.en : null);
   const w = res.target;
 

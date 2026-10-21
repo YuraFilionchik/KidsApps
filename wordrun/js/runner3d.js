@@ -35,7 +35,7 @@ class WordRunner3D {
   initScene() {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x7dd3fc);
-    this.scene.fog = new THREE.Fog(0x7dd3fc, 30, 75);
+    this.scene.fog = new THREE.Fog(0x7dd3fc, 40, 90);
 
     this.camera = new THREE.PerspectiveCamera(60, 1, 0.1, 120);
     this.camPos = new THREE.Vector3(0, 1.9, 7.4);
@@ -275,15 +275,16 @@ class WordRunner3D {
   }
 
   // Табличка ворот: английское слово крупно или (режим 4) картинка с подписью.
+  // Рамка — цвета дорожки, как кнопка внизу: издалека ворота узнаются по цвету.
   gateTexture(opt, picMode, hint) {
     const c = document.createElement('canvas');
     c.width = 512; c.height = 400;
     const ctx = c.getContext('2d');
     const glow = hint && opt.correct;
     ctx.fillStyle = glow ? '#dcfce7' : '#ffffff';
-    ctx.strokeStyle = glow ? '#16a34a' : '#1e293b';
-    ctx.lineWidth = 18;
-    this.roundRect(ctx, 12, 12, 488, 376, 44);
+    ctx.strokeStyle = glow ? '#16a34a' : WordRunner3D.LANE_CSS[opt.lane];
+    ctx.lineWidth = 30;
+    this.roundRect(ctx, 16, 16, 480, 368, 44);
     ctx.fill();
     ctx.stroke();
     ctx.textAlign = 'center';
@@ -294,14 +295,19 @@ class WordRunner3D {
       ctx.font = '800 40px Nunito, "Comic Sans MS", sans-serif';
       ctx.fillText(opt.word.ru, 256, 330, 460);
     } else {
+      // самый крупный шрифт, при котором слово влезает в табличку
       const text = opt.word.en;
-      const size = text.length > 7 ? 74 : 92;
-      ctx.fillStyle = '#0f172a';
+      let size = 170;
       ctx.font = `900 ${size}px Nunito, "Comic Sans MS", sans-serif`;
-      ctx.fillText(text, 256, 205, 460);
+      while (size > 60 && ctx.measureText(text).width > 430) {
+        size -= 6;
+        ctx.font = `900 ${size}px Nunito, "Comic Sans MS", sans-serif`;
+      }
+      ctx.fillStyle = '#0f172a';
+      ctx.fillText(text, 256, 208);
     }
     const tex = new THREE.CanvasTexture(c);
-    tex.anisotropy = 4;
+    tex.anisotropy = this.renderer.capabilities.getMaxAnisotropy();
     return tex;
   }
 
@@ -310,11 +316,11 @@ class WordRunner3D {
     if (this.gates) this.retire(this.gates);
     const group = new THREE.Group();
     group.position.z = -distance;
-    const pillar = this.mat(boss ? 0x9333ea : 0x2563eb);
     const top = this.mat(boss ? 0xfacc15 : 0xffffff);
     const pGeo = new THREE.BoxGeometry(0.26, 3.4, 0.26);
     const boards = [];
     for (const opt of options) {
+      const pillar = this.mat(WordRunner3D.LANE_COLORS[opt.lane]);
       const g = new THREE.Group();
       g.position.x = opt.lane * this.LANE;
       const pl = new THREE.Mesh(pGeo, pillar); pl.position.set(-0.98, 1.7, 0);
@@ -322,7 +328,8 @@ class WordRunner3D {
       const bar = new THREE.Mesh(new THREE.BoxGeometry(2.25, 0.22, 0.3), top); bar.position.y = 3.45;
       pl.castShadow = pr.castShadow = true;
       const tex = this.gateTexture(opt, picMode, hint);
-      const faceMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true });
+      // табличка без тумана: появляется вдали уже чёткой
+      const faceMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, fog: false });
       const board = new THREE.Mesh(new THREE.PlaneGeometry(2.12, 1.66), faceMat);
       board.position.set(0, 2.5, 0.16);
       // Полупрозрачная «плёнка» в проёме, которую игрок пробегает насквозь.
@@ -567,3 +574,7 @@ class WordRunner3D {
     this.renderer.render(this.scene, this.camera);
   }
 }
+
+// Цвета дорожек: левая синяя, средняя оранжевая, правая фиолетовая (те же цвета — у кнопок дорожек в style.css).
+WordRunner3D.LANE_COLORS = { '-1': 0x3b82f6, '0': 0xf59e0b, '1': 0xa855f7 };
+WordRunner3D.LANE_CSS = { '-1': '#3b82f6', '0': '#f59e0b', '1': '#a855f7' };
