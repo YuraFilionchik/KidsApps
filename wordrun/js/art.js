@@ -32,7 +32,8 @@ const WRArt = (() => {
 
   function preloadWords(words) {
     // у цветов вместо картинки — цветной кружок, PNG не нужен
-    return Promise.all(words.filter(w => !w.color).map(w => load(wordPath(w.en)).promise));
+    // числам из режима «Контрольная» (есть поле n) картинка тоже не нужна — рисуется цифра
+    return Promise.all(words.filter(w => !w.color && w.n === undefined).map(w => load(wordPath(w.en)).promise));
   }
 
   function ready(path) {

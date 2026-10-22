@@ -51,7 +51,8 @@ const WRGame = (() => {
       mistakes: {},     // { [en]: { en, worldId, streak, errors } }
       words: {},        // { [en]: { right, wrong } } — статистика для будущего режима учителя
       daily: { last: null, count: 0, chestDay: null },
-      settings: { sound: true, voice: true }
+      settings: { sound: true, voice: true, voiceName: '' },
+      study: { known: {}, weak: {}, best: {} }   // режим «Контрольная»
     };
   }
 

@@ -35,15 +35,22 @@ const WRSound = (() => {
     o.stop(t + dur + 0.05);
   }
 
-  // Голоса подгружаются асинхронно: выбираем британский, потом американский, потом любой английский.
+  // Голоса подгружаются асинхронно. Ранжируем: британский естественный (нейросетевой) голос —
+  // лучше всего, потом любой британский, потом американский. Выбор ребёнка/родителя важнее.
+  let preferred = null;   // имя голоса, выбранное вручную
+  function englishVoices() {
+    if (!('speechSynthesis' in window)) return [];
+    const all = window.speechSynthesis.getVoices().filter(v => /^en([-_]|$)/i.test(v.lang));
+    const score = v => (/GB/i.test(v.lang) ? 40 : /US/i.test(v.lang) ? 20 : 10)
+      + (/Natural|Online|Neural|Premium|Enhanced/i.test(v.name) ? 30 : 0)
+      + (/Google/i.test(v.name) ? 15 : 0)
+      + (/Sonia|Libby|Ryan|Maisie|Thomas|Daniel|Serena|Kate|Arthur|Martha/i.test(v.name) ? 10 : 0)
+      + (v.localService ? 0 : 2);
+    return all.sort((a, b) => score(b) - score(a));
+  }
   function pickVoice() {
-    if (!('speechSynthesis' in window)) return;
-    const all = window.speechSynthesis.getVoices();
-    const en = all.filter(v => /^en[-_]/i.test(v.lang) || v.lang === 'en');
-    voice = en.find(v => /en[-_]GB/i.test(v.lang) && /Google|Natural|Online/i.test(v.name))
-      || en.find(v => /en[-_]GB/i.test(v.lang))
-      || en.find(v => /en[-_]US/i.test(v.lang))
-      || en[0] || null;
+    const list = englishVoices();
+    voice = (preferred && list.find(v => v.name === preferred)) || list[0] || null;
   }
   if ('speechSynthesis' in window) {
     pickVoice();
@@ -71,6 +78,11 @@ const WRSound = (() => {
     setVoice(on) { voiceOn = on; if (!on && canSpeak()) window.speechSynthesis.cancel(); },
     canSpeak,
     speak,
+    // медленно и чётко — для заучивания
+    speakSlow(text) { speak(text, 0.55); },
+    voices: () => englishVoices().map(v => ({ name: v.name, lang: v.lang })),
+    voiceName: () => (voice ? voice.name : ''),
+    setVoiceName(name) { preferred = name || null; pickVoice(); },
     unlock() { ac(); },
     click() { tone(620, 0, 0.05, { type: 'triangle', vol: 0.07 }); },
     swipe() { tone(420, 0, 0.09, { type: 'sine', vol: 0.06, to: 760 }); },

@@ -23,6 +23,7 @@ const save = () => WRStore.save();
 function applySettings() {
   WRSound.setSfx(st.settings.sound);
   WRSound.setVoice(st.settings.voice);
+  WRSound.setVoiceName(st.settings.voiceName);
 }
 
 function toast(html, kind = '', ms = 1400) {
@@ -78,6 +79,7 @@ function showMenu() {
       <p class="sub">Беги и выбирай правильное английское слово!</p>
       ${chest ? `<button class="btn gold wide" data-act="chest">🎁 Сундук за ${st.daily.count} дня подряд!</button>` : ''}
       <button class="btn primary big wide" data-act="map">▶ ИГРАТЬ</button>
+      <button class="btn study wide" data-act="study">📚 Контрольная<small>Спорт, места, месяцы, числа, времена года</small></button>
       <div class="grid2">
         <button class="btn soft" data-act="mistakes">🩹 Мои ошибки${mistakes ? ` <span class="badge">${mistakes}</span>` : ''}
           <small>${st.bonusHeart ? '❤️ +1 сердце готово!' : 'Повтори 3 слова → +1 ❤️'}</small></button>
