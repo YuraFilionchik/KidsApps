@@ -234,7 +234,7 @@ async function finishEmailLink() {
   if (!fb.isSignInWithEmailLink(auth, location.href)) return;
   let email = '';
   try { email = localStorage.getItem(EMAIL_KEY) || ''; } catch (e) { /* ничего */ }
-  if (!email) email = window.prompt('Для входа введите адрес почты, на который пришла ссылка') || '';
+  if (!email) email = window.prompt(t('Для входа введите адрес почты, на который пришла ссылка')) || '';
   if (!email) return;
   try {
     await fb.signInWithEmailLink(auth, email, location.href);

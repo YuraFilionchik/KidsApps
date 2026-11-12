@@ -90,15 +90,15 @@ function onAnyCorrect() {
   if (hasPet('hamster') && P.totalCorrect % 5 === 0) P.farm.food++;
   if (hasPet('panda') && P.totalCorrect % 3 === 0) {
     P.farm.food += 2;
-    toast('🐼 Пандочка нашла +2 🦐 корма!');
+    toast(t('🐼 Пандочка нашла +2 🦐 корма!'));
   }
   if (P.daily.correct === DAILY_GOAL) {
     updateStreak();
-    toast('🎁 Задание дня выполнено! Открой сундук в меню');
+    toast(t('🎁 Задание дня выполнено! Открой сундук в меню'));
   }
   const lv = levelInfo(P.xp);
   if (lv.level > lvBefore) {
-    toast(`🎉 Новый уровень ${lv.level}: <b>${lv.title}</b>!`);
+    toast(t('🎉 Новый уровень {n}: <b>{title}</b>!', { n: lv.level, title: lv.title }));
     Sound.levelUp();
   }
   checkAchievements();
@@ -119,14 +119,14 @@ function checkAchievements() {
     if (!P.achievements[a.id] && a.test(P)) {
       P.achievements[a.id] = Date.now();
       P.fish += 10;
-      toast(`🏆 Новая награда: ${a.icon} <b>${a.name}</b> (+10 🐟)`);
+      toast(t('🏆 Новая награда: {icon} <b>{name}</b> (+10 🐟)', { icon: a.icon, name: a.name }));
       Sound.achieve();
     }
   }
   for (const b of BREEDS) {
     if (!P.breedsSeen.includes(b.id) && b.test(P)) {
       P.breedsSeen.push(b.id);
-      toast(`🐈 Новый котик в коллекции: <b>${b.name}</b>!`);
+      toast(t('🐈 Новый котик в коллекции: <b>{name}</b>!', { name: b.name }));
     }
   }
 }
@@ -147,22 +147,25 @@ function grantSpecial(slot, id, text) {
 function screenProfiles() {
   const list = Store.list();
   show(`<div class="screen center profiles-screen">
-    <h1 class="logo">Кото<span>матика</span></h1>
-    <p class="subtitle">Учим таблицу умножения вместе с котиками</p>
+    <div class="lang-pick">
+      ${LANGS.map(l => `<button class="lang-opt ${LANG === l.id ? 'sel' : ''}" data-action="setLang" data-id="${l.id}"><span>${l.flag}</span>${l.name}</button>`).join('')}
+    </div>
+    <h1 class="logo">${t('Кото<span>матика</span>')}</h1>
+    <p class="subtitle">${t('Учим таблицу умножения вместе с котиками')}</p>
     ${list.length ? `
-      <h2>Кто играет?</h2>
+      <h2>${t('Кто играет?')}</h2>
       <div class="profiles">
         ${list.map(p => `<button class="profile-card" data-action="pickProfile" data-id="${p.id}">
-            ${catHTML(p.cat, 88)}<b>${esc(p.name)}</b><small>ур. ${levelInfo(p.xp).level} · 🐟 ${p.fish}</small>
+            ${catHTML(p.cat, 88)}<b>${esc(p.name)}</b><small>${t('ур. {n}', { n: levelInfo(p.xp).level })} · 🐟 ${p.fish}</small>
           </button>`).join('')}
-        <button class="profile-card add" data-action="newProfile"><span class="plus">+</span><b>Новый игрок</b></button>
+        <button class="profile-card add" data-action="newProfile"><span class="plus">+</span><b>${t('Новый игрок')}</b></button>
       </div>` : `
       <div class="hello">
         ${catHTML({ fur: 'ginger', hat: 'bow', bg: 'meadow' }, 170, 'happy')}
-        <div class="bubble">Привет! Я котик Мурчик. Давай вместе выучим таблицу умножения и соберём кучу рыбок! 🐾</div>
-        <button class="btn big primary" data-action="newProfile">Начать игру!</button>
+        <div class="bubble">${t('Привет! Я котик Мурчик. Давай вместе выучим таблицу умножения и соберём кучу рыбок! 🐾')}</div>
+        <button class="btn big primary" data-action="newProfile">${t('Начать игру!')}</button>
       </div>`}
-    <button class="btn ghost parent-link" data-action="parent">👨‍👩‍👧 Для родителей · ☁️ сохранения в облаке</button>
+    <button class="btn ghost parent-link" data-action="parent">👨‍👩‍👧 ${t('Для родителей · ☁️ сохранения в облаке')}</button>
   </div>`);
 }
 
@@ -172,14 +175,14 @@ function screenNewProfile() {
     const starters = SHOP.fur.items.filter(i => i.price === 0);
     show(`<div class="screen center">
       <div class="row-top"><button class="icon-btn" data-action="toProfiles">←</button></div>
-      <h2>Как тебя зовут?</h2>
-      <input id="nameInput" class="text-input" maxlength="14" placeholder="Твоё имя" value="${esc(draft.name)}" autocomplete="off">
-      <h2>Выбери котика</h2>
+      <h2>${t('Как тебя зовут?')}</h2>
+      <input id="nameInput" class="text-input" maxlength="14" placeholder="${esc(t('Твоё имя'))}" value="${esc(draft.name)}" autocomplete="off">
+      <h2>${t('Выбери котика')}</h2>
       <div class="fur-pick">
         ${starters.map(f => `<button class="fur-opt ${draft.fur === f.id ? 'sel' : ''}" data-action="draftFur" data-id="${f.id}">
           ${catHTML({ fur: f.id, bg: 'room' }, 78, 'happy')}<small>${f.name}</small></button>`).join('')}
       </div>
-      <button class="btn big primary" data-action="draftNext">Дальше →</button>
+      <button class="btn big primary" data-action="draftNext">${t('Дальше →')}</button>
     </div>`);
     const inp = document.getElementById('nameInput');
     inp.addEventListener('input', () => { draft.name = inp.value; });
@@ -188,12 +191,12 @@ function screenNewProfile() {
     const done = draft.pin.length === PIN_LENGTH;
     show(`<div class="screen center">
       <div class="row-top"><button class="icon-btn" data-action="draftBack">←</button></div>
-      <h2>Придумай секретный код</h2>
-      <p class="subtitle">Нажми ${PIN_LENGTH} картинки. Код нужен, чтобы никто другой не играл за тебя.</p>
+      <h2>${t('Придумай секретный код')}</h2>
+      <p class="subtitle">${t('Нажми {n} картинки. Код нужен, чтобы никто другой не играл за тебя.', { n: PIN_LENGTH })}</p>
       ${pinSlots(draft.pin, true)}
-      ${done ? `<div class="bubble small">Запомни свой код: <b class="big-emoji">${draft.pin.map(i => PIN_SYMBOLS[i]).join(' ')}</b></div>
-        <button class="btn big primary" data-action="draftCreate">Готово! 🎉</button>
-        <button class="btn ghost" data-action="pinClear">Стереть</button>`
+      ${done ? `<div class="bubble small">${t('Запомни свой код:')} <b class="big-emoji">${draft.pin.map(i => PIN_SYMBOLS[i]).join(' ')}</b></div>
+        <button class="btn big primary" data-action="draftCreate">${t('Готово! 🎉')}</button>
+        <button class="btn ghost" data-action="pinClear">${t('Стереть')}</button>`
       : pinPad('draftPin')}
     </div>`);
   }
@@ -215,12 +218,12 @@ function pinPad(action) {
 function screenPin() {
   const p = Store.get(pinState.id);
   const first = pinState.fails >= 2 ? Store.pinFirstSymbol(p) : null;
-  const hint = first !== null ? `<p class="hint">Подсказка: код начинается с ${PIN_SYMBOLS[first]}</p>` : '';
+  const hint = first !== null ? `<p class="hint">${t('Подсказка: код начинается с {s}', { s: PIN_SYMBOLS[first] })}</p>` : '';
   show(`<div class="screen center">
     <div class="row-top"><button class="icon-btn" data-action="toProfiles">←</button></div>
     ${catHTML(p.cat, 120)}
-    <h2>Привет, ${esc(p.name)}!</h2>
-    <p class="subtitle">Введи свой секретный код</p>
+    <h2>${t('Привет, {name}!', { name: esc(p.name) })}</h2>
+    <p class="subtitle">${t('Введи свой секретный код')}</p>
     <div id="pinSlotsBox">${pinSlots(pinState.entered, false)}</div>
     ${hint}
     ${pinPad('pinTap')}
@@ -245,18 +248,18 @@ function screenHub() {
   const dPct = Math.min(100, d.correct / DAILY_GOAL * 100);
   const boss = bossFor(P.bossLevel);
   const achCount = Object.keys(P.achievements).length;
-  const greet = pick(['Мяу! Во что поиграем?', 'Привет! Я соскучился 🐾', 'Мур! Готов к приключениям!', 'Давай заработаем рыбок!']);
+  const greet = pick([t('Мяу! Во что поиграем?'), t('Привет! Я соскучился 🐾'), t('Мур! Готов к приключениям!'), t('Давай заработаем рыбок!')]);
   show(`<div class="screen hub">
     <header class="topbar">
-      <button class="avatar-btn" data-action="shop" title="Мой котик">${catHTML(P.cat, 58)}</button>
+      <button class="avatar-btn" data-action="shop" title="${esc(t('Мой котик'))}">${catHTML(P.cat, 58)}</button>
       <div class="who">
         <b>${esc(P.name)}</b>
-        <small>${lv.title} · ур. ${lv.level}</small>
+        <small>${lv.title} · ${t('ур. {n}', { n: lv.level })}</small>
         <div class="xpbar"><i style="width:${lv.cur / lv.need * 100}%"></i></div>
       </div>
       <div class="pill fish">🐟 ${P.fish}</div>
       <span id="cloudBadge">${cloudBadgeHTML()}</span>
-      <button class="icon-btn" data-action="settings" title="Настройки">⚙️</button>
+      <button class="icon-btn" data-action="settings" title="${esc(t('Настройки'))}">⚙️</button>
     </header>
 
     <div class="hub-cat">
@@ -265,38 +268,38 @@ function screenHub() {
     </div>
 
     <div class="card daily">
-      <div class="daily-head"><b>🎯 Задание дня</b><span class="streak" title="Дней подряд">🔥 ${P.streak.count}</span></div>
-      <div class="daily-text">Реши ${DAILY_GOAL} примеров правильно</div>
+      <div class="daily-head"><b>${t('🎯 Задание дня')}</b><span class="streak" title="${esc(t('Дней подряд'))}">🔥 ${P.streak.count}</span></div>
+      <div class="daily-text">${t('Реши {n} примеров правильно', { n: DAILY_GOAL })}</div>
       <div class="bar"><i style="width:${dPct}%"></i><span>${Math.min(d.correct, DAILY_GOAL)} / ${DAILY_GOAL}</span></div>
-      ${d.correct >= DAILY_GOAL && !d.claimed ? '<button class="btn gold wide" data-action="claimDaily">🎁 Открыть сундук!</button>'
-        : d.claimed ? '<div class="done">✅ Сундук открыт. Приходи завтра!</div>' : ''}
+      ${d.correct >= DAILY_GOAL && !d.claimed ? `<button class="btn gold wide" data-action="claimDaily">${t('🎁 Открыть сундук!')}</button>`
+        : d.claimed ? `<div class="done">${t('✅ Сундук открыт. Приходи завтра!')}</div>` : ''}
     </div>
 
     <div class="tiles">
-      <button class="tile t-adv wide" data-action="map"><span class="ti">🗺️</span><span class="tw"><b>Приключение</b><small>Умножение × и деление : — путешествуй по мирам</small></span></button>
-      <button class="tile t-col" data-action="columnMenu"><span class="ti">✏️</span><b>Столбик</b><small>Сложение и вычитание</small></button>
-      <button class="tile t-blitz" data-action="blitzSetup"><span class="ti">⚡</span><b>Блиц</b><small>60 секунд на скорость</small></button>
-      <button class="tile t-boss" data-action="bossIntro"><span class="ti">${boss.icon}</span><b>Битва с боссом</b><small>${boss.name}, ур. ${boss.level}</small></button>
-      <button class="tile t-house" data-action="house"><span class="ti">🏡</span><b>Кото-домик</b><small>Комната твоего котика</small></button>
-      <button class="tile t-farm" data-action="farm"><span class="ti">🎣</span><b>Кото-ферма</b><small>${farmStatus()}</small></button>
-      <button class="tile t-pets" data-action="pets"><span class="ti">🥚</span><b>Питомцы</b><small>${P.pets.length} из ${PETS.length} друзей</small></button>
-      <button class="tile t-coll" data-action="collection"><span class="ti">🐈</span><b>Коллекция</b><small>${BREEDS.filter(b => b.test(P)).length} из ${BREEDS.length} пород</small></button>
-      <button class="tile t-shop" data-action="shop"><span class="ti">🛍️</span><b>Наряды</b><small>Одень своего котика</small></button>
-      <button class="tile t-ach" data-action="achievements"><span class="ti">🏆</span><b>Награды</b><small>${achCount} из ${ACHIEVEMENTS.length}</small></button>
+      <button class="tile t-adv wide" data-action="map"><span class="ti">🗺️</span><span class="tw"><b>${t('Приключение')}</b><small>${t('Умножение × и деление : — путешествуй по мирам')}</small></span></button>
+      <button class="tile t-col" data-action="columnMenu"><span class="ti">✏️</span><b>${t('Столбик')}</b><small>${t('Сложение и вычитание')}</small></button>
+      <button class="tile t-blitz" data-action="blitzSetup"><span class="ti">⚡</span><b>${t('Блиц')}</b><small>${t('60 секунд на скорость')}</small></button>
+      <button class="tile t-boss" data-action="bossIntro"><span class="ti">${boss.icon}</span><b>${t('Битва с боссом')}</b><small>${boss.name}, ${t('ур. {n}', { n: boss.level })}</small></button>
+      <button class="tile t-house" data-action="house"><span class="ti">🏡</span><b>${t('Кото-домик')}</b><small>${t('Комната твоего котика')}</small></button>
+      <button class="tile t-farm" data-action="farm"><span class="ti">🎣</span><b>${t('Кото-ферма')}</b><small>${farmStatus()}</small></button>
+      <button class="tile t-pets" data-action="pets"><span class="ti">🥚</span><b>${t('Питомцы')}</b><small>${t('{n} из {m} друзей', { n: P.pets.length, m: PETS.length })}</small></button>
+      <button class="tile t-coll" data-action="collection"><span class="ti">🐈</span><b>${t('Коллекция')}</b><small>${t('{n} из {m} пород', { n: BREEDS.filter(b => b.test(P)).length, m: BREEDS.length })}</small></button>
+      <button class="tile t-shop" data-action="shop"><span class="ti">🛍️</span><b>${t('Наряды')}</b><small>${t('Одень своего котика')}</small></button>
+      <button class="tile t-ach" data-action="achievements"><span class="ti">🏆</span><b>${t('Награды')}</b><small>${t('{n} из {m}', { n: achCount, m: ACHIEVEMENTS.length })}</small></button>
     </div>
   </div>`);
 }
 
 function settingsModal() {
-  modal(`<h2>Настройки</h2>
-    <button class="btn wide" data-action="toggleSound">${P.settings.sound ? '🔊 Звуки включены' : '🔇 Звуки выключены'}</button>
-    <button class="btn wide" data-action="toggleMusic">${P.settings.music !== false ? '🎵 Музыка включена' : '🔇 Музыка выключена'}</button>
-    ${P.settings.music !== false ? `<div class="chips music-vol">${['🔈 Тихо', '🔉 Средне', '🔊 Громко'].map((t, i) =>
-      `<button class="chip ${(P.settings.musicVol || 2) === i + 1 ? 'sel' : ''}" data-action="musicVol" data-v="${i + 1}">${t}</button>`).join('')}</div>` : ''}
-    <button class="btn wide" data-action="logout">👥 Сменить игрока</button>
-    <button class="btn wide" data-action="parent">👨‍👩‍👧 Для родителей</button>
-    <button class="btn wide danger" data-action="deleteProfile">🗑️ Удалить игрока</button>
-    <button class="btn wide ghost" data-action="closeModal">Закрыть</button>`);
+  modal(`<h2>${t('Настройки')}</h2>
+    <button class="btn wide" data-action="toggleSound">${P.settings.sound ? t('🔊 Звуки включены') : t('🔇 Звуки выключены')}</button>
+    <button class="btn wide" data-action="toggleMusic">${P.settings.music !== false ? t('🎵 Музыка включена') : t('🔇 Музыка выключена')}</button>
+    ${P.settings.music !== false ? `<div class="chips music-vol">${[t('🔈 Тихо'), t('🔉 Средне'), t('🔊 Громко')].map((lab, i) =>
+      `<button class="chip ${(P.settings.musicVol || 2) === i + 1 ? 'sel' : ''}" data-action="musicVol" data-v="${i + 1}">${lab}</button>`).join('')}</div>` : ''}
+    <button class="btn wide" data-action="logout">${t('👥 Сменить игрока')}</button>
+    <button class="btn wide" data-action="parent">👨‍👩‍👧 ${t('Для родителей')}</button>
+    <button class="btn wide danger" data-action="deleteProfile">${t('🗑️ Удалить игрока')}</button>
+    <button class="btn wide ghost" data-action="closeModal">${t('Закрыть')}</button>`);
 }
 
 // ---------- Карта приключений ----------
@@ -316,21 +319,21 @@ function screenMap() {
       <button class="map-node ${open ? '' : 'locked'} ${isNext ? 'next' : ''}" style="--c:${w.color}"
         data-action="${open ? 'startAdventure' : 'lockedWorld'}" data-i="${i}" data-op="${mapOp}">
         <span class="mn-icon">${open ? w.icon : '🔒'}</span>
-        <span class="mn-table">${w.tables.length > 1 ? 'микс' : sign + w.tables[0]}</span>
+        <span class="mn-table">${w.tables.length > 1 ? t('микс') : sign + w.tables[0]}</span>
       </button>
       <div class="map-label"><b>${w.name}</b><span class="stars">${'⭐'.repeat(st)}${'☆'.repeat(3 - st)}</span></div>
       ${isNext ? `<div class="map-cat">${catHTML(P.cat, 54, 'happy', false)}</div>` : ''}
     </div>${i < list.length - 1 ? '<div class="map-paws">🐾</div>' : ''}`;
   }).join('');
   show(`<div class="screen map">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>Карта миров</h2><button class="icon-btn" data-action="knowledge" title="Карта знаний">📊</button></div>
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('Карта миров')}</h2><button class="icon-btn" data-action="knowledge" title="${esc(t('Карта знаний'))}">📊</button></div>
     <div class="seg">
-      <button class="${isDiv ? '' : 'sel'}" data-action="mapOp" data-op="mul">× Умножение</button>
-      <button class="${isDiv ? 'sel' : ''}" data-action="mapOp" data-op="div">: Деление</button>
+      <button class="${isDiv ? '' : 'sel'}" data-action="mapOp" data-op="mul">${t('× Умножение')}</button>
+      <button class="${isDiv ? 'sel' : ''}" data-action="mapOp" data-op="div">${t(': Деление')}</button>
     </div>
     <p class="subtitle">${isDiv
-      ? 'Делим угощение поровну между котиками! Мир деления открывается, когда пройден такой же мир умножения.'
-      : 'Пройди мир, чтобы открыть следующий. Без ошибок — 3 звезды!'}</p>
+      ? t('Делим угощение поровну между котиками! Мир деления открывается, когда пройден такой же мир умножения.')
+      : t('Пройди мир, чтобы открыть следующий. Без ошибок — 3 звезды!')}</p>
     <div class="map-path">${nodes}</div>
   </div>`);
 }
@@ -445,7 +448,7 @@ const worldOpen = (op, i) => (op === 'div' ? isDivWorldUnlocked(P, i) : isWorldU
 
 function startAdventure(i, op = 'mul') {
   const w = worldsFor(op)[i];
-  const say = op === 'div' ? `${w.icon} Делим угощение поровну! Поехали!` : `Мир «${w.name}»! Поехали! 🐾`;
+  const say = op === 'div' ? t('{icon} Делим угощение поровну! Поехали!', { icon: w.icon }) : t('Мир «{name}»! Поехали! 🐾', { name: w.name });
   S = { mode: 'adventure', op, world: i, tables: w.tables, input: 'choices', retry: [], recent: [], qn: 0, correct: 0, mistakes: 0, combo: 0, mood: 'normal', say };
   show(quizLayout());
   document.querySelector('.quiz').style.setProperty('--world', w.color);
@@ -468,7 +471,7 @@ MODES.adventure = {
   after(ok) {
     if (ok) {
       S.mood = 'happy';
-      S.say = S.combo >= 5 ? `${S.combo} подряд! Ты огонь! 🔥` : pick(PRAISE);
+      S.say = S.combo >= 5 ? t('{n} подряд! Ты огонь! 🔥', { n: S.combo }) : pick(PRAISE);
       renderAdvStage();
       heroFx(S.combo % 5 === 0 ? 'combo' : 'hop');
       later(() => {
@@ -494,17 +497,17 @@ function hintModal(q) {
   const treat = S.op === 'div' ? DIV_WORLDS[S.world].icon : '🐟';
   const main = q.type === 'div'
     ? `<p class="big-eq">${a * b} : ${a} = <b>${b}</b></p>
-       <p>Раздели ${a * b} ${treat} поровну: сколько раз по <b>${a}</b> помещается в <b>${a * b}</b>?</p>
-       <p>Проверяем умножением: ${a} × ${b} = ${a * b} ✔️</p>`
+       <p>${t('Раздели {total} {treat} поровну: сколько раз по <b>{a}</b> помещается в <b>{total}</b>?', { total: a * b, treat, a })}</p>
+       <p>${t('Проверяем умножением:')} ${a} × ${b} = ${a * b} ✔️</p>`
     : q.type === 'missing'
-    ? `<p>Сколько раз нужно взять по <b>${a}</b>, чтобы получилось <b>${a * b}</b>?</p><p class="big-eq">${a * b} : ${a} = <b>${b}</b></p>`
-    : `<p class="big-eq">${a} × ${b} = <b>${a * b}</b></p><p>Это по <b>${a}</b> взять <b>${b}</b> раз:<br>${sum} = ${a * b}</p>`;
+    ? `<p>${t('Сколько раз нужно взять по <b>{a}</b>, чтобы получилось <b>{total}</b>?', { a, total: a * b })}</p><p class="big-eq">${a * b} : ${a} = <b>${b}</b></p>`
+    : `<p class="big-eq">${a} × ${b} = <b>${a * b}</b></p><p>${t('Это по <b>{a}</b> взять <b>{b}</b> раз:', { a, b })}<br>${sum} = ${a * b}</p>`;
   const tip = q.type === 'div' ? divTipFor(a) : tipFor(a, b);
-  modal(`<h2>Давай разберёмся 🐾</h2>
+  modal(`<h2>${t('Давай разберёмся 🐾')}</h2>
     ${main}
     <div class="dots" style="grid-template-columns:repeat(${a}, var(--dot))">${dots}</div>
     ${tip ? `<p class="tip">💡 ${tip}</p>` : ''}
-    <button class="btn big primary wide" data-action="hintOk">Понятно! 👍</button>`, 'hint-modal');
+    <button class="btn big primary wide" data-action="hintOk">${t('Понятно! 👍')}</button>`, 'hint-modal');
 }
 
 function finishAdventure() {
@@ -517,21 +520,21 @@ function finishAdventure() {
   if (stars === 3) P.perfectCount++;
   const bonus = stars * 5 * (hasPet('unicorn') ? 2 : 1) + (first ? 10 : 0);
   P.fish += bonus;
-  const lines = [`Ошибок: ${S.mistakes}`, `Бонус: +${bonus} 🐟`];
+  const lines = [t('Ошибок: {n}', { n: S.mistakes }), t('Бонус: +{n} 🐟', { n: bonus })];
   const nextW = list[S.world + 1];
-  if (first && nextW) lines.push(`Открыт новый мир: ${nextW.icon} <b>${nextW.name}</b>!`);
-  if (WORLDS.every(x => (P.stars[x.id] || 0) > 0)) grantSpecial('neck', 'star', '🌟 Ты получила «Звезду мира» для котика!');
+  if (first && nextW) lines.push(t('Открыт новый мир: {icon} <b>{name}</b>!', { icon: nextW.icon, name: nextW.name }));
+  if (WORLDS.every(x => (P.stars[x.id] || 0) > 0)) grantSpecial('neck', 'star', t('🌟 Ты получила «Звезду мира» для котика!'));
   checkAchievements();
   save();
   Sound.win();
   confetti();
   screenResult({
-    title: stars === 3 ? 'Идеально!' : stars === 2 ? 'Отлично!' : 'Уровень пройден!',
+    title: stars === 3 ? t('Идеально!') : stars === 2 ? t('Отлично!') : t('Уровень пройден!'),
     stars, mood: 'happy', lines,
     buttons: [
-      nextW && worldOpen(S.op, S.world + 1) ? `<button class="btn big primary" data-action="startAdventure" data-i="${S.world + 1}" data-op="${S.op}">Следующий мир →</button>` : '',
-      `<button class="btn" data-action="startAdventure" data-i="${S.world}" data-op="${S.op}">Ещё раз</button>`,
-      `<button class="btn" data-action="map">На карту</button>`,
+      nextW && worldOpen(S.op, S.world + 1) ? `<button class="btn big primary" data-action="startAdventure" data-i="${S.world + 1}" data-op="${S.op}">${t('Следующий мир →')}</button>` : '',
+      `<button class="btn" data-action="startAdventure" data-i="${S.world}" data-op="${S.op}">${t('Ещё раз')}</button>`,
+      `<button class="btn" data-action="map">${t('На карту')}</button>`,
     ],
   });
 }
@@ -557,19 +560,19 @@ let blitzTables = null;
 function screenBlitzSetup() {
   if (!blitzTables) blitzTables = [2, 3, 4, 5, 6, 7, 8, 9, 10];
   show(`<div class="screen center">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>⚡ Блиц</h2><div class="pill">🏅 ${P.blitzBest}</div></div>
-    <p class="subtitle">60 секунд. Вводи ответы как можно быстрее! Каждый верный ответ — рыбка.</p>
-    <h3>Какие таблицы?</h3>
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('⚡ Блиц')}</h2><div class="pill">🏅 ${P.blitzBest}</div></div>
+    <p class="subtitle">${t('60 секунд. Вводи ответы как можно быстрее! Каждый верный ответ — рыбка.')}</p>
+    <h3>${t('Какие таблицы?')}</h3>
     <div class="chips">
       ${[2, 3, 4, 5, 6, 7, 8, 9, 10].map(t => `<button class="chip ${blitzTables.includes(t) ? 'sel' : ''}" data-action="blitzChip" data-t="${t}">×${t}</button>`).join('')}
     </div>
-    <button class="btn ghost" data-action="blitzAll">Выбрать все</button>
-    <button class="btn big primary" data-action="startBlitz">Старт! ⚡</button>
+    <button class="btn ghost" data-action="blitzAll">${t('Выбрать все')}</button>
+    <button class="btn big primary" data-action="startBlitz">${t('Старт! ⚡')}</button>
   </div>`);
 }
 
 function startBlitz() {
-  if (!blitzTables.length) { toast('Выбери хотя бы одну таблицу'); return; }
+  if (!blitzTables.length) { toast(t('Выбери хотя бы одну таблицу')); return; }
   const total = hasPet('owl') ? 70000 : 60000;
   S = { mode: 'blitz', tables: [...blitzTables], input: 'keypad', recent: [], qn: 0, correct: 0, mistakes: 0, combo: 0, timeLeft: total, total };
   show(quizLayout());
@@ -591,9 +594,9 @@ function startBlitz() {
 function renderBlitzStage() {
   document.getElementById('qprogress').innerHTML = `<div class="timebar"><i id="timebar" style="width:${S.timeLeft / S.total * 100}%"></i><span id="timesec">${Math.ceil(S.timeLeft / 1000)}</span></div>`;
   document.getElementById('stage').innerHTML = `<div class="blitz-stage">
-    <div class="score"><small>Очки</small><b>${S.correct}</b></div>
+    <div class="score"><small>${t('Очки')}</small><b>${S.correct}</b></div>
     <div class="cat-with-pet">${catHTML(P.cat, 90, S.combo >= 3 ? 'happy' : 'normal')}</div>
-    <div class="score"><small>Рекорд</small><b>${Math.max(P.blitzBest, S.correct)}</b></div>
+    <div class="score"><small>${t('Рекорд')}</small><b>${Math.max(P.blitzBest, S.correct)}</b></div>
     ${comboBadge()}
   </div>`;
 }
@@ -625,13 +628,13 @@ function finishBlitz() {
   Sound.win();
   if (record) confetti(['⚡', '🏅', '🐟', '⭐']);
   screenResult({
-    title: record ? 'Новый рекорд! 🏅' : 'Время вышло!',
+    title: record ? t('Новый рекорд! 🏅') : t('Время вышло!'),
     mood: 'happy',
     big: `<div class="big-score">${S.correct}</div>`,
-    lines: [`Верных ответов: ${S.correct}`, `Ошибок: ${S.mistakes}`, record ? 'Бонус за рекорд: +10 🐟' : `Рекорд: ${P.blitzBest}`],
+    lines: [t('Верных ответов: {n}', { n: S.correct }), t('Ошибок: {n}', { n: S.mistakes }), record ? t('Бонус за рекорд: +10 🐟') : t('Рекорд: {n}', { n: P.blitzBest })],
     buttons: [
-      `<button class="btn big primary" data-action="startBlitz">Ещё раз ⚡</button>`,
-      `<button class="btn" data-action="hub">В меню</button>`,
+      `<button class="btn big primary" data-action="startBlitz">${t('Ещё раз ⚡')}</button>`,
+      `<button class="btn" data-action="hub">${t('В меню')}</button>`,
     ],
   });
 }
@@ -643,12 +646,11 @@ function bossIntro() {
   const tables = unlockedTables(P);
   modal(`<div class="boss-big">${boss.icon}<span>${boss.crown}</span></div>
     <h2>${boss.name}</h2>
-    <p>Уровень ${boss.level} · ❤️ ${boss.hp} ударов</p>
-    <p>Отвечай правильно, чтобы бить босса. Быстрый ответ — <b>критический удар</b>!
-    Если долго думать, босс атакует. У тебя 3 жизни.</p>
-    <p class="tip">Примеры из открытых миров: ${tables.map(t => '×' + t).join(' ')}</p>
-    <button class="btn big danger wide" data-action="startBoss">В бой! ⚔️</button>
-    <button class="btn ghost wide" data-action="closeModal">Не сейчас</button>`);
+    <p>${t('Уровень {n} · ❤️ {hp} {hits}', { n: boss.level, hp: boss.hp, hits: tn(boss.hp, 'удар|удара|ударов') })}</p>
+    <p>${t('Отвечай правильно, чтобы бить босса. Быстрый ответ — <b>критический удар</b>! Если долго думать, босс атакует. У тебя 3 жизни.')}</p>
+    <p class="tip">${t('Примеры из открытых миров:')} ${tables.map(t => '×' + t).join(' ')}</p>
+    <button class="btn big danger wide" data-action="startBoss">${t('В бой! ⚔️')}</button>
+    <button class="btn ghost wide" data-action="closeModal">${t('Не сейчас')}</button>`);
 }
 
 function startBoss() {
@@ -682,14 +684,14 @@ function renderBossStage(fx = '') {
   for (let i = 0; i < S.maxHearts; i++) hearts += i < S.hearts ? '❤️' : '🤍';
   document.getElementById('qprogress').innerHTML = `<div class="hearts">${hearts}</div>`;
   document.getElementById('stage').innerHTML = `<div class="boss-stage">
-    <div class="boss-name">${S.boss.name} · ур. ${S.boss.level}</div>
+    <div class="boss-name">${S.boss.name} · ${t('ур. {n}', { n: S.boss.level })}</div>
     <div class="hpbar"><i style="width:${S.hp / S.boss.hp * 100}%"></i><span>${S.hp} / ${S.boss.hp}</span></div>
     <div class="boss-row">
       <div class="cat-with-pet">${catHTML(P.cat, 96, S.mood || 'normal')}${petHTML(P.pet, 30)}</div>
       <div class="vs">VS</div>
       <div class="boss-big ${fx}" id="bossBig">${S.boss.icon}<span>${S.boss.crown}</span></div>
     </div>
-    <div class="attack"><small>Атака босса</small><div class="attackbar"><i id="attackbar" style="width:${Math.max(0, S.attackLeft / S.boss.attackMs * 100)}%"></i></div></div>
+    <div class="attack"><small>${t('Атака босса')}</small><div class="attackbar"><i id="attackbar" style="width:${Math.max(0, S.attackLeft / S.boss.attackMs * 100)}%"></i></div></div>
     ${comboBadge()}
   </div>`;
 }
@@ -715,7 +717,7 @@ MODES.boss = {
       if (crit) Sound.crit(); else Sound.hit();
       renderBossStage('shake');
       heroFx(crit ? 'crit' : 'pounce');
-      floatText(crit ? `КРИТ! −${dmg}` : `−${dmg}`, crit ? 'crit' : 'dmg');
+      floatText(crit ? t('КРИТ! −{n}', { n: dmg }) : `−${dmg}`, crit ? 'crit' : 'dmg');
       if (S.hp <= 0) { S.over = true; later(() => finishBoss(true), 700); return; }
       later(() => { S.mood = 'normal'; nextQuestion(); }, 600);
     } else {
@@ -759,25 +761,25 @@ function finishBoss(win) {
     P.fish += reward;
     P.bossWins++;
     P.bossLevel++;
-    if (P.bossWins === 1) grantSpecial('neck', 'medal', '🏅 Ты получила «Медаль чемпиона» для котика!');
-    if (P.bossWins === 5) grantSpecial('paw', 'trophy', '🏆 Ты получила «Кубок чемпиона» для котика!');
+    if (P.bossWins === 1) grantSpecial('neck', 'medal', t('🏅 Ты получила «Медаль чемпиона» для котика!'));
+    if (P.bossWins === 5) grantSpecial('paw', 'trophy', t('🏆 Ты получила «Кубок чемпиона» для котика!'));
     checkAchievements();
     save();
     Sound.win();
     confetti(['⚔️', '🏆', '🐟', '⭐', boss.icon]);
     const nb = bossFor(P.bossLevel);
     screenResult({
-      title: 'Победа! 🏆', mood: 'happy',
+      title: t('Победа! 🏆'), mood: 'happy',
       big: `<div class="boss-big defeated">${boss.icon}</div>`,
-      lines: [`${boss.name} побеждён!`, `Награда: +${reward} 🐟`, `Следующий соперник: ${nb.icon} ${nb.name}`],
-      buttons: [`<button class="btn big danger" data-action="bossIntro">Следующий бой ⚔️</button>`, `<button class="btn" data-action="hub">В меню</button>`],
+      lines: [t('{name} побеждён!', { name: boss.name }), t('Награда: +{n} 🐟', { n: reward }), t('Следующий соперник: {icon} {name}', { icon: nb.icon, name: nb.name })],
+      buttons: [`<button class="btn big danger" data-action="bossIntro">${t('Следующий бой ⚔️')}</button>`, `<button class="btn" data-action="hub">${t('В меню')}</button>`],
     });
   } else {
     save();
     screenResult({
-      title: 'Босс оказался сильнее…', mood: 'sad',
-      lines: [`Ты нанесла ${boss.hp - S.hp} из ${boss.hp} ударов`, 'Потренируйся в Приключении и возвращайся!', `Рыбок собрано: ${S.correct} 🐟`],
-      buttons: [`<button class="btn big danger" data-action="startBoss">Реванш! ⚔️</button>`, `<button class="btn" data-action="hub">В меню</button>`],
+      title: t('Босс оказался сильнее…'), mood: 'sad',
+      lines: [t('Ты нанесла {n} из {m} ударов', { n: boss.hp - S.hp, m: boss.hp }), t('Потренируйся в Приключении и возвращайся!'), t('Рыбок собрано: {n} 🐟', { n: S.correct })],
+      buttons: [`<button class="btn big danger" data-action="startBoss">${t('Реванш! ⚔️')}</button>`, `<button class="btn" data-action="hub">${t('В меню')}</button>`],
     });
   }
 }
@@ -787,9 +789,9 @@ function finishBoss(win) {
 let shopTab = 'fur';
 
 const TIERS = {
-  rare:   { name: 'Редкое' },
-  epic:   { name: 'Эпическое' },
-  legend: { name: 'Легендарное' },
+  rare:   { name: t('Редкое') },
+  epic:   { name: t('Эпическое') },
+  legend: { name: t('Легендарное') },
 };
 
 // Редкость вещи по цене: чем дороже, тем круче рамка.
@@ -817,8 +819,8 @@ function screenShop() {
     const on = P.cat[shopTab] === it.id;
     const tier = itemTier(it);
     let label;
-    if (on) label = '<span class="tag on">Надето</span>';
-    else if (have) label = '<span class="tag">Надеть</span>';
+    if (on) label = `<span class="tag on">${t('Надето')}</span>`;
+    else if (have) label = `<span class="tag">${t('Надеть')}</span>`;
     else if (it.special) label = `<span class="tag special">🔒 ${it.special}</span>`;
     else label = `<span class="tag price ${P.fish >= it.price ? '' : 'poor'}">🐟 ${it.price}</span>`;
     return `<button class="item tier-${tier || 'common'} ${on ? 'on' : ''} ${!have ? 'not-owned' : ''}" data-action="shopItem" data-id="${it.id}">
@@ -827,10 +829,10 @@ function screenShop() {
   }).join('');
   const own = slot.items.filter(it => owns(shopTab, it)).length;
   show(`<div class="screen shop">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>Мой котик</h2><div class="pill fish">🐟 ${P.fish}</div></div>
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('Мой котик')}</h2><div class="pill fish">🐟 ${P.fish}</div></div>
     <div class="shop-preview"><button class="cat-pet" data-action="petCat">${catHTML(P.cat, 190, 'happy')}</button></div>
     <div class="tabs">${Object.entries(SHOP).map(([k, s]) => `<button class="tab ${k === shopTab ? 'sel' : ''}" data-action="shopTab" data-tab="${k}">${s.icon}<small>${s.title}</small></button>`).join('')}</div>
-    <p class="subtitle shop-count">${slot.title}: собрано ${own} из ${slot.items.length}</p>
+    <p class="subtitle shop-count">${t('{title}: собрано {own} из {n}', { title: slot.title, own, n: slot.items.length })}</p>
     <div class="items">${items}</div>
   </div>`);
 }
@@ -845,7 +847,7 @@ function shopItem(id) {
     screenShop();
     if (P.cat[shopTab]) heroFx('twirl', document.querySelector('.shop-preview'));
   } else if (it.special) {
-    toast(`🔒 Эту вещь нельзя купить. ${it.special}!`);
+    toast(t('🔒 Эту вещь нельзя купить. {special}!', { special: it.special }));
   } else {
     // Сначала примерка: котик показывает вещь на себе, покупка — только по кнопке.
     const tryCat = { ...P.cat, [shopTab]: id };
@@ -854,11 +856,11 @@ function shopItem(id) {
     modal(`${tier ? `<div class="tier-badge big tier-${tier}">${TIERS[tier].name}</div>` : ''}
       <div class="try-on"><div class="cat-with-pet">${catHTML(tryCat, 200, 'happy')}</div></div>
       <h2>${it.name}</h2>
-      <p>Цена: <b>🐟 ${it.price}</b> · у тебя 🐟 ${P.fish}</p>
+      <p>${t('Цена: <b>🐟 {price}</b> · у тебя 🐟 {fish}', { price: it.price, fish: P.fish })}</p>
       ${enough
-        ? `<button class="btn big primary wide" data-action="buyItem" data-id="${id}">Купить!</button>`
-        : `<p class="hint">Не хватает ${it.price - P.fish} 🐟 — решай примеры и лови рыбу на ферме!</p>`}
-      <button class="btn wide ghost" data-action="closeModal">${enough ? 'Не сейчас' : 'Понятно'}</button>`, 'try-modal');
+        ? `<button class="btn big primary wide" data-action="buyItem" data-id="${id}">${t('Купить!')}</button>`
+        : `<p class="hint">${t('Не хватает {n} 🐟 — решай примеры и лови рыбу на ферме!', { n: it.price - P.fish })}</p>`}
+      <button class="btn wide ghost" data-action="closeModal">${enough ? t('Не сейчас') : t('Понятно')}</button>`, 'try-modal');
     heroFx('twirl', document.getElementById('modal'));
   }
 }
@@ -872,7 +874,7 @@ function buyItem(id) {
   P.cat[shopTab] = id;
   Sound.register();
   if (itemTier(it) === 'legend' || itemTier(it) === 'epic') confetti(['✨', '⭐', '💎', '🐟']);
-  toast(`🛍️ Куплено: <b>${it.name}</b>!`);
+  toast(t('🛍️ Куплено: <b>{name}</b>!', { name: it.name }));
   checkAchievements();
   save();
   screenShop();
@@ -904,22 +906,22 @@ function screenKnowledge() {
   const total = seenKeys.size;
   const mt = op === 'mul' ? masteredTables(P) : [];
   show(`<div class="screen knowledge">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>Карта знаний</h2><div></div></div>
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('Карта знаний')}</h2><div></div></div>
     <div class="seg">
-      <button class="${op === 'mul' ? 'sel' : ''}" data-action="knowOp" data-op="mul">× Умножение</button>
-      <button class="${op === 'div' ? 'sel' : ''}" data-action="knowOp" data-op="div">: Деление</button>
+      <button class="${op === 'mul' ? 'sel' : ''}" data-action="knowOp" data-op="mul">${t('× Умножение')}</button>
+      <button class="${op === 'div' ? 'sel' : ''}" data-action="knowOp" data-op="div">${t(': Деление')}</button>
     </div>
     <div class="card center">
-      <div class="big-score small">${learned} <small>из ${total}</small></div>
-      <div>примеров выучено ${mt.length ? `· таблицы: ${mt.map(t => '×' + t).join(', ')}` : ''}</div>
+      <div class="big-score small">${learned} <small>${t('из {n}', { n: total })}</small></div>
+      <div>${t('примеров выучено')} ${mt.length ? `· ${t('таблицы:')} ${mt.map(t => '×' + t).join(', ')}` : ''}</div>
       <div class="bar"><i style="width:${learned / total * 100}%"></i></div>
     </div>
     ${grid}
     <div class="legend">
-      <span><i class="none"></i>ещё не было</span><span><i class="b0"></i>учим</span>
-      <span><i class="b2"></i>почти</span><span><i class="b3"></i>хорошо</span><span><i class="b5"></i>выучено!</span>
+      <span><i class="none"></i>${t('ещё не было')}</span><span><i class="b0"></i>${t('учим')}</span>
+      <span><i class="b2"></i>${t('почти')}</span><span><i class="b3"></i>${t('хорошо')}</span><span><i class="b5"></i>${t('выучено!')}</span>
     </div>
-    <p class="subtitle">Нажми на клетку, чтобы узнать подробнее. Красные примеры будут попадаться чаще — так они быстрее запомнятся.</p>
+    <p class="subtitle">${t('Нажми на клетку, чтобы узнать подробнее. Красные примеры будут попадаться чаще — так они быстрее запомнятся.')}</p>
   </div>`);
 }
 
@@ -927,7 +929,7 @@ function screenKnowledge() {
 
 function screenAchievements() {
   show(`<div class="screen">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>Награды</h2><div class="pill">${Object.keys(P.achievements).length}/${ACHIEVEMENTS.length}</div></div>
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('Награды')}</h2><div class="pill">${Object.keys(P.achievements).length}/${ACHIEVEMENTS.length}</div></div>
     <div class="ach-list">
       ${ACHIEVEMENTS.map(a => {
         const got = !!P.achievements[a.id];
@@ -942,12 +944,13 @@ function screenAchievements() {
 const actions = {
   toProfiles() { draft = null; pinState = null; screenProfiles(); },
   newProfile() { draft = null; screenNewProfile(); },
+  setLang(el) { if (el.dataset.id !== LANG) setLang(el.dataset.id); },
   pickProfile(el) { pinState = { id: el.dataset.id, entered: [], fails: 0 }; screenPin(); },
   draftFur(el) { draft.fur = el.dataset.id; Sound.meow(); screenNewProfile(); },
   draftNext() {
     const name = (draft.name || '').trim();
-    if (!name) { toast('Напиши своё имя 🙂'); return; }
-    if (Store.list().some(p => p.name.toLowerCase() === name.toLowerCase())) { toast('Такое имя уже есть. Придумай другое!'); return; }
+    if (!name) { toast(t('Напиши своё имя 🙂')); return; }
+    if (Store.list().some(p => p.name.toLowerCase() === name.toLowerCase())) { toast(t('Такое имя уже есть. Придумай другое!')); return; }
     draft.name = name;
     draft.step = 'pin';
     draft.pin = [];
@@ -960,7 +963,7 @@ const actions = {
     const p = Store.create(draft.name, draft.pin.join(','), draft.fur);
     draft = null;
     p.fish = 10;
-    toast('🎁 Подарок новичку: 10 рыбок!');
+    toast(t('🎁 Подарок новичку: 10 рыбок!'));
     login(p);
     confetti();
   },
@@ -990,9 +993,9 @@ const actions = {
   musicVol(el) { P.settings.musicVol = Number(el.dataset.v); save(); Sound.musicChanged(); settingsModal(); },
   logout() { Store.setCurrent(null); P = null; Sound.musicChanged(); screenProfiles(); },
   deleteProfile() {
-    modal(`<h2>Удалить игрока ${esc(P.name)}?</h2><p>Все звёзды, рыбки и наряды пропадут навсегда.</p>
-      <button class="btn wide danger" data-action="deleteYes">Да, удалить</button>
-      <button class="btn wide" data-action="closeModal">Нет, оставить</button>`);
+    modal(`<h2>${t('Удалить игрока {name}?', { name: esc(P.name) })}</h2><p>${t('Все звёзды, рыбки и наряды пропадут навсегда.')}</p>
+      <button class="btn wide danger" data-action="deleteYes">${t('Да, удалить')}</button>
+      <button class="btn wide" data-action="closeModal">${t('Нет, оставить')}</button>`);
   },
   deleteYes() { Store.remove(P.id); P = null; screenProfiles(); },
   petCat(el) {
@@ -1015,22 +1018,22 @@ const actions = {
     save();
     Sound.chest();
     confetti(['🐟', '🎁', '💎']);
-    modal(`<div class="chest">🎁</div><h2>Сундук дня!</h2><p>Внутри <b>${reward} 🐟</b></p>
-      <p>Серия: 🔥 ${P.streak.count} дн. Чем длиннее серия, тем больше рыбок в сундуке!</p>
-      <button class="btn big primary wide" data-action="hub">Ура!</button>`);
+    modal(`<div class="chest">🎁</div><h2>${t('Сундук дня!')}</h2><p>${t('Внутри <b>{n} 🐟</b>', { n: reward })}</p>
+      <p>${t('Серия: 🔥 {n} дн. Чем длиннее серия, тем больше рыбок в сундуке!', { n: P.streak.count })}</p>
+      <button class="btn big primary wide" data-action="hub">${t('Ура!')}</button>`);
   },
-  lockedWorld(el) { toast(el.dataset.op === 'div' ? '🔒 Сначала пройди такой же мир умножения и предыдущий мир деления!' : '🔒 Сначала пройди предыдущий мир!'); },
+  lockedWorld(el) { toast(el.dataset.op === 'div' ? t('🔒 Сначала пройди такой же мир умножения и предыдущий мир деления!') : t('🔒 Сначала пройди предыдущий мир!')); },
   startAdventure(el) { startAdventure(Number(el.dataset.i), el.dataset.op || 'mul'); },
   mapOp(el) { mapOp = el.dataset.op; screenMap(); },
   choose(el) { answer(Number(el.dataset.v), el); },
   kp(el) { kpPress(el.dataset.v); },
-  hintOk() { closeModal(); if (S && S.mode === 'adventure') { S.mood = 'normal'; S.say = 'Пробуем дальше! 💪'; renderAdvStage(); nextQuestion(); } },
+  hintOk() { closeModal(); if (S && S.mode === 'adventure') { S.mood = 'normal'; S.say = t('Пробуем дальше! 💪'); renderAdvStage(); nextQuestion(); } },
   quitQuiz() {
     const paused = S.locked;
     S.locked = true;
-    modal(`<h2>Выйти из игры?</h2><p>Рыбки останутся у тебя, а уровень придётся начать заново.</p>
-      <button class="btn wide danger" data-action="quitYes">Выйти</button>
-      <button class="btn wide primary" data-action="quitNo" data-p="${paused ? 1 : 0}">Играть дальше</button>`);
+    modal(`<h2>${t('Выйти из игры?')}</h2><p>${t('Рыбки останутся у тебя, а уровень придётся начать заново.')}</p>
+      <button class="btn wide danger" data-action="quitYes">${t('Выйти')}</button>
+      <button class="btn wide primary" data-action="quitNo" data-p="${paused ? 1 : 0}">${t('Играть дальше')}</button>`);
   },
   quitYes() { S = null; screenHub(); },
   quitNo(el) { closeModal(); if (S) S.locked = el.dataset.p === '1'; },
@@ -1052,12 +1055,12 @@ const actions = {
   factInfo(el) {
     const a = Number(el.dataset.a), b = Number(el.dataset.b);
     const f = factOf(P, a, b, knowOp);
-    const status = f.r + f.w === 0 ? 'ещё не встречался' : isMastered(f) ? 'выучен! 🌟' : 'учим 💪';
+    const status = f.r + f.w === 0 ? t('Пример ещё не встречался') : isMastered(f) ? t('Пример выучен! 🌟') : t('Пример учим 💪');
     const eq = knowOp === 'div' ? `${a * b} : ${a} = <b>${b}</b>` : `${a} × ${b} = <b>${a * b}</b>`;
     modal(`<p class="big-eq">${eq}</p>
-      <p>Пример ${status}</p><p>✅ Верно: ${f.r} · ❌ Ошибок: ${f.w}</p>
+      <p>${status}</p><p>${t('✅ Верно: {r} · ❌ Ошибок: {w}', { r: f.r, w: f.w })}</p>
       <p class="tip">💡 ${knowOp === 'div' ? divTipFor(a) : tipFor(a, b)}</p>
-      <button class="btn wide primary" data-action="closeModal">Понятно</button>`);
+      <button class="btn wide primary" data-action="closeModal">${t('Понятно')}</button>`);
   },
   achievements: screenAchievements,
   knowOp(el) { knowOp = el.dataset.op; screenKnowledge(); },

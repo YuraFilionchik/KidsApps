@@ -23,18 +23,18 @@ function screenHouse() {
   const bw = HOUSE_ITEMS.bowl.find(b => b.id === P.house.bowl) || HOUSE_ITEMS.bowl[0];
 
   const catPhrases = [
-    'Мурр! Какой уютный диванчик!',
-    'Как здесь тепло и мягко 🐾',
-    'Моя любимая комната!',
-    'Почеши за ушком!',
-    curPet ? `Мы с ${curPet.name} здесь играем!` : 'Здесь так спокойно!'
+    t('Мурр! Какой уютный диванчик!'),
+    t('Как здесь тепло и мягко 🐾'),
+    t('Моя любимая комната!'),
+    t('Почеши за ушком!'),
+    curPet ? t('Мы с {name} здесь играем!', { name: curPet.name }) : t('Здесь так спокойно!')
   ];
 
   show(`<div class="screen house-screen">
     <!-- Верхняя панель -->
     <div class="row-top">
-      <button class="icon-btn" data-action="hub" title="В меню">←</button>
-      <h2>🏡 Кото-домик</h2>
+      <button class="icon-btn" data-action="hub" title="${t('В меню')}">←</button>
+      <h2>🏡 ${t('Кото-домик')}</h2>
       <div class="pill fish" id="houseFishBadge">🐟 ${P.fish}</div>
     </div>
 
@@ -62,7 +62,7 @@ function screenHouse() {
               <img src="${dc.img}" class="room-decor-img" alt="${dc.name}">
             </div>
           ` : dc.id === 'garland' ? `
-            <div class="room-garland" data-action="tapDecor" title="Гирлянда">
+            <div class="room-garland" data-action="tapDecor" title="${t('Гирлянда')}">
               <span>💡</span><span>✨</span><span>💡</span><span>✨</span><span>💡</span>
             </div>` : `
             <div class="room-wall-art" data-action="tapDecor" title="${dc.name}">
@@ -118,7 +118,7 @@ function screenHouse() {
         </div>
 
         <!-- Слой 7: Котик в центре (уши полностью открыты, поверх стены и пола) -->
-        <div class="room-layer-cat" data-action="tapHouseCat" title="Погладить котика">
+        <div class="room-layer-cat" data-action="tapHouseCat" title="${t('Погладить котика')}">
           <div class="cat-floor-shadow"></div>
           ${catHTML(P.cat, 126, 'happy', false)}
           <div class="room-cat-bubble" id="houseCatBubble">${pick(catPhrases)}</div>
@@ -126,7 +126,7 @@ function screenHouse() {
 
         <!-- Слой 8: Питомец рядом с котиком (Пандочка с уникальной иллюстрацией) -->
         ${curPet ? `
-          <div class="room-layer-pet" data-action="tapHousePet" title="Поиграть с ${curPet.name}">
+          <div class="room-layer-pet" data-action="tapHousePet" title="${t('Поиграть с {name}', { name: curPet.name })}">
             <div class="pet-floor-shadow"></div>
             ${curPet.img ? `
               <img src="${curPet.img}" class="room-pet-img ${curPet.id === 'panda' ? 'panda-wiggle' : ''}" alt="${curPet.name}">
@@ -135,9 +135,9 @@ function screenHouse() {
             `}
           </div>
         ` : `
-          <button class="room-pet-invite" data-action="pets" title="Позвать питомца в комнату">
+          <button class="room-pet-invite" data-action="pets" title="${t('Позвать питомца в комнату')}">
             <span class="invite-plus">➕</span>
-            <small>Друг</small>
+            <small>${t('Друг')}</small>
           </button>
         `}
 
@@ -145,15 +145,15 @@ function screenHouse() {
 
       <!-- Кнопка смены питомца в комнате -->
       <div class="room-pet-bar">
-        <span class="pet-bar-title">${curPet ? `${curPet.icon} <b>${curPet.name}</b>` : '🐾 Без питомца'}</span>
-        <button class="btn ghost small" data-action="pets" style="padding:4px 10px;font-size:0.85rem;">Сменить друга 🥚</button>
+        <span class="pet-bar-title">${curPet ? `${curPet.icon} <b>${curPet.name}</b>` : '🐾 ' + t('Без питомца')}</span>
+        <button class="btn ghost small" data-action="pets" style="padding:4px 10px;font-size:0.85rem;">${t('Сменить друга 🥚')}</button>
       </div>
     </div>
 
     <!-- Панель магазина мебели и декора для комнаты -->
     <div class="house-shop-card card">
       <div class="house-tabs-container">
-        <button class="house-tab-scroll-btn" data-action="scrollHouseTabsLeft" title="Влево">‹</button>
+        <button class="house-tab-scroll-btn" data-action="scrollHouseTabsLeft" title="${t('Влево')}">‹</button>
         <div class="house-tabs-scroll" id="houseTabsScroll">
           ${Object.entries(HOUSE_CATEGORIES).map(([id, cat]) => `
             <button class="house-tab-btn ${houseTab === id ? 'active' : ''}" data-action="houseTab" data-tab="${id}">
@@ -162,7 +162,7 @@ function screenHouse() {
             </button>
           `).join('')}
         </div>
-        <button class="house-tab-scroll-btn" data-action="scrollHouseTabsRight" title="Вправо">›</button>
+        <button class="house-tab-scroll-btn" data-action="scrollHouseTabsRight" title="${t('Вправо')}">›</button>
       </div>
 
       <!-- Сетка предметов текущей категории -->
@@ -190,12 +190,12 @@ function screenHouse() {
             <div class="house-item-card ${isEquipped ? 'equipped' : ''}" data-action="${isEquipped ? '' : isOwned ? 'equipHouseItem' : 'buyHouseItem'}" data-slot="${houseTab}" data-id="${item.id}">
               <div class="house-item-preview">
                 ${previewHTML}
-                ${isEquipped ? '<span class="equipped-badge">✓ В комнате</span>' : ''}
+                ${isEquipped ? `<span class="equipped-badge">✓ ${t('В комнате')}</span>` : ''}
               </div>
               <div class="house-item-info">
                 <b class="house-item-name">${item.name}</b>
-                ${isEquipped ? '<span class="house-item-status active">Выбрано</span>'
-                  : isOwned ? '<span class="house-item-status owned">Надеть</span>'
+                ${isEquipped ? `<span class="house-item-status active">${t('Выбрано')}</span>`
+                  : isOwned ? `<span class="house-item-status owned">${t('Надеть')}</span>`
                   : `<span class="house-item-price ${canBuy ? '' : 'poor'}">🐟 ${item.price}</span>`}
               </div>
             </div>
@@ -225,19 +225,19 @@ function buyHouseItem(slot, id) {
   if (!item) return;
 
   if (P.fish < item.price) {
-    toast(`Не хватает ${item.price - P.fish} 🐟. Решай примеры, чтобы заработать!`);
+    toast(t('Не хватает {n} 🐟. Решай примеры, чтобы заработать!', { n: item.price - P.fish }));
     Sound.wrong();
     return;
   }
 
   const visual = item.img ? `<img src="${item.img}" style="max-height:90px;margin:8px auto;display:block;" alt="${item.name}">` : `<div style="font-size:3.5rem;margin:12px 0;">${item.icon || '🛋️'}</div>`;
 
-  modal(`<h2>Купить для домика?</h2>
+  modal(`<h2>${t('Купить для домика?')}</h2>
     ${visual}
     <p><b>${item.name}</b></p>
-    <p>Цена: <b>${item.price} 🐟</b></p>
-    <button class="btn big primary wide" data-action="confirmBuyHouseItem" data-slot="${slot}" data-id="${id}">Купить и поставить!</button>
-    <button class="btn wide ghost" data-action="closeModal">Позже</button>`);
+    <p>${t('Цена:')} <b>${item.price} 🐟</b></p>
+    <button class="btn big primary wide" data-action="confirmBuyHouseItem" data-slot="${slot}" data-id="${id}">${t('Купить и поставить!')}</button>
+    <button class="btn wide ghost" data-action="closeModal">${t('Позже')}</button>`);
 }
 
 function confirmBuyHouseItem(slot, id) {
@@ -255,7 +255,7 @@ function confirmBuyHouseItem(slot, id) {
   closeModal();
   Sound.coin();
   confetti(['✨', '🏡', '💖', '🐟']);
-  toast(`🎉 ${item.name} теперь в твоей комнате!`);
+  toast(t('🎉 {name} теперь в твоей комнате!', { name: item.name }));
   screenHouse();
 }
 
@@ -314,8 +314,8 @@ Object.assign(actions, {
     const bubble = document.getElementById('houseCatBubble');
     if (bubble) {
       const phrases = isPandaCat
-        ? ['Хрусь! Бамбук такой вкусный! 🎋', 'Мурр! Я самая пушистая пандочка!', 'Спасибо за чудесный домик! 🐼', 'Люблю отдыхать на диванчике! ✨']
-        : ['Мур-мур! Я обожаю этот диванчик!', 'Спасибо за уют! 🐾', 'Ты самый лучший хозяин!', 'Мяу-мяу! У меня самая красивая комната!'];
+        ? [t('Хрусь! Бамбук такой вкусный! 🎋'), t('Мурр! Я самая пушистая пандочка!'), t('Спасибо за чудесный домик! 🐼'), t('Люблю отдыхать на диванчике! ✨')]
+        : [t('Мур-мур! Я обожаю этот диванчик!'), t('Спасибо за уют! 🐾'), t('Ты самый лучший хозяин!'), t('Мяу-мяу! У меня самая красивая комната!')];
       bubble.textContent = pick(phrases);
       bubble.classList.remove('pop');
       void bubble.offsetWidth;
@@ -333,37 +333,37 @@ Object.assign(actions, {
       petEl.classList.add('bounce-tap');
     }
     popHeartInRoom(70, 50, isPanda ? pick(['🎍', '🐼', '✨', '💖']) : pick(['✨', '💖', '⭐']));
-    toast(isPanda ? '🐼 Пандочка с аппетитом хрустит бамбуком!' : '🐾 Твой питомец счастлив играть в комнате!');
+    toast(isPanda ? t('🐼 Пандочка с аппетитом хрустит бамбуком!') : t('🐾 Твой питомец счастлив играть в комнате!'));
   },
 
   tapBed() {
     Sound.click();
     popHeartInRoom(20, 52, '💤');
-    toast('🛋️ Просторный мягкий диванчик возле стены!');
+    toast(t('🛋️ Просторный мягкий диванчик возле стены!'));
   },
 
   tapScratcher() {
     Sound.click();
     popHeartInRoom(84, 46, '🪵');
-    toast('🌳 Большое кошачье дерево: котик залезает на самый верх!');
+    toast(t('🌳 Большое кошачье дерево: котик залезает на самый верх!'));
   },
 
   tapWindow() {
     Sound.click();
     popHeartInRoom(20, 24, '☀️');
-    toast('🪟 За окном чудесный цветущий сад!');
+    toast(t('🪟 За окном чудесный цветущий сад!'));
   },
 
   tapDecor() {
     Sound.coin();
     popHeartInRoom(50, 16, '✨');
-    toast('💡 Тёплый свет гирлянды!');
+    toast(t('💡 Тёплый свет гирлянды!'));
   },
 
   tapBowl() {
     Sound.coin();
     popHeartInRoom(28, 65, '😋');
-    toast('🥛 Ням! Вкусное угощение для котика!');
+    toast(t('🥛 Ням! Вкусное угощение для котика!'));
   },
 
   tapRug() {

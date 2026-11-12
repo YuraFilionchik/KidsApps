@@ -6,14 +6,14 @@ const findPet = id => PETS.find(p => p.id === id);
 function screenPets() {
   const cur = findPet(P.pet);
   show(`<div class="screen pets">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>🥚 Питомцы</h2><div class="pill fish">🐟 ${P.fish}</div></div>
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('🥚 Питомцы')}</h2><div class="pill fish">🐟 ${P.fish}</div></div>
     <div class="card companion">
       <div class="cat-with-pet">${catHTML(P.cat, 110, 'happy')}${cur ? petHTML(cur.id, 46) : ''}</div>
       <div>${cur
-        ? `<b>${cur.icon} ${cur.name}</b> играет с тобой<br><small>✨ ${cur.bonus}</small>`
-        : '<b>У котика пока нет друга</b><br><small>Выведи питомца из яйца — он будет помогать в игре!</small>'}</div>
+        ? `<b>${cur.icon} ${cur.name}</b> ${t('играет с тобой')}<br><small>✨ ${cur.bonus}</small>`
+        : `<b>${t('У котика пока нет друга')}</b><br><small>${t('Выведи питомца из яйца — он будет помогать в игре!')}</small>`}</div>
     </div>
-    <h3>Яйца</h3>
+    <h3>${t('Яйца')}</h3>
     <div class="eggs">
       ${EGGS.map(e => `<button class="egg-card" data-action="buyEgg" data-id="${e.id}">
         <span class="egg ${e.id === 'gold' ? 'egg-gold' : ''}">🥚</span>
@@ -22,7 +22,7 @@ function screenPets() {
         <span class="tag price ${P.fish >= e.price ? '' : 'poor'}">🐟 ${e.price}</span>
       </button>`).join('')}
     </div>
-    <h3>Мои питомцы · ${P.pets.length} из ${PETS.length}</h3>
+    <h3>${t('Мои питомцы · {n} из {total}', { n: P.pets.length, total: PETS.length })}</h3>
     <div class="pet-grid">
       ${PETS.map(p => {
         const have = P.pets.includes(p.id);
@@ -33,7 +33,7 @@ function screenPets() {
           <b>${have ? p.name : '???'}</b>
           <small>${RARITY[p.rarity].name}</small>
           ${have ? `<small class="bonus">${p.bonus}</small>` : ''}
-          ${on ? '<span class="tag on">С тобой</span>' : ''}
+          ${on ? `<span class="tag on">${t('С тобой')}</span>` : ''}
         </button>`;
       }).join('')}
     </div>
@@ -53,8 +53,8 @@ function rollPet(egg) {
 }
 
 function hatchEgg(egg) {
-  if (P.pets.length >= PETS.length) { toast('У тебя уже есть все питомцы! 🎉'); return; }
-  if (P.fish < egg.price) { toast(`Не хватает ${egg.price - P.fish} 🐟. Решай примеры!`); Sound.wrong(); return; }
+  if (P.pets.length >= PETS.length) { toast(t('У тебя уже есть все питомцы! 🎉')); return; }
+  if (P.fish < egg.price) { toast(t('Не хватает {n} 🐟. Решай примеры!', { n: egg.price - P.fish })); Sound.wrong(); return; }
   P.fish -= egg.price;
   const pet = rollPet(egg);
   P.pets.push(pet.id);
@@ -63,7 +63,7 @@ function hatchEgg(egg) {
   save();
   Sound.click();
   modal(`<div class="hatch"><span class="egg big wobble ${egg.id === 'gold' ? 'egg-gold' : ''}">🥚</span></div>
-    <h2>Кто же там?..</h2>`, 'hatch-modal');
+    <h2>${t('Кто же там?..')}</h2>`, 'hatch-modal');
   [350, 850, 1300].forEach(ms => setTimeout(() => { if (document.getElementById('modal')) Sound.crack(); }, ms));
   setTimeout(() => {
     if (!document.getElementById('modal')) return;
@@ -74,8 +74,8 @@ function hatchEgg(egg) {
       <div class="rarity" style="background:${rar.color}">${rar.name}</div>
       <h2>${pet.name}!</h2>
       <p>✨ ${pet.bonus}</p>
-      <button class="btn big primary wide" data-action="equipPet" data-id="${pet.id}">Взять с собой!</button>
-      <button class="btn wide ghost" data-action="pets">Потом</button>`, 'hatch-modal');
+      <button class="btn big primary wide" data-action="equipPet" data-id="${pet.id}">${t('Взять с собой!')}</button>
+      <button class="btn wide ghost" data-action="pets">${t('Потом')}</button>`, 'hatch-modal');
   }, 1700);
 }
 
@@ -84,8 +84,8 @@ function hatchEgg(egg) {
 function screenCollection() {
   const got = BREEDS.filter(b => b.test(P));
   show(`<div class="screen">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>🐈 Коллекция</h2><div class="pill">${got.length}/${BREEDS.length}</div></div>
-    <p class="subtitle">Открывай новые породы за успехи в игре. Нажми на котика, чтобы играть им!</p>
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('🐈 Коллекция')}</h2><div class="pill">${got.length}/${BREEDS.length}</div></div>
+    <p class="subtitle">${t('Открывай новые породы за успехи в игре. Нажми на котика, чтобы играть им!')}</p>
     <div class="breed-grid">
       ${BREEDS.map(b => {
         const open = b.test(P);
@@ -93,7 +93,7 @@ function screenCollection() {
         return `<button class="breed-card ${open ? '' : 'locked'} ${on ? 'on' : ''}" data-action="${open ? 'pickBreed' : 'lockedBreed'}" data-id="${b.id}">
           <div class="${open ? '' : 'silhouette'}">${catHTML({ fur: b.fur, breed: b.id, bg: 'room' }, 96, open ? 'happy' : 'normal')}</div>
           <b>${open ? b.name : '???'}</b>
-          <small>${on ? '✅ Это ты!' : open ? 'Выбрать' : '🔒 ' + b.cond}</small>
+          <small>${on ? t('✅ Это ты!') : open ? t('Выбрать') : '🔒 ' + b.cond}</small>
         </button>`;
       }).join('')}
     </div>
@@ -111,7 +111,7 @@ Object.assign(actions, {
     screenPets();
     if (P.pet) heroFx('twirl', document.querySelector('.companion'));
   },
-  unknownPet() { toast('❓ Этого питомца можно найти в яйце!'); },
+  unknownPet() { toast(t('❓ Этого питомца можно найти в яйце!')); },
   collection() { S = null; screenCollection(); },
   pickBreed(el) {
     const b = BREEDS.find(x => x.id === el.dataset.id);

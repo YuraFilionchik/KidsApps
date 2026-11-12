@@ -148,6 +148,12 @@ h2 { font-size: 1.5rem; }
 .shake { animation: shake .4s; }
 @keyframes shake { 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
 
+.lang-pick { display: flex; gap: 8px; justify-content: center; margin-bottom: 6px; }
+.lang-opt { display: flex; align-items: center; gap: 6px; border: 3px solid transparent; background: #fff; border-radius: 999px;
+  padding: 6px 14px; font: inherit; font-weight: 800; color: inherit; cursor: pointer; box-shadow: 0 3px 0 #ead6c1; }
+.lang-opt span { font-size: 1.3rem; line-height: 1; }
+.lang-opt.sel { border-color: var(--primary, #ffb84d); }
+
 /* ---------- Главное меню ---------- */
 
 .topbar { display: flex; align-items: center; gap: 10px; }

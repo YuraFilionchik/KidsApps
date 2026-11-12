@@ -51,16 +51,16 @@ function columnSteps(a, b, op) {
 
 function columnHint(st, op) {
   if (op === '+') {
-    if (st.lead) return 'Остался 1 в уме — пиши его впереди!';
-    const sum = `${st.x} + ${st.y}${st.cin ? ' + 1 (в уме)' : ''} = ${st.val}`;
-    return st.val >= 10 ? `${sum}. Пиши <b>${st.digit}</b>, а 1 держим в уме!` : `${sum}. Пиши <b>${st.digit}</b>.`;
+    if (st.lead) return t('Остался 1 в уме — пиши его впереди!');
+    const sum = `${st.x} + ${st.y}${st.cin ? t(' + 1 (в уме)') : ''} = ${st.val}`;
+    return st.val >= 10 ? t('{sum}. Пиши <b>{digit}</b>, а 1 держим в уме!', { sum, digit: st.digit }) : t('{sum}. Пиши <b>{digit}</b>.', { sum, digit: st.digit });
   }
   const top = st.x - st.cin;
-  let pre = st.cin ? `Здесь заняли 1, стало ${st.x} − 1 = ${top}. ` : '';
-  if (top < 0) pre = 'Здесь 0, а мы заняли 1 — снова занимаем десяток! ';
+  let pre = st.cin ? t('Здесь заняли 1, стало {x} − 1 = {top}. ', { x: st.x, top }) : '';
+  if (top < 0) pre = t('Здесь 0, а мы заняли 1 — снова занимаем десяток! ');
   if (top < st.y) {
     const big = top + 10;
-    return `${pre}Из ${Math.max(top, 0)} не вычесть ${st.y} — занимаем десяток у соседа: ${big} − ${st.y} = <b>${st.digit}</b>.`;
+    return pre + t('Из {top} не вычесть {y} — занимаем десяток у соседа: {big} − {y} = <b>{digit}</b>.', { top: Math.max(top, 0), y: st.y, big, digit: st.digit });
   }
   return `${pre}${top} − ${st.y} = <b>${st.digit}</b>.`;
 }
@@ -83,10 +83,10 @@ function screenColumnMenu() {
   };
   const group = op => COLUMN_LEVELS.map((l, i) => (l.op === op ? card(l, i) : '')).join('');
   show(`<div class="screen">
-    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>✏️ Столбик</h2><div class="pill fish">🐟 ${P.fish}</div></div>
-    <p class="subtitle">Пиши ответ справа налево — с единиц. Котик подскажет, что держать в уме.</p>
-    <h3>➕ Сложение</h3>${group('+')}
-    <h3>➖ Вычитание</h3>${group('-')}
+    <div class="row-top"><button class="icon-btn" data-action="hub">←</button><h2>${t('✏️ Столбик')}</h2><div class="pill fish">🐟 ${P.fish}</div></div>
+    <p class="subtitle">${t('Пиши ответ справа налево — с единиц. Котик подскажет, что держать в уме.')}</p>
+    <h3>${t('➕ Сложение')}</h3>${group('+')}
+    <h3>${t('➖ Вычитание')}</h3>${group('-')}
   </div>`);
 }
 
@@ -114,7 +114,7 @@ function startColumn(i) {
 function nextColumn() {
   const p = genColumn(S.level.id);
   Object.assign(S, p, columnSteps(p.a, p.b, p.op), { col: 0, ans: [], marks: {}, bad: false, locked: false });
-  S.say = S.n === 0 ? 'Начинаем с единиц — с правого края! 👉' : 'Следующий пример!';
+  S.say = S.n === 0 ? t('Начинаем с единиц — с правого края! 👉') : t('Следующий пример!');
   S.mood = 'normal';
   renderColumn();
 }
@@ -158,9 +158,9 @@ function colPress(v) {
     Sound.digit(S.col);
     if (st.cout) {
       S.marks[S.col + 1] = S.op === '+' ? '1' : '•';
-      S.say = S.op === '+' ? `Пишем ${st.digit}, а 1 держим в уме ☝️` : `Заняли десяток — ставим точку над соседом •`;
+      S.say = S.op === '+' ? t('Пишем {digit}, а 1 держим в уме ☝️', { digit: st.digit }) : t('Заняли десяток — ставим точку над соседом •');
     } else {
-      S.say = pick(['Верно!', 'Так!', 'Дальше влево 👈', 'Мур, правильно!']);
+      S.say = pick([t('Верно!'), t('Так!'), t('Дальше влево 👈'), t('Мур, правильно!')]);
     }
     S.mood = 'happy';
     S.col++;
@@ -182,7 +182,7 @@ function columnSolved() {
   S.locked = true;
   S.solved++;
   S.n++;
-  S.say = `Верно! ${S.a} ${S.op === '+' ? '+' : '−'} ${S.b} = ${S.res} 🎉`;
+  S.say = t('Верно! {a} {op} {b} = {res} 🎉', { a: S.a, op: S.op === '+' ? '+' : '−', b: S.b, res: S.res });
   Sound.correct(S.solved);
   addFish(2);
   P.farm.food++; // за пример в столбик корма больше
@@ -209,13 +209,13 @@ function finishColumn() {
   const next = COLUMN_LEVELS[S.levelIdx + 1];
   const canNext = next && isColLevelOpen(S.levelIdx + 1);
   screenResult({
-    title: stars === 3 ? 'Идеально!' : stars === 2 ? 'Отлично!' : 'Уровень пройден!',
+    title: stars === 3 ? t('Идеально!') : stars === 2 ? t('Отлично!') : t('Уровень пройден!'),
     stars, mood: 'happy',
-    lines: [`Ошибок: ${S.mistakes}`, `Бонус: +${bonus} 🐟`],
+    lines: [t('Ошибок: {n}', { n: S.mistakes }), t('Бонус: +{bonus} 🐟', { bonus })],
     buttons: [
-      canNext ? `<button class="btn big primary" data-action="startColumn" data-i="${S.levelIdx + 1}">Дальше: ${next.name} →</button>` : '',
-      `<button class="btn" data-action="startColumn" data-i="${S.levelIdx}">Ещё раз</button>`,
-      `<button class="btn" data-action="columnMenu">К уровням</button>`,
+      canNext ? `<button class="btn big primary" data-action="startColumn" data-i="${S.levelIdx + 1}">${t('Дальше: {name} →', { name: next.name })}</button>` : '',
+      `<button class="btn" data-action="startColumn" data-i="${S.levelIdx}">${t('Ещё раз')}</button>`,
+      `<button class="btn" data-action="columnMenu">${t('К уровням')}</button>`,
     ],
   });
 }
@@ -223,7 +223,7 @@ function finishColumn() {
 Object.assign(actions, {
   columnMenu() { S = null; screenColumnMenu(); },
   startColumn(el) { startColumn(Number(el.dataset.i)); },
-  lockedCol() { toast('🔒 Сначала пройди предыдущий уровень!'); },
+  lockedCol() { toast(t('🔒 Сначала пройди предыдущий уровень!')); },
   colKey(el) { colPress(el.dataset.v); },
   colHelp() {
     if (!S || S.locked) return;
